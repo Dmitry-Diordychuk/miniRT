@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/04 19:45:22 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/04 21:05:59 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ t_point2d	canvas_to_screen(t_point2d canvas_point, t_screen screen)
 t_point3d	canvas_to_viewport(t_point2d canvas_point, t_canvas canvas, t_viewport viewport)
 {
 	return ((t_point3d){
-		.x = canvas_point.x * (viewport.width / canvas.width) * (4.0 / 3.0),
+		.x = canvas_point.x * (viewport.width / canvas.width) * 4 / 3,
 		.y = canvas_point.y * (viewport.height / canvas.height), 
 		.z = viewport.focal_length
 		});
@@ -102,17 +102,22 @@ t_point3d	canvas_to_viewport(t_point2d canvas_point, t_canvas canvas, t_viewport
 **	Передадим массив объектов сцены. Пока заглушка. необходимо обдумать маллок или возращать ошибку.
 */
 
-int	trace_ray(t_ray3d r, t_object obj)
+int	trace_ray(t_ray3d r, t_list *objects)
 {
 	double		*crossing_point;
+	t_object	obj;
 
-	if (ft_strcmp(obj.name, "Sphere") == 0)
+	while (objects != NULL)
 	{
-		if (!(crossing_point = obj.intersect(r, obj.obj)))
-			return (-2);
-		if (crossing_point[0] > 0 || crossing_point[1] > 0)
-			return (create_trgb(0, obj.color.x, obj.color.y, obj.color.z));
-		return (-1);
+		obj = *(t_object*)(objects->content);
+		if (ft_strcmp(obj.name, "Sphere") == 0)
+		{
+			if (!(crossing_point = obj.intersect(r, obj.obj)))
+				return (-2);
+			if (crossing_point[0] > 0 || crossing_point[1] > 0)
+				return (create_trgb(0, obj.color.x, obj.color.y, obj.color.z));
+		}
+		objects = objects->next;
 	}
 	return (-1);
 }
@@ -155,10 +160,12 @@ t_data	render(t_screen screen, t_data img)
 {
 
 	//Сфера 
-	t_object	obj = create_object("Sphere", create_sphere(-10, 10, 100, 1), (t_color3d){0, 255, 0}); 
-	//t_list		*objects;
+	t_object	obj2 = create_object("Sphere", create_sphere(-10, 10, 100, 1), (t_color3d){0, 255, 0});
+	t_object	obj = create_object("Sphere", create_sphere(10, 10, 100, 5), (t_color3d){255, 0, 0});
+	t_list		*objects;
 
-	//objects = ft_lstnew((void*)&obj);
+	objects = ft_lstnew((void*)&obj);
+	ft_lstadd_back(&objects, ft_lstnew((void*)&obj2));
 
 	//Холст
 	t_canvas	canvas = create_canvas(screen);
@@ -178,7 +185,7 @@ t_data	render(t_screen screen, t_data img)
 		{
 			draw_pixel(&img, canvas_to_screen((t_point2d){x, y}, screen), create_trgb(0, 0, 200 - canvas.height / 5 + y / 5, 255 - canvas.height / 5 + y / 5));
 			camera.ray.direction = canvas_to_viewport((t_point2d){x, y}, canvas, camera.viewport);
-			if ((color = trace_ray(camera.ray, obj)) >= 0)
+			if ((color = trace_ray(camera.ray, objects)) >= 0)
 				draw_pixel(&img, canvas_to_screen((t_point2d){x, y}, screen), color);
 			else if (color == -2)
 				break; ///////////////////////////////////////обработка ошибки
