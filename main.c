@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/04 17:51:21 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/04 19:45:22 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,13 +129,36 @@ t_canvas	create_canvas(t_screen screen)
 				});
 }
 
+t_object	create_object(const char *name, void *obj, t_color3d color)
+{
+	if (ft_strcmp(name, "Sphere") == 0)
+		return ((t_object){ft_strdup(name), obj, intersect_sphere, color});
+}
+
+void	*create_sphere(double x, double y, double z, double r)   		// malloc
+{
+	t_sphere *s;
+
+	if (!(s = (t_sphere*)malloc(sizeof(t_sphere))))
+		return (NULL);
+	s->coor = (t_point3d){
+				.x = x,
+				.y = y,
+				.z = z
+				};
+	s->r = r;
+	return ((void*)s);
+}
+
 // Разобратся с t_data , разобратся с объектами ,  разобратся с возратом из решения уравнения , разобратся с цветами. 
 t_data	render(t_screen screen, t_data img)
 {
 
-	//Сфера
-	t_sphere	sphere = (t_sphere){(t_point3d){-10, +10, 100}, 5};
-	t_object	obj = (t_object){ft_strdup("Sphere"), (void*)(&sphere), intersect_sphere, (t_color3d){255, 0, 0}}; 
+	//Сфера 
+	t_object	obj = create_object("Sphere", create_sphere(-10, 10, 100, 1), (t_color3d){0, 255, 0}); 
+	//t_list		*objects;
+
+	//objects = ft_lstnew((void*)&obj);
 
 	//Холст
 	t_canvas	canvas = create_canvas(screen);
