@@ -6,7 +6,7 @@
 #    By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/05/06 16:34:49 by kdustin           #+#    #+#              #
-#    Updated: 2020/07/30 01:21:33 by kdustin          ###   ########.fr        #
+#    Updated: 2020/07/20 16:20:48 by kdustin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,9 +49,8 @@ REG_OBJS =	ft_memset.o			\
 			ft_malloc.o			\
 			ft_free.o			\
 			ft_putunbr_fd.o		\
-			ft_strrotate.o		\
-			ft_intswap.o		\
-			ft_floatswap.o
+			ft_strrotate.o
+
 BONUS_OBJS =	ft_lstnew.o			\
 				ft_lstadd_front.o	\
 				ft_lstsize.o		\

@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/04 18:50:18 by kdustin           #+#    #+#             */
-/*   Updated: 2020/07/30 01:21:06 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/07/20 14:14:06 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,6 @@ void				ft_putstr_fd(char *s, int fd);
 void				ft_putendl_fd(char *s, int fd);
 void				ft_putnbr_fd(int n, int fd);
 void				ft_putunbr_fd(unsigned int n, int fd);
-
-void				ft_intswap(int *a, int *b);
-void				ft_floatswap(float *a, float *b);
 
 typedef struct		s_list
 {
