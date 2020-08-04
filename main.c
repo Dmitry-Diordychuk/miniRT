@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/04 21:05:59 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/04 23:28:31 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,10 @@ int	trace_ray(t_ray3d r, t_list *objects)
 {
 	double		*crossing_point;
 	t_object	obj;
+	t_object	obj_in_front;
+	double		t_in_front;
 
+	t_in_front = -1;
 	while (objects != NULL)
 	{
 		obj = *(t_object*)(objects->content);
@@ -114,11 +117,20 @@ int	trace_ray(t_ray3d r, t_list *objects)
 		{
 			if (!(crossing_point = obj.intersect(r, obj.obj)))
 				return (-2);
-			if (crossing_point[0] > 0 || crossing_point[1] > 0)
-				return (create_trgb(0, obj.color.x, obj.color.y, obj.color.z));
+			if (crossing_point[0] > -1 || crossing_point[1] > -1)
+			{
+				if (t_in_front == -1 || (crossing_point[0] < t_in_front || crossing_point[1] < t_in_front))
+				{
+					obj_in_front = obj;
+					t_in_front = crossing_point[0] < crossing_point[1] ? crossing_point[0] : crossing_point[1];
+				}
+			}
+			free(crossing_point);
 		}
 		objects = objects->next;
 	}
+	if (t_in_front != -1)
+		return (create_trgb(0, obj_in_front.color.x, obj_in_front.color.y, obj_in_front.color.z));
 	return (-1);
 }
 
@@ -160,8 +172,8 @@ t_data	render(t_screen screen, t_data img)
 {
 
 	//Сфера 
-	t_object	obj2 = create_object("Sphere", create_sphere(-10, 10, 100, 1), (t_color3d){0, 255, 0});
-	t_object	obj = create_object("Sphere", create_sphere(10, 10, 100, 5), (t_color3d){255, 0, 0});
+	t_object	obj2 = create_object("Sphere", create_sphere(-10, 10, 95, 1), (t_color3d){0, 255, 0});
+	t_object	obj = create_object("Sphere", create_sphere(-10, 10, 100, 5), (t_color3d){255, 0, 0});
 	t_list		*objects;
 
 	objects = ft_lstnew((void*)&obj);
