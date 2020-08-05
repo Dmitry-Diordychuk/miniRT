@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:34:01 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/01 20:38:18 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/05 03:16:42 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ typedef struct	s_vector3d{
 }		t_vector3d;
 
 typedef	t_vector3d t_point3d;
+typedef t_vector3d t_color3d;
 
 t_vector3d	sum_vec(t_vector3d a, t_vector3d b);
 t_vector3d	minus_vec(t_vector3d a, t_vector3d b);

@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/04 23:28:31 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/05 03:50:24 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@
 #include "vector.h"
 #include "ray.h"
 #include "sphere.h"
+#include "object.h"
+#include "camera.h"
+#include "screen_and_canvas.h"
 
 typedef struct	s_data {
 	void	*img;
@@ -26,44 +29,6 @@ typedef struct	s_data {
 	int	endian;
 }		t_data;
 
-typedef struct	s_point2d {
-	int	x;
-	int	y;
-}		t_point2d;
-
-typedef struct		s_viewport {
-	const double	focal_length;
-	const double	height;
-	const double	width;
-}			t_viewport;
-
-typedef struct		s_screen {
-	const int	width;
-	const int	height;
-	const int	aspect_ratio;
-}			t_screen;
-
-typedef struct		s_canvas {
-	const int	left_border;
-	const int	right_border;
-	const int	top_border;
-	const int	bottom_border;
-	const int	width;
-	const int	height;
-}			t_canvas;
-
-typedef	struct		s_camera {
-	t_ray3d		ray;
-	t_viewport	viewport;
-}			t_camera;
-
-typedef struct		s_object {
-	char		*name;
-	void		*obj;
-	double		*(*intersect)(t_ray3d, void*);
-	t_color3d	color;
-}			t_object;
-
 void	draw_pixel(t_data *data, t_point2d p, int color)
 {
 	char *dst;
@@ -71,31 +36,6 @@ void	draw_pixel(t_data *data, t_point2d p, int color)
 	dst = data->addr +
 	(p.y * data->line_length + p.x * (data->bits_per_pixel / 8));
 	*(unsigned int*)dst = color;
-}
-
-/*
-**	This function transform canvas point coordinates to screen coordinates
-*/
-
-t_point2d	canvas_to_screen(t_point2d canvas_point, t_screen screen)
-{
-	return ((t_point2d){
-			.x = screen.width / 2 + canvas_point.x,
-			.y = screen.height / 2 - canvas_point.y
-			});
-}
-
-/*
-**	This function transform canvas point coordinates to viewport coordinates
-*/
-
-t_point3d	canvas_to_viewport(t_point2d canvas_point, t_canvas canvas, t_viewport viewport)
-{
-	return ((t_point3d){
-		.x = canvas_point.x * (viewport.width / canvas.width) * 4 / 3,
-		.y = canvas_point.y * (viewport.height / canvas.height), 
-		.z = viewport.focal_length
-		});
 }
 
 /*
@@ -132,39 +72,6 @@ int	trace_ray(t_ray3d r, t_list *objects)
 	if (t_in_front != -1)
 		return (create_trgb(0, obj_in_front.color.x, obj_in_front.color.y, obj_in_front.color.z));
 	return (-1);
-}
-
-t_canvas	create_canvas(t_screen screen)
-{
-	return ((t_canvas){
-				.left_border	= -screen.width / 2,
-				.right_border	= screen.width / 2,
-				.top_border	= screen.height / 2,
-				.bottom_border	= -screen.height / 2,
-				.width		= screen.width,
-				.height		= screen.height
-				});
-}
-
-t_object	create_object(const char *name, void *obj, t_color3d color)
-{
-	if (ft_strcmp(name, "Sphere") == 0)
-		return ((t_object){ft_strdup(name), obj, intersect_sphere, color});
-}
-
-void	*create_sphere(double x, double y, double z, double r)   		// malloc
-{
-	t_sphere *s;
-
-	if (!(s = (t_sphere*)malloc(sizeof(t_sphere))))
-		return (NULL);
-	s->coor = (t_point3d){
-				.x = x,
-				.y = y,
-				.z = z
-				};
-	s->r = r;
-	return ((void*)s);
 }
 
 // Разобратся с t_data , разобратся с объектами ,  разобратся с возратом из решения уравнения , разобратся с цветами. 

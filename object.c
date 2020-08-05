@@ -1,28 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sphere.h                                           :+:      :+:    :+:   */
+/*   object.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/03 20:09:25 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/05 03:33:33 by kdustin          ###   ########.fr       */
+/*   Created: 2020/08/04 23:36:42 by kdustin           #+#    #+#             */
+/*   Updated: 2020/08/04 23:37:08 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SPHERE_H
-# define SPHERE_H
+#include "object.h"
 
-# include "object.h"
-
-typedef struct		s_sphere {
-	t_vector3d	coor;
-	double		r;
-}			t_sphere;
-
-void			*create_sphere(double x, double y, double z, double r);
-double			sgn(double x);
-double			*intersect_sphere(t_ray3d r, void *obj);
-
-#endif
+t_object	create_object(const char *name, void *obj, t_color3d color)
+{
+	if (ft_strcmp(name, "Sphere") == 0)
+		return ((t_object){ft_strdup(name), obj, intersect_sphere, color});
+}
 

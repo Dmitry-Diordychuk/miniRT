@@ -6,11 +6,27 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/03 20:11:31 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/04 17:24:15 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/05 03:33:07 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sphere.h"
+
+void	*create_sphere(double x, double y, double z, double r)   		// malloc
+{
+	t_sphere *s;
+
+	if (!(s = (t_sphere*)malloc(sizeof(t_sphere))))
+		return (NULL);
+	s->coor = (t_point3d){
+				.x = x,
+				.y = y,
+				.z = z
+				};
+	s->r = r;
+	return ((void*)s);
+}
+
 
 /*
 **	sgn(x)

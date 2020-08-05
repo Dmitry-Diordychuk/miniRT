@@ -1,28 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sphere.h                                           :+:      :+:    :+:   */
+/*   camera.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/03 20:09:25 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/05 03:33:33 by kdustin          ###   ########.fr       */
+/*   Created: 2020/08/05 03:30:35 by kdustin           #+#    #+#             */
+/*   Updated: 2020/08/05 03:46:52 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SPHERE_H
-# define SPHERE_H
+#ifndef CAMERA_H
+# define CAMERA_H
 
-# include "object.h"
+#include "screen_and_canvas.h"
+#include "ray.h"
 
-typedef struct		s_sphere {
-	t_vector3d	coor;
-	double		r;
-}			t_sphere;
+typedef struct		s_viewport {
+	const double	focal_length;
+	const double	height;
+	const double	width;
+}			t_viewport;
 
-void			*create_sphere(double x, double y, double z, double r);
-double			sgn(double x);
-double			*intersect_sphere(t_ray3d r, void *obj);
+typedef	struct		s_camera {
+	t_ray3d		ray;
+	t_viewport	viewport;
+}			t_camera;
+
+t_point3d	canvas_to_viewport(t_point2d canvas_point, t_canvas canvas, t_viewport viewport);
 
 #endif
 
