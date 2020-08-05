@@ -1,33 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   minirt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/05 03:50:24 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/05 14:20:45 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <libft.h>
-#include <math.h>
-#include "mlx.h"
-#include "color.h"
-#include "vector.h"
-#include "ray.h"
-#include "sphere.h"
-#include "object.h"
-#include "camera.h"
-#include "screen_and_canvas.h"
-
-typedef struct	s_data {
-	void	*img;
-	char	*addr;
-	int	bits_per_pixel;
-	int	line_length;
-	int	endian;
-}		t_data;
+#include "minirt.h"
 
 void	draw_pixel(t_data *data, t_point2d p, int color)
 {
@@ -39,6 +22,32 @@ void	draw_pixel(t_data *data, t_point2d p, int color)
 }
 
 /*
+**	choose_obj_type
+*/
+
+int	choose_obj_intersect(t_ray3d r, t_object obj, double *nearest_root,
+							t_object *nearest_obj)               //malloc
+{
+	double	*roots;
+
+	if (ft_strcmp(obj.name, "Sphere") == 0)
+	{
+		if (!(roots = obj.intersect(r, obj.obj)))
+			return (-1);
+		if ((roots[0] > -1 || roots[1] > -1) &&
+		(*nearest_root == -1 || (roots[0] < *nearest_root || roots[1] <
+								*nearest_root)))
+		{
+			*nearest_obj = obj;
+			*nearest_root = roots[0] < roots[1] ?
+							roots[0] : roots[1];
+		}
+		free(roots);
+	}
+	return (0);
+}
+
+/*
 **	Передадим массив объектов сцены. Пока заглушка. необходимо обдумать маллок или возращать ошибку.
 */
 
@@ -46,35 +55,32 @@ int	trace_ray(t_ray3d r, t_list *objects)
 {
 	double		*crossing_point;
 	t_object	obj;
-	t_object	obj_in_front;
-	double		t_in_front;
+	t_object	nearest_obj;
+	double		nearest_root;
 
-	t_in_front = -1;
+	nearest_root = -1;
 	while (objects != NULL)
 	{
 		obj = *(t_object*)(objects->content);
-		if (ft_strcmp(obj.name, "Sphere") == 0)
-		{
-			if (!(crossing_point = obj.intersect(r, obj.obj)))
-				return (-2);
-			if (crossing_point[0] > -1 || crossing_point[1] > -1)
-			{
-				if (t_in_front == -1 || (crossing_point[0] < t_in_front || crossing_point[1] < t_in_front))
-				{
-					obj_in_front = obj;
-					t_in_front = crossing_point[0] < crossing_point[1] ? crossing_point[0] : crossing_point[1];
-				}
-			}
-			free(crossing_point);
-		}
+		if (choose_obj_intersect(r, obj, &nearest_root, &nearest_obj)
+									< 0)
+			return (-2);
 		objects = objects->next;
 	}
-	if (t_in_front != -1)
-		return (create_trgb(0, obj_in_front.color.x, obj_in_front.color.y, obj_in_front.color.z));
+	if (nearest_root != -1)
+		return (create_trgb(0, nearest_obj.color.x,
+				nearest_obj.color.y, nearest_obj.color.z));
 	return (-1);
 }
 
-// Разобратся с t_data , разобратся с объектами ,  разобратся с возратом из решения уравнения , разобратся с цветами. 
+typedef struct		s_scene {
+	t_camera	camera;
+	t_list		*objects;
+}			t_scene;
+
+
+
+// Разобратся с t_data , разобратся с объектами ,  разобратся с возратом из решения уравнения , разобратся с цветами, разобратся с аспкктом 
 t_data	render(t_screen screen, t_data img)
 {
 
