@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/06 14:46:39 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/06 15:42:49 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,6 @@ typedef struct		s_scene {
 	t_list		*objects;
 }			t_scene;
 
-
-
 // Разобратся с t_data , разобратся с объектами ,  разобратся с возратом из решения уравнения , разобратся с цветами, разобратся с аспкктом 
 t_data	render(t_screen screen, t_data img)
 {
@@ -114,6 +112,7 @@ t_data	render(t_screen screen, t_data img)
 		}
 		y--;
 	}
+	ft_lstclear(&objects, delete_object);
 	return (img);
 }
 

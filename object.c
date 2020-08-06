@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/04 23:36:42 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/06 15:13:22 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/06 15:45:13 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,3 +26,10 @@ t_object	*create_object(const char *type, void *obj, t_color3d color)
 	return (object);
 }
 
+void		delete_object(void *item)
+{
+	t_object	*object = (t_object*)item;
+	if (ft_strcmp("Sphere", object->type) == 0)
+		free((t_sphere*)object->container);
+	free(object);
+}
