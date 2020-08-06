@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 00:55:52 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/07 01:02:19 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,15 @@ t_scene	init_scene(t_list *objects, t_viewport viewport, t_point3d origin)
 	return (scene);
 }
 
+void	draw_background(t_data *img, t_point2d point, t_screen screen,
+								t_canvas canvas)
+{
+	draw_pixel(img, canvas_to_screen(point, screen),
+			create_trgb(0, 0, 200 - canvas.height / 5 + point.y / 5,
+					255 - canvas.height / 5 + point.y / 5));
+
+}
+
 // Разобратся с t_data , разобратся с объектами ,  разобратся с возратом из решения уравнения , разобратся с цветами, разобратся с аспкктом 
 int	render(t_screen screen, t_data *img)
 {
@@ -128,12 +137,13 @@ int	render(t_screen screen, t_data *img)
 		point.x = canvas.left_border - 1;
 		while (++point.x < canvas.right_border)
 		{
-			draw_pixel(img, canvas_to_screen(point, screen), create_trgb(0, 0, 200 - canvas.height / 5 + point.y / 5, 255 - canvas.height / 5 + point.y / 5));
-			scene.camera.ray.direction = canvas_to_viewport(point, canvas, scene.camera.viewport);
+			draw_background(img, point, screen, canvas);
+			scene.camera.ray.direction = canvas_to_viewport(point,
+						canvas, scene.camera.viewport);
 			if ((color = trace_ray(scene.camera.ray, scene.objects)) >= 0)
 				draw_pixel(img, canvas_to_screen(point, screen), color);
 			else if (color == -2)
-				break; ///////////////////////////////////////обработка ошибки
+				return (-2);
 		}
 	}
 	ft_lstclear(&(scene.objects), delete_object);
