@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 03:35:13 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/05 03:48:10 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/07 02:37:23 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ typedef struct	s_point2d {
 typedef struct		s_screen {
 	const int	width;
 	const int	height;
-	const int	aspect_ratio;
 }			t_screen;
 
 typedef struct		s_canvas {

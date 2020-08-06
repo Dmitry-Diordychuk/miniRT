@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 02:27:07 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/07 02:40:13 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	draw_pixel(t_data *data, t_point2d p, int color)
 **	choose_obj_type
 */
 
-int	choose_obj_intersect(t_ray3d r, t_object obj, double *nearest_root,
+int	apply_intersect(t_ray3d r, t_object obj, double *nearest_root,
 							t_object *nearest_obj)               //malloc
 {
 	double	*roots;
@@ -58,7 +58,7 @@ int	trace_ray(t_ray3d r, t_list *objects)
 	while (objects != NULL)
 	{
 		obj = *(t_object*)(objects->content);
-		if (choose_obj_intersect(r, obj, &nearest_root, &nearest_obj)
+		if (apply_intersect(r, obj, &nearest_root, &nearest_obj)
 									< 0)
 			return (-2);
 		objects = objects->next;
@@ -75,14 +75,16 @@ t_list	*init_objects()
 	t_list		*temp;
 	t_list		*objects;
 
-	if (!(obj = create_object("Sphere", create_sphere((t_point3d){-10, 10, 95}, 1), (t_color3d){0, 255, 0})))
+	if (!(obj = create_object("Sphere",
+	create_sphere((t_point3d){-10, 10, 95}, 1), (t_color3d){0, 255, 0})))
 		return (NULL);
 	if (!(objects = ft_lstnew((void*)obj)))
 	{
 		delete_object((void*)obj);
 		return (NULL);
 	}
-	if (!(obj = create_object("Sphere", create_sphere((t_point3d){-10, 10, 100}, 5), (t_color3d){255, 0, 0})))
+	if (!(obj = create_object("Sphere",
+	create_sphere((t_point3d){-10, 10, 100}, 5), (t_color3d){255, 0, 0})))
 	{
 		ft_lstclear(&objects, delete_object);
 		return (NULL);
@@ -118,7 +120,6 @@ void	draw_background(t_data *img, t_point2d point, t_screen screen,
 	draw_pixel(img, canvas_to_screen(point, screen),
 			create_trgb(0, 0, 200 - canvas.height / 5 + point.y / 5,
 					255 - canvas.height / 5 + point.y / 5));
-
 }
 
 int	render_return(int ret, t_list *objects)
@@ -130,7 +131,7 @@ int	render_return(int ret, t_list *objects)
 // Разобратся с t_data , разобратся с объектами ,  разобратся с возратом из решения уравнения , разобратся с цветами, разобратся с аспкктом 
 int	render(t_screen screen, t_data *img)
 {
-	t_canvas	canvas = create_canvas(screen);
+	const t_canvas	canvas = create_canvas(screen);
 	t_scene		scene;
 	t_point2d	point;
 	int		color;
@@ -159,7 +160,7 @@ int	render(t_screen screen, t_data *img)
 
 int	main(void)
 {
-	t_screen	screen = (t_screen){800, 600, 4 / 3};	
+	const t_screen	screen = (t_screen){800, 600};	
 	void		*mlx;
 	void		*mlx_win;
 	t_data		img;
@@ -167,7 +168,8 @@ int	main(void)
 	mlx = mlx_init();
 	mlx_win = mlx_new_window(mlx, screen.width, screen.height, "MLX!");
 	img.img = mlx_new_image(mlx, screen.width, screen.height);
-	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);	
+	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel,
+						&img.line_length, &img.endian);	
 	if (render(screen, &img) < 0)
 		return (-1);
 	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
