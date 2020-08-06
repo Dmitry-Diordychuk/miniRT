@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/06 15:42:49 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/06 16:24:52 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,17 +74,40 @@ typedef struct		s_scene {
 	t_list		*objects;
 }			t_scene;
 
+t_list	*init_objects()
+{
+	t_object	*obj;
+	t_list		*temp;
+	t_list		*objects;
+
+	if (!(obj = create_object("Sphere", create_sphere((t_point3d){-10, 10, 95}, 1), (t_color3d){0, 255, 0})))
+		return (NULL);
+	if (!(objects = ft_lstnew((void*)obj)))
+	{
+		delete_object((void*)obj);
+		return (NULL);
+	}
+	if (!(obj = create_object("Sphere", create_sphere((t_point3d){-10, 10, 100}, 5), (t_color3d){255, 0, 0})))
+	{
+		ft_lstclear(&objects, delete_object);
+		return (NULL);
+	}
+	if (!(temp = ft_lstnew((void*)obj)))
+	{	
+		delete_object((void*)obj);
+		ft_lstclear(&objects, delete_object);
+		return (NULL);
+	}
+	ft_lstadd_back(&objects, temp);
+	return (objects);
+}
+
 // Разобратся с t_data , разобратся с объектами ,  разобратся с возратом из решения уравнения , разобратся с цветами, разобратся с аспкктом 
 t_data	render(t_screen screen, t_data img)
 {
 
 	//Сфера 
-	t_object	*obj2 = create_object("Sphere", create_sphere((t_point3d){-10, 10, 95}, 1), (t_color3d){0, 255, 0});
-	t_object	*obj = create_object("Sphere", create_sphere((t_point3d){-10, 10, 100}, 5), (t_color3d){255, 0, 0});
 	t_list		*objects;
-
-	objects = ft_lstnew((void*)obj);
-	ft_lstadd_back(&objects, ft_lstnew((void*)obj2));
 
 	//Холст
 	t_canvas	canvas = create_canvas(screen);
@@ -94,6 +117,7 @@ t_data	render(t_screen screen, t_data img)
 	int		y;
 	int		color;
 
+	objects = init_objects();
 	camera.viewport = (t_viewport){1.0, 1.0, 1.0};
 	camera.ray.origin = (t_point3d){0, 0, 0};
 	y = canvas.top_border;

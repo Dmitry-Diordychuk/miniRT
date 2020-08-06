@@ -6,13 +6,13 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/03 20:11:31 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/05 22:39:22 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/06 15:48:20 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sphere.h"
 
-void	*create_sphere(t_point3d p, double r)   			// malloc
+void	*create_sphere(t_point3d p, double r)
 {
 	t_sphere *s;
 

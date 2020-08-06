@@ -6,18 +6,29 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/04 23:36:42 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/06 15:45:13 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/06 16:27:49 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "object.h"
 
+void	delete_content(const char *type, void *content)
+{
+	if (ft_strcmp("Sphere", type) == 0)
+		free((t_sphere*)content);
+}
+
 t_object	*create_object(const char *type, void *obj, t_color3d color)
 {
 	t_object *object;
-	
+
+	if (obj == NULL)
+		return (NULL);	
 	if (!(object = (t_object*)malloc(sizeof(t_object))))
+	{
+		delete_content(type, obj);
 		return (NULL);
+	}
 	ft_strcpy(object->type, type);
 	object->container = obj;
 	if (ft_strcmp("Sphere", type) == 0)
@@ -28,8 +39,9 @@ t_object	*create_object(const char *type, void *obj, t_color3d color)
 
 void		delete_object(void *item)
 {
-	t_object	*object = (t_object*)item;
-	if (ft_strcmp("Sphere", object->type) == 0)
-		free((t_sphere*)object->container);
+	t_object	*object;
+
+	object = (t_object*)item;
+	delete_content(object->type, object->container);
 	free(object);
 }

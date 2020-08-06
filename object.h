@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/04 23:34:42 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/06 15:45:37 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/06 16:28:03 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ typedef struct		s_object {
 	t_color3d	color;
 }			t_object;
 
+void		delete_content(const char *type, void *content);
 t_object	*create_object(const char *type, void *obj, t_color3d color);
 void		delete_object(void *object);
 
