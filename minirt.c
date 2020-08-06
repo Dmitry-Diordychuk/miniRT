@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 01:02:19 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/07 02:27:07 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,12 @@ void	draw_background(t_data *img, t_point2d point, t_screen screen,
 
 }
 
+int	render_return(int ret, t_list *objects)
+{
+	ft_lstclear(&objects, delete_object);
+	return (ret);
+}
+
 // Разобратся с t_data , разобратся с объектами ,  разобратся с возратом из решения уравнения , разобратся с цветами, разобратся с аспкктом 
 int	render(t_screen screen, t_data *img)
 {
@@ -140,14 +146,15 @@ int	render(t_screen screen, t_data *img)
 			draw_background(img, point, screen, canvas);
 			scene.camera.ray.direction = canvas_to_viewport(point,
 						canvas, scene.camera.viewport);
-			if ((color = trace_ray(scene.camera.ray, scene.objects)) >= 0)
-				draw_pixel(img, canvas_to_screen(point, screen), color);
+			if ((color = trace_ray(scene.camera.ray, scene.objects))
+									>= 0)
+				draw_pixel(img, canvas_to_screen(point, screen),
+									color);
 			else if (color == -2)
-				return (-2);
+				return (render_return(-2, scene.objects));
 		}
 	}
-	ft_lstclear(&(scene.objects), delete_object);
-	return (0);
+	return (render_return(0, scene.objects));
 }
 
 int	main(void)
@@ -161,7 +168,8 @@ int	main(void)
 	mlx_win = mlx_new_window(mlx, screen.width, screen.height, "MLX!");
 	img.img = mlx_new_image(mlx, screen.width, screen.height);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);	
-	render(screen, &img);
+	if (render(screen, &img) < 0)
+		return (-1);
 	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
 	mlx_loop(mlx);
 	return (0);
