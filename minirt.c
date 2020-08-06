@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 00:47:32 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/07 00:55:52 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,11 +122,11 @@ int	render(t_screen screen, t_data *img)
 
 	scene = init_scene(init_objects(), (t_viewport){1, 1, 1},
 							(t_point3d){0, 0, 0});
-	point.y = canvas.top_border;
-	while (point.y > canvas.bottom_border)
+	point.y = canvas.top_border + 1;
+	while (--point.y > canvas.bottom_border)
 	{
-		point.x = canvas.left_border;
-		while (point.x < canvas.right_border)
+		point.x = canvas.left_border - 1;
+		while (++point.x < canvas.right_border)
 		{
 			draw_pixel(img, canvas_to_screen(point, screen), create_trgb(0, 0, 200 - canvas.height / 5 + point.y / 5, 255 - canvas.height / 5 + point.y / 5));
 			scene.camera.ray.direction = canvas_to_viewport(point, canvas, scene.camera.viewport);
@@ -134,9 +134,7 @@ int	render(t_screen screen, t_data *img)
 				draw_pixel(img, canvas_to_screen(point, screen), color);
 			else if (color == -2)
 				break; ///////////////////////////////////////обработка ошибки
-			point.x++;
 		}
-		point.y--;
 	}
 	ft_lstclear(&(scene.objects), delete_object);
 	return (0);
