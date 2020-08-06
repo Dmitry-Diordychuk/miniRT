@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/05 14:20:45 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/06 14:46:39 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,20 +30,16 @@ int	choose_obj_intersect(t_ray3d r, t_object obj, double *nearest_root,
 {
 	double	*roots;
 
-	if (ft_strcmp(obj.name, "Sphere") == 0)
-	{
-		if (!(roots = obj.intersect(r, obj.obj)))
-			return (-1);
-		if ((roots[0] > -1 || roots[1] > -1) &&
-		(*nearest_root == -1 || (roots[0] < *nearest_root || roots[1] <
+	if (!(roots = obj.intersect_function(r, obj.container)))
+		return (-1);
+	if ((roots[0] > -1 || roots[1] > -1) &&
+	(*nearest_root == -1 || (roots[0] < *nearest_root || roots[1] <
 								*nearest_root)))
-		{
-			*nearest_obj = obj;
-			*nearest_root = roots[0] < roots[1] ?
-							roots[0] : roots[1];
-		}
-		free(roots);
+	{
+		*nearest_obj = obj;
+		*nearest_root = roots[0] < roots[1] ? roots[0] : roots[1];
 	}
+	free(roots);
 	return (0);
 }
 
@@ -68,8 +64,8 @@ int	trace_ray(t_ray3d r, t_list *objects)
 		objects = objects->next;
 	}
 	if (nearest_root != -1)
-		return (create_trgb(0, nearest_obj.color.x,
-				nearest_obj.color.y, nearest_obj.color.z));
+		return (create_trgb(0, nearest_obj.color.x, nearest_obj.color.y,
+							nearest_obj.color.z));
 	return (-1);
 }
 
@@ -85,12 +81,12 @@ t_data	render(t_screen screen, t_data img)
 {
 
 	//Сфера 
-	t_object	obj2 = create_object("Sphere", create_sphere(-10, 10, 95, 1), (t_color3d){0, 255, 0});
-	t_object	obj = create_object("Sphere", create_sphere(-10, 10, 100, 5), (t_color3d){255, 0, 0});
+	t_object	*obj2 = create_object("Sphere", create_sphere((t_point3d){-10, 10, 95}, 1), (t_color3d){0, 255, 0});
+	t_object	*obj = create_object("Sphere", create_sphere((t_point3d){-10, 10, 100}, 5), (t_color3d){255, 0, 0});
 	t_list		*objects;
 
-	objects = ft_lstnew((void*)&obj);
-	ft_lstadd_back(&objects, ft_lstnew((void*)&obj2));
+	objects = ft_lstnew((void*)obj);
+	ft_lstadd_back(&objects, ft_lstnew((void*)obj2));
 
 	//Холст
 	t_canvas	canvas = create_canvas(screen);

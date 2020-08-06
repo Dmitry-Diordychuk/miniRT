@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/03 20:09:25 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/05 03:33:33 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/05 22:31:55 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@
 # include "object.h"
 
 typedef struct		s_sphere {
-	t_vector3d	coor;
-	double		r;
+	t_vector3d	position;
+	double		radius;
 }			t_sphere;
 
-void			*create_sphere(double x, double y, double z, double r);
+void			*create_sphere(t_point3d p, double r);
 double			sgn(double x);
 double			*intersect_sphere(t_ray3d r, void *obj);
 
