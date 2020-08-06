@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/06 16:48:57 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/07 00:33:45 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ typedef struct	s_scene {
 }		t_scene;
 
 // Разобратся с t_data , разобратся с объектами ,  разобратся с возратом из решения уравнения , разобратся с цветами, разобратся с аспкктом 
-t_data	render(t_screen screen, t_data img)
+int	render(t_screen screen, t_data *img)
 {
 	t_canvas	canvas = create_canvas(screen);
 	t_scene		scene;
@@ -119,10 +119,10 @@ t_data	render(t_screen screen, t_data img)
 		point.x = canvas.left_border;
 		while (point.x < canvas.right_border)
 		{
-			draw_pixel(&img, canvas_to_screen(point, screen), create_trgb(0, 0, 200 - canvas.height / 5 + point.y / 5, 255 - canvas.height / 5 + point.y / 5));
+			draw_pixel(img, canvas_to_screen(point, screen), create_trgb(0, 0, 200 - canvas.height / 5 + point.y / 5, 255 - canvas.height / 5 + point.y / 5));
 			scene.camera.ray.direction = canvas_to_viewport(point, canvas, scene.camera.viewport);
 			if ((color = trace_ray(scene.camera.ray, scene.objects)) >= 0)
-				draw_pixel(&img, canvas_to_screen(point, screen), color);
+				draw_pixel(img, canvas_to_screen(point, screen), color);
 			else if (color == -2)
 				break; ///////////////////////////////////////обработка ошибки
 			point.x++;
@@ -130,7 +130,7 @@ t_data	render(t_screen screen, t_data img)
 		point.y--;
 	}
 	ft_lstclear(&(scene.objects), delete_object);
-	return (img);
+	return (0);
 }
 
 int	main(void)
@@ -144,7 +144,7 @@ int	main(void)
 	mlx_win = mlx_new_window(mlx, screen.width, screen.height, "MLX!");
 	img.img = mlx_new_image(mlx, screen.width, screen.height);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);	
-	img = render(screen, img);
+	render(screen, &img);
 	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
 	mlx_loop(mlx);
 	return (0);
