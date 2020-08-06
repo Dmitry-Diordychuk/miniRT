@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 00:33:45 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/07 00:47:32 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,16 @@ typedef struct	s_scene {
 	t_list		*objects;
 }		t_scene;
 
+t_scene	init_scene(t_list *objects, t_viewport viewport, t_point3d origin)
+{
+	t_scene	scene;
+
+	scene.objects = objects;
+	scene.camera.viewport = viewport;
+	scene.camera.ray.origin = origin;
+	return (scene);
+}
+
 // Разобратся с t_data , разобратся с объектами ,  разобратся с возратом из решения уравнения , разобратся с цветами, разобратся с аспкктом 
 int	render(t_screen screen, t_data *img)
 {
@@ -110,9 +120,8 @@ int	render(t_screen screen, t_data *img)
 	t_point2d	point;
 	int		color;
 
-	scene.objects = init_objects();
-	scene.camera.viewport = (t_viewport){1.0, 1.0, 1.0};
-	scene.camera.ray.origin = (t_point3d){0, 0, 0};
+	scene = init_scene(init_objects(), (t_viewport){1, 1, 1},
+							(t_point3d){0, 0, 0});
 	point.y = canvas.top_border;
 	while (point.y > canvas.bottom_border)
 	{
