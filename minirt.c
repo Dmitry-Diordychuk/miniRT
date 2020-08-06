@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/06 16:24:52 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/06 16:48:57 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,6 @@ int	trace_ray(t_ray3d r, t_list *objects)
 	return (-1);
 }
 
-typedef struct		s_scene {
-	t_camera	camera;
-	t_list		*objects;
-}			t_scene;
-
 t_list	*init_objects()
 {
 	t_object	*obj;
@@ -102,41 +97,39 @@ t_list	*init_objects()
 	return (objects);
 }
 
+typedef struct	s_scene {
+	t_camera	camera;
+	t_list		*objects;
+}		t_scene;
+
 // Разобратся с t_data , разобратся с объектами ,  разобратся с возратом из решения уравнения , разобратся с цветами, разобратся с аспкктом 
 t_data	render(t_screen screen, t_data img)
 {
-
-	//Сфера 
-	t_list		*objects;
-
-	//Холст
 	t_canvas	canvas = create_canvas(screen);
-
-	t_camera	camera;
-	int		x;
-	int		y;
+	t_scene		scene;
+	t_point2d	point;
 	int		color;
 
-	objects = init_objects();
-	camera.viewport = (t_viewport){1.0, 1.0, 1.0};
-	camera.ray.origin = (t_point3d){0, 0, 0};
-	y = canvas.top_border;
-	while (y > canvas.bottom_border)
+	scene.objects = init_objects();
+	scene.camera.viewport = (t_viewport){1.0, 1.0, 1.0};
+	scene.camera.ray.origin = (t_point3d){0, 0, 0};
+	point.y = canvas.top_border;
+	while (point.y > canvas.bottom_border)
 	{
-		x = canvas.left_border;
-		while (x < canvas.right_border)
+		point.x = canvas.left_border;
+		while (point.x < canvas.right_border)
 		{
-			draw_pixel(&img, canvas_to_screen((t_point2d){x, y}, screen), create_trgb(0, 0, 200 - canvas.height / 5 + y / 5, 255 - canvas.height / 5 + y / 5));
-			camera.ray.direction = canvas_to_viewport((t_point2d){x, y}, canvas, camera.viewport);
-			if ((color = trace_ray(camera.ray, objects)) >= 0)
-				draw_pixel(&img, canvas_to_screen((t_point2d){x, y}, screen), color);
+			draw_pixel(&img, canvas_to_screen(point, screen), create_trgb(0, 0, 200 - canvas.height / 5 + point.y / 5, 255 - canvas.height / 5 + point.y / 5));
+			scene.camera.ray.direction = canvas_to_viewport(point, canvas, scene.camera.viewport);
+			if ((color = trace_ray(scene.camera.ray, scene.objects)) >= 0)
+				draw_pixel(&img, canvas_to_screen(point, screen), color);
 			else if (color == -2)
 				break; ///////////////////////////////////////обработка ошибки
-			x++;
+			point.x++;
 		}
-		y--;
+		point.y--;
 	}
-	ft_lstclear(&objects, delete_object);
+	ft_lstclear(&(scene.objects), delete_object);
 	return (img);
 }
 
