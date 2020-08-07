@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 03:49:04 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/07 13:34:16 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	apply_intersect(t_ray3d r, t_object obj, double *nearest_root,
 /*
 **	trace_ray function
 **	if find ray go trought object than we get it's color.
-**	if we find two object in one spote we get color of neares.	
+**	if we find two object in one spote we get color of neares.
 */
 
 int	trace_ray(t_ray3d r, t_list *objects)

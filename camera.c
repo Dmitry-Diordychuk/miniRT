@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 03:31:51 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 02:42:35 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/07 13:27:15 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,13 @@
 **	This function transform canvas point coordinates to viewport coordinates
 */
 
-t_point3d	canvas_to_viewport(t_point2d canvas_point, t_canvas canvas, t_viewport viewport)
+t_point3d	canvas_to_viewport(t_point2d canvas_point, t_canvas canvas,
+							t_viewport viewport)
 {
 	return ((t_point3d){
 		.x = canvas_point.x * (viewport.width / canvas.width) *
 						canvas.width / canvas.height,
-		.y = canvas_point.y * (viewport.height / canvas.height), 
+		.y = canvas_point.y * (viewport.height / canvas.height),
 		.z = viewport.focal_length
 		});
 }
