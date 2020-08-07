@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/04 23:36:42 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 13:33:10 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/07 17:41:04 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,10 @@ void		delete_content(const char *type, void *content)
 {
 	if (ft_strcmp("Sphere", type) == 0)
 		free((t_sphere*)content);
+	if (ft_strcmp("Light_point", type) == 0)
+		free((t_light_point*)content);
+	if (ft_strcmp("Light_directional", type) == 0)
+		free((t_light_directional*)content);
 }
 
 t_object	*create_object(const char *type, void *obj, t_color3d color)

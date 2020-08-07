@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/04 23:34:42 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 14:26:22 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/07 17:53:51 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "math.h"
 # include "sphere.h"
 # include "color.h"
+# include "light.h"
 
 typedef struct		s_object {
 	char		type[20];
