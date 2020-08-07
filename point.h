@@ -1,29 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minirt.h                                           :+:      :+:    :+:   */
+/*   point.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/05 13:44:09 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 03:08:44 by kdustin          ###   ########.fr       */
+/*   Created: 2020/08/07 03:11:41 by kdustin           #+#    #+#             */
+/*   Updated: 2020/08/07 03:12:43 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINIRT_H
-# define MINIRT_H
+#ifndef POINT_H
+# define POINT_H
 
-# include <libft.h>
-# include <math.h>
-# include "mlx.h"
-# include "color.h"
-# include "vector.h"
-# include "ray.h"
-# include "sphere.h"
-# include "object.h"
-# include "camera.h"
-# include "screen_and_canvas.h"
-# include "scene.h"
-# include "draw.h"
+typedef struct	s_point2d {
+	int	x;
+	int	y;
+}		t_point2d;
 
 #endif

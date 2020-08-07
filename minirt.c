@@ -6,27 +6,18 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 02:40:13 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/07 03:03:56 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-void	draw_pixel(t_data *data, t_point2d p, int color)
-{
-	char *dst;
-
-	dst = data->addr +
-	(p.y * data->line_length + p.x * (data->bits_per_pixel / 8));
-	*(unsigned int*)dst = color;
-}
-
 /*
-**	choose_obj_type
+**	apply intersect function choosen for sertain primitive.
 */
 
 int	apply_intersect(t_ray3d r, t_object obj, double *nearest_root,
-							t_object *nearest_obj)               //malloc
+							t_object *nearest_obj)
 {
 	double	*roots;
 
@@ -44,7 +35,9 @@ int	apply_intersect(t_ray3d r, t_object obj, double *nearest_root,
 }
 
 /*
-**	Передадим массив объектов сцены. Пока заглушка. необходимо обдумать маллок или возращать ошибку.
+**	trace_ray function
+**	if find ray go trought object than we get it's color.
+**	if we find two object in one spote we get color of neares.	
 */
 
 int	trace_ray(t_ray3d r, t_list *objects)
@@ -69,66 +62,13 @@ int	trace_ray(t_ray3d r, t_list *objects)
 	return (-1);
 }
 
-t_list	*init_objects()
-{
-	t_object	*obj;
-	t_list		*temp;
-	t_list		*objects;
-
-	if (!(obj = create_object("Sphere",
-	create_sphere((t_point3d){-10, 10, 95}, 1), (t_color3d){0, 255, 0})))
-		return (NULL);
-	if (!(objects = ft_lstnew((void*)obj)))
-	{
-		delete_object((void*)obj);
-		return (NULL);
-	}
-	if (!(obj = create_object("Sphere",
-	create_sphere((t_point3d){-10, 10, 100}, 5), (t_color3d){255, 0, 0})))
-	{
-		ft_lstclear(&objects, delete_object);
-		return (NULL);
-	}
-	if (!(temp = ft_lstnew((void*)obj)))
-	{	
-		delete_object((void*)obj);
-		ft_lstclear(&objects, delete_object);
-		return (NULL);
-	}
-	ft_lstadd_back(&objects, temp);
-	return (objects);
-}
-
-typedef struct	s_scene {
-	t_camera	camera;
-	t_list		*objects;
-}		t_scene;
-
-t_scene	init_scene(t_list *objects, t_viewport viewport, t_point3d origin)
-{
-	t_scene	scene;
-
-	scene.objects = objects;
-	scene.camera.viewport = viewport;
-	scene.camera.ray.origin = origin;
-	return (scene);
-}
-
-void	draw_background(t_data *img, t_point2d point, t_screen screen,
-								t_canvas canvas)
-{
-	draw_pixel(img, canvas_to_screen(point, screen),
-			create_trgb(0, 0, 200 - canvas.height / 5 + point.y / 5,
-					255 - canvas.height / 5 + point.y / 5));
-}
-
 int	render_return(int ret, t_list *objects)
 {
 	ft_lstclear(&objects, delete_object);
 	return (ret);
 }
 
-// Разобратся с t_data , разобратся с объектами ,  разобратся с возратом из решения уравнения , разобратся с цветами, разобратся с аспкктом 
+//                                                           разобратся с t_data, разобратся с цветами 
 int	render(t_screen screen, t_data *img)
 {
 	const t_canvas	canvas = create_canvas(screen);

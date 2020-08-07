@@ -6,17 +6,14 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 03:35:13 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 02:37:23 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/07 03:13:25 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CANVAS_H
 # define CANVAS_H
 
-typedef struct	s_point2d {
-	int	x;
-	int	y;
-}		t_point2d;
+# include "point.h"
 
 typedef struct		s_screen {
 	const int	width;

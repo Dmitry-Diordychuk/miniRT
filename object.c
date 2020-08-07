@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/04 23:36:42 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/06 16:27:49 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/07 03:00:49 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,34 @@ void		delete_object(void *item)
 	object = (t_object*)item;
 	delete_content(object->type, object->container);
 	free(object);
+}
+
+t_list	*init_objects()
+{
+	t_object	*obj;
+	t_list		*temp;
+	t_list		*objects;
+
+	if (!(obj = create_object("Sphere",
+	create_sphere((t_point3d){-10, 10, 95}, 1), (t_color3d){0, 255, 0})))
+		return (NULL);
+	if (!(objects = ft_lstnew((void*)obj)))
+	{
+		delete_object((void*)obj);
+		return (NULL);
+	}
+	if (!(obj = create_object("Sphere",
+	create_sphere((t_point3d){-10, 10, 100}, 5), (t_color3d){255, 0, 0})))
+	{
+		ft_lstclear(&objects, delete_object);
+		return (NULL);
+	}
+	if (!(temp = ft_lstnew((void*)obj)))
+	{	
+		delete_object((void*)obj);
+		ft_lstclear(&objects, delete_object);
+		return (NULL);
+	}
+	ft_lstadd_back(&objects, temp);
+	return (objects);
 }

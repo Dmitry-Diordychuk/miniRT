@@ -1,29 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minirt.h                                           :+:      :+:    :+:   */
+/*   scene.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/05 13:44:09 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 03:08:44 by kdustin          ###   ########.fr       */
+/*   Created: 2020/08/07 02:50:11 by kdustin           #+#    #+#             */
+/*   Updated: 2020/08/07 02:50:28 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINIRT_H
-# define MINIRT_H
+#include "scene.h"
 
-# include <libft.h>
-# include <math.h>
-# include "mlx.h"
-# include "color.h"
-# include "vector.h"
-# include "ray.h"
-# include "sphere.h"
-# include "object.h"
-# include "camera.h"
-# include "screen_and_canvas.h"
-# include "scene.h"
-# include "draw.h"
+t_scene	init_scene(t_list *objects, t_viewport viewport, t_point3d origin)
+{
+	t_scene	scene;
 
-#endif
+	scene.objects = objects;
+	scene.camera.viewport = viewport;
+	scene.camera.ray.origin = origin;
+	return (scene);
+}
