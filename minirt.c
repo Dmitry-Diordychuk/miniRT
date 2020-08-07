@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 03:03:56 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/07 03:49:04 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	render_return(int ret, t_list *objects)
 	return (ret);
 }
 
-//                                                           разобратся с t_data, разобратся с цветами 
+                                                                                //  разобратся с t_data, разобратся с цветами 
 int	render(t_screen screen, t_data *img)
 {
 	const t_canvas	canvas = create_canvas(screen);

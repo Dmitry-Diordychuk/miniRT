@@ -6,12 +6,12 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 03:35:13 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 03:13:25 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/07 03:39:29 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CANVAS_H
-# define CANVAS_H
+#ifndef SCREEN_AND_CANVAS_H
+# define SCREEN_AND_CANVAS_H
 
 # include "point.h"
 
@@ -29,7 +29,9 @@ typedef struct		s_canvas {
 	const int	height;
 }			t_canvas;
 
-t_canvas	create_canvas(t_screen screen);
-t_point2d	canvas_to_screen(t_point2d canvas_point, t_screen screen);
+t_canvas		create_canvas(t_screen screen);
+t_point2d		canvas_to_screen(t_point2d canvas_point,
+							t_screen screen);
 
 #endif
+

@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/03 20:09:25 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/05 22:31:55 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/07 03:41:00 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 
 # include "object.h"
 
-typedef struct		s_sphere {
+typedef struct		s_sphere
+{
 	t_vector3d	position;
 	double		radius;
 }			t_sphere;

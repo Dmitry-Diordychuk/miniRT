@@ -6,13 +6,13 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/04 23:36:42 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 03:00:49 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/07 03:52:48 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "object.h"
 
-void	delete_content(const char *type, void *content)
+void		delete_content(const char *type, void *content)
 {
 	if (ft_strcmp("Sphere", type) == 0)
 		free((t_sphere*)content);
@@ -23,7 +23,7 @@ t_object	*create_object(const char *type, void *obj, t_color3d color)
 	t_object *object;
 
 	if (obj == NULL)
-		return (NULL);	
+		return (NULL);
 	if (!(object = (t_object*)malloc(sizeof(t_object))))
 	{
 		delete_content(type, obj);
@@ -33,7 +33,7 @@ t_object	*create_object(const char *type, void *obj, t_color3d color)
 	object->container = obj;
 	if (ft_strcmp("Sphere", type) == 0)
 		object->intersect_function = intersect_sphere;
-	object->color = color;	
+	object->color = color;
 	return (object);
 }
 
@@ -46,7 +46,7 @@ void		delete_object(void *item)
 	free(object);
 }
 
-t_list	*init_objects()
+t_list		*init_objects(void)
 {
 	t_object	*obj;
 	t_list		*temp;
@@ -67,7 +67,7 @@ t_list	*init_objects()
 		return (NULL);
 	}
 	if (!(temp = ft_lstnew((void*)obj)))
-	{	
+	{
 		delete_object((void*)obj);
 		ft_lstclear(&objects, delete_object);
 		return (NULL);
@@ -75,3 +75,4 @@ t_list	*init_objects()
 	ft_lstadd_back(&objects, temp);
 	return (objects);
 }
+
