@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 13:44:09 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 03:08:44 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/07 14:25:17 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,6 @@
 # include "screen_and_canvas.h"
 # include "scene.h"
 # include "draw.h"
+# include "light.h"
 
 #endif

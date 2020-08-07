@@ -6,11 +6,22 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 13:34:16 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/07 16:15:29 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
+
+//double	calculate_diffuse_reflection(double enviroment_brightness, t_list *lights)
+//{
+//	double	point_brightness;
+//
+//	point_brightness = enviroment_brightness;
+//	while (lights != NULL)
+//	{
+//		
+//	}	
+//}
 
 /*
 **	apply intersect function choosen for sertain primitive.
@@ -76,8 +87,9 @@ int	render(t_screen screen, t_data *img)
 	t_point2d	point;
 	int		color;
 
-	scene = init_scene(init_objects(), (t_viewport){1, 1, 1},
-							(t_point3d){0, 0, 0});
+	t_list	*lights;
+	scene = init_scene(init_objects(), lights, (t_light_environment){0.2},
+				(t_viewport){1, 1, 1}, (t_point3d){0, 0, 0});
 	point.y = canvas.top_border + 1;
 	while (--point.y > canvas.bottom_border)
 	{
@@ -104,7 +116,7 @@ int	main(void)
 	void		*mlx;
 	void		*mlx_win;
 	t_data		img;
-	
+
 	mlx = mlx_init();
 	mlx_win = mlx_new_window(mlx, screen.width, screen.height, "MLX!");
 	img.img = mlx_new_image(mlx, screen.width, screen.height);
@@ -116,3 +128,4 @@ int	main(void)
 	mlx_loop(mlx);
 	return (0);
 }
+
