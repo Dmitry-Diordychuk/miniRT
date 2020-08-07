@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 14:23:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 14:25:01 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/07 16:33:00 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,11 @@ typedef struct		s_light_environment
 {
 	double		brightness;
 }			t_light_environment;
+
+t_light_point		*create_light_point(t_point3d position,
+							double brightness);
+
+t_light_directional	*create_light_directional(t_vector3d direction,
+							double brightness);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 16:15:29 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/07 16:31:44 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,14 @@ int	render(t_screen screen, t_data *img)
 		}
 	}
 	return (render_return(0, scene.objects));
+}
+
+
+
+t_list	*init_lights()
+{
+	t_list	*lights;
+
 }
 
 int	main(void)
