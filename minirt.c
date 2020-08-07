@@ -6,22 +6,41 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 17:53:15 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/07 19:32:58 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-//double	calculate_diffuse_reflection(double enviroment_brightness, t_list *lights)
-//{
-//	double	point_brightness;
-//
-//	point_brightness = enviroment_brightness;
-//	while (lights != NULL)
-//	{
-//		
-//	}	
-//}
+double	calculate_diffuse_reflection(t_point3d point, t_vector3d norm, t_light_environment env, t_list *lights)
+{
+	double			temp;
+	double			point_brightness;
+	t_object		*light;
+	t_light_point		light_p;
+	t_light_directional	light_d;
+
+	point_brightness = env.brightness;
+	while (lights != NULL)
+	{
+		light = (t_object*)lights->content;
+		if (ft_strcmp(light->type, "Light_directional"))
+		{
+			light_d = *(t_light_directional*)light->container;
+		}
+		else if (ft_strcmp(light->type, "Light_point"))
+		{
+			light_p = *(t_light_point*)light->container;
+			light_d.direction = minus_vec(light_p.position, point);
+			light_d.brightness = light_p.brightness;
+		}
+		if ((temp =
+		(light_d.brightness * dot_vec(norm, light_d.direction)) /
+		(module_vec(norm) * module_vec(light_d.direction))) > 0)
+			point_brightness += temp;
+	}
+	return (point_brightness);
+}
 
 /*
 **	apply intersect function choosen for sertain primitive.
