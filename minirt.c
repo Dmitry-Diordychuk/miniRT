@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 19:32:58 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/08 03:32:41 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,19 +76,26 @@ int	trace_ray(t_ray3d r, t_list *objects)
 	t_object	obj;
 	t_object	nearest_obj;
 	double		nearest_root;
+	t_point3d	point;
+	t_vector3d	norm;
 
 	nearest_root = -1;
 	while (objects != NULL)
 	{
 		obj = *(t_object*)(objects->content);
-		if (apply_intersect(r, obj, &nearest_root, &nearest_obj)
-									< 0)
+		if (apply_intersect(r, obj, &nearest_root, &nearest_obj) < 0)
 			return (-2);
+
 		objects = objects->next;
 	}
 	if (nearest_root != -1)
+	{
+		point = ray_param_func(r, nearest_root);
+		norm = unit_vec(minus_vec(((t_sphere*)(nearest_obj.container))->position, point));	//считаем для сферы нужно обобщить
+		//calculate_diffuse_reflection(point, norm, );
 		return (create_trgb(0, nearest_obj.color.x, nearest_obj.color.y,
 							nearest_obj.color.z));
+	}
 	return (-1);
 }
 
@@ -103,7 +110,7 @@ t_list	*init_lights()
 	t_list			*lights;
 	t_list			*temp;
 	t_object		*object;
-	
+
 	if (!(object = create_object("Light_point", create_light_point((t_point3d){5, 5, 5}, 0.6), (t_color3d){255, 255, 255})))
 		return (NULL);
 	if (!(lights = ft_lstnew(object)))
@@ -129,13 +136,13 @@ t_list	*init_lights()
 int	render(t_screen screen, t_data *img)
 {
 	const t_canvas	canvas = create_canvas(screen);
-	t_scene		scene;
-	t_point2d	point;
-	int		color;
+	t_scene			scene;
+	t_point2d		point;
+	int				color;
 
 	t_list	*lights;
-	scene = init_scene(init_objects(), init_lights(), (t_light_environment){0.2},
-				(t_viewport){1, 1, 1}, (t_point3d){0, 0, 0});
+	scene = init_scene(init_objects(), init_lights(),
+	(t_light_environment){0.2}, (t_viewport){1, 1, 1}, (t_point3d){0, 0, 0});
 	point.y = canvas.top_border + 1;
 	while (--point.y > canvas.bottom_border)
 	{
@@ -143,12 +150,10 @@ int	render(t_screen screen, t_data *img)
 		while (++point.x < canvas.right_border)
 		{
 			draw_background(img, point, screen, canvas);
-			scene.camera.ray.direction = canvas_to_viewport(point,
-						canvas, scene.camera.viewport);
-			if ((color = trace_ray(scene.camera.ray, scene.objects))
-									>= 0)
-				draw_pixel(img, canvas_to_screen(point, screen),
-									color);
+			scene.camera.ray.direction = canvas_to_viewport(point, canvas,
+														scene.camera.viewport);
+			if ((color = trace_ray(scene.camera.ray, scene.objects)) >= 0)
+				draw_pixel(img, canvas_to_screen(point, screen), color);
 			else if (color == -2)
 				return (render_return(-2, scene.objects));
 		}
@@ -158,7 +163,7 @@ int	render(t_screen screen, t_data *img)
 
 int	main(void)
 {
-	const t_screen	screen = (t_screen){800, 600};	
+	const t_screen	screen = (t_screen){800, 600};
 	void		*mlx;
 	void		*mlx_win;
 	t_data		img;
@@ -167,7 +172,7 @@ int	main(void)
 	mlx_win = mlx_new_window(mlx, screen.width, screen.height, "MLX!");
 	img.img = mlx_new_image(mlx, screen.width, screen.height);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel,
-						&img.line_length, &img.endian);	
+						&img.line_length, &img.endian);
 	if (render(screen, &img) < 0)
 		return (-1);
 	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);

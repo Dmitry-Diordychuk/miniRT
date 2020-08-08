@@ -13,7 +13,7 @@
 all:
 	make bonus -C ./libft/
 	make -C ./minilibx_opengl_20191021/
-	$(CC) -g -O0 minirt.c color.c vector.c sphere.c object.c camera.c screen_and_canvas.c scene.c draw.c light.c -L./libft/ -lft -L./minilibx_opengl_20191021 -lmlx -I./libft/ -I./minilibx_opengl_20191021 -framework OpenGL -framework AppKit
+	$(CC) -g -O0 minirt.c color.c vector.c sphere.c object.c camera.c screen_and_canvas.c scene.c draw.c light.c ray.c -L./libft/ -lft -L./minilibx_opengl_20191021 -lmlx -I./libft/ -I./minilibx_opengl_20191021 -framework OpenGL -framework AppKit
 
 clean:
 	make clean -C ./libft/
