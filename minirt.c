@@ -14,9 +14,9 @@
 
 double	calculate_diffuse_reflection(t_point3d point, t_vector3d norm, t_light_environment env, t_list *lights)
 {
-	double			temp;
-	double			point_brightness;
-	t_object		*light;
+	double				temp;
+	double				point_brightness;
+	t_object			*light;
 	t_light_point		light_p;
 	t_light_directional	light_d;
 
@@ -38,12 +38,13 @@ double	calculate_diffuse_reflection(t_point3d point, t_vector3d norm, t_light_en
 		(light_d.brightness * dot_vec(norm, light_d.direction)) /
 		(module_vec(norm) * module_vec(light_d.direction))) > 0)
 			point_brightness += temp;
+		lights = lights->next;
 	}
 	return (point_brightness);
 }
 
 /*
-**	apply intersect function choosen for sertain primitive.
+**	apply intersect function choosen for certain primitive.
 */
 
 int	apply_intersect(t_ray3d r, t_object obj, double *nearest_root,
@@ -55,7 +56,7 @@ int	apply_intersect(t_ray3d r, t_object obj, double *nearest_root,
 		return (-1);
 	if ((roots[0] > -1 || roots[1] > -1) &&
 	(*nearest_root == -1 || (roots[0] < *nearest_root || roots[1] <
-								*nearest_root)))
+																*nearest_root)))
 	{
 		*nearest_obj = obj;
 		*nearest_root = roots[0] < roots[1] ? roots[0] : roots[1];
@@ -70,7 +71,7 @@ int	apply_intersect(t_ray3d r, t_object obj, double *nearest_root,
 **	if we find two object in one spote we get color of neares.
 */
 
-int	trace_ray(t_ray3d r, t_list *objects)
+int	trace_ray(t_ray3d r, t_list *objects, t_light_environment env, t_list *lights)
 {
 	double		*crossing_point;
 	t_object	obj;
@@ -78,6 +79,7 @@ int	trace_ray(t_ray3d r, t_list *objects)
 	double		nearest_root;
 	t_point3d	point;
 	t_vector3d	norm;
+	double		reflection_result;
 
 	nearest_root = -1;
 	while (objects != NULL)
@@ -92,7 +94,7 @@ int	trace_ray(t_ray3d r, t_list *objects)
 	{
 		point = ray_param_func(r, nearest_root);
 		norm = unit_vec(minus_vec(((t_sphere*)(nearest_obj.container))->position, point));	//считаем для сферы нужно обобщить
-		//calculate_diffuse_reflection(point, norm, );
+		reflection_result = calculate_diffuse_reflection(point, norm, env, lights);
 		return (create_trgb(0, nearest_obj.color.x, nearest_obj.color.y,
 							nearest_obj.color.z));
 	}
@@ -136,13 +138,13 @@ t_list	*init_lights()
 int	render(t_screen screen, t_data *img)
 {
 	const t_canvas	canvas = create_canvas(screen);
-	t_scene			scene;
-	t_point2d		point;
-	int				color;
+	t_scene		scene;
+	t_point2d	point;
+	int		color;
 
 	t_list	*lights;
-	scene = init_scene(init_objects(), init_lights(),
-	(t_light_environment){0.2}, (t_viewport){1, 1, 1}, (t_point3d){0, 0, 0});
+	scene = init_scene(init_objects(), init_lights(), (t_light_environment){0.2},
+				(t_viewport){1, 1, 1}, (t_point3d){0, 0, 0});
 	point.y = canvas.top_border + 1;
 	while (--point.y > canvas.bottom_border)
 	{
@@ -150,10 +152,12 @@ int	render(t_screen screen, t_data *img)
 		while (++point.x < canvas.right_border)
 		{
 			draw_background(img, point, screen, canvas);
-			scene.camera.ray.direction = canvas_to_viewport(point, canvas,
-														scene.camera.viewport);
-			if ((color = trace_ray(scene.camera.ray, scene.objects)) >= 0)
-				draw_pixel(img, canvas_to_screen(point, screen), color);
+			scene.camera.ray.direction = canvas_to_viewport(point,
+						canvas, scene.camera.viewport);
+			if ((color = trace_ray(scene.camera.ray, scene.objects, scene.environment_light, scene.lights))
+									>= 0)
+				draw_pixel(img, canvas_to_screen(point, screen),
+									color);
 			else if (color == -2)
 				return (render_return(-2, scene.objects));
 		}
