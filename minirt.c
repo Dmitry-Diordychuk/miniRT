@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/10 15:54:45 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/10 16:13:16 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,18 @@ int	apply_intersect(t_ray3d r, t_object obj, double *nearest_root,
 	return (0);
 }
 
+double	calculate_reflection(t_light_environment env, t_list *lights, double nearest_root, t_object nearest_obj, t_ray3d r)
+{
+	t_point3d	point;
+	t_vector3d	norm;
+	double		reflection_result;
+
+	point = ray_param_func(r, nearest_root);
+	norm = unit_vec(minus_vec(point, ((t_sphere*)(nearest_obj.container))->position));	//считаем для сферы нужно обобщить
+	reflection_result = calculate_diffuse_reflection(point, norm, env, lights);
+	return (reflection_result);
+}
+
 /*
 **	trace_ray function
 **	if find ray go trought object than we get it's color.
@@ -48,9 +60,6 @@ int	trace_ray(t_ray3d r, t_list *objects, t_light_environment env, t_list *light
 	t_object	obj;
 	t_object	nearest_obj;
 	double		nearest_root;
-	t_point3d	point;
-	t_vector3d	norm;
-	double		reflection_result;
 
 	nearest_root = -1;
 	while (objects != NULL)
@@ -63,10 +72,9 @@ int	trace_ray(t_ray3d r, t_list *objects, t_light_environment env, t_list *light
 	}
 	if (nearest_root != -1)
 	{
-		point = ray_param_func(r, nearest_root);
-		norm = unit_vec(minus_vec(point, ((t_sphere*)(nearest_obj.container))->position));	//считаем для сферы нужно обобщить
-		reflection_result = calculate_diffuse_reflection(point, norm, env, lights);
-		return (color3d_to_trgb(mul_vec_scalar(nearest_obj.color, reflection_result)));
+		return (color3d_to_trgb(mul_vec_scalar(nearest_obj.color, 
+			calculate_reflection(env, lights, nearest_root,
+							nearest_obj, r))));
 	}
 	return (-1);
 }
