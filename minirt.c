@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/10 16:13:16 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/11 00:39:45 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,17 @@ int	apply_intersect(t_ray3d r, t_object obj, double *nearest_root,
 	return (0);
 }
 
-double	calculate_reflection(t_light_environment env, t_list *lights, double nearest_root, t_object nearest_obj, t_ray3d r)
+double	calculate_reflection(t_scene scene, double nearest_root, t_object nearest_obj)
 {
 	t_point3d	point;
 	t_vector3d	norm;
 	double		reflection_result;
 
-	point = ray_param_func(r, nearest_root);
-	norm = unit_vec(minus_vec(point, ((t_sphere*)(nearest_obj.container))->position));	//считаем для сферы нужно обобщить
-	reflection_result = calculate_diffuse_reflection(point, norm, env, lights);
+	point = ray_param_func(scene.camera.ray, nearest_root);
+	norm = unit_vec(minus_vec(point, ((t_sphere*)(nearest_obj.container))->
+								position));	//считаем для сферы нужно обобщить
+	reflection_result = calculate_diffuse_reflection(point, norm,
+					scene.environment_light, scene.lights);
 	return (reflection_result);
 }
 
@@ -54,7 +56,7 @@ double	calculate_reflection(t_light_environment env, t_list *lights, double near
 **	if we find two object in one spote we get color of neares.
 */
 
-int	trace_ray(t_ray3d r, t_list *objects, t_light_environment env, t_list *lights)
+int	trace_ray(t_scene scene)//t_ray3d r, t_list *objects, t_light_environment env, t_list *lights)
 {
 	double		*crossing_point;
 	t_object	obj;
@@ -62,19 +64,18 @@ int	trace_ray(t_ray3d r, t_list *objects, t_light_environment env, t_list *light
 	double		nearest_root;
 
 	nearest_root = -1;
-	while (objects != NULL)
+	while (scene.objects != NULL)
 	{
-		obj = *(t_object*)(objects->content);
-		if (apply_intersect(r, obj, &nearest_root, &nearest_obj) < 0)
+		obj = *(t_object*)(scene.objects->content);
+		if (apply_intersect(scene.camera.ray, obj, &nearest_root, &nearest_obj) < 0)
 			return (-2);
 
-		objects = objects->next;
+		scene.objects = scene.objects->next;
 	}
 	if (nearest_root != -1)
 	{
 		return (color3d_to_trgb(mul_vec_scalar(nearest_obj.color, 
-			calculate_reflection(env, lights, nearest_root,
-							nearest_obj, r))));
+		calculate_reflection(scene, nearest_root, nearest_obj))));
 	}
 	return (-1);
 }
@@ -104,8 +105,7 @@ int	render(t_screen screen, t_data *img)
 			draw_background(img, point, screen, canvas);
 			scene.camera.ray.direction = canvas_to_viewport(point,
 						canvas, scene.camera.viewport);
-			if ((color = trace_ray(scene.camera.ray, scene.objects, scene.environment_light, scene.lights))
-									>= 0)
+			if ((color = trace_ray(scene)) >= 0)
 				draw_pixel(img, canvas_to_screen(point, screen), color);
 			else if (color == -2)
 				return (render_return(-2, scene.objects));
