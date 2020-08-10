@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/11 00:39:45 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/11 01:06:26 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,20 +34,6 @@ int	apply_intersect(t_ray3d r, t_object obj, double *nearest_root,
 	}
 	free(roots);
 	return (0);
-}
-
-double	calculate_reflection(t_scene scene, double nearest_root, t_object nearest_obj)
-{
-	t_point3d	point;
-	t_vector3d	norm;
-	double		reflection_result;
-
-	point = ray_param_func(scene.camera.ray, nearest_root);
-	norm = unit_vec(minus_vec(point, ((t_sphere*)(nearest_obj.container))->
-								position));	//считаем для сферы нужно обобщить
-	reflection_result = calculate_diffuse_reflection(point, norm,
-					scene.environment_light, scene.lights);
-	return (reflection_result);
 }
 
 /*

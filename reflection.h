@@ -1,31 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minirt.h                                           :+:      :+:    :+:   */
+/*   reflection.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/05 13:44:09 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/11 01:07:51 by kdustin          ###   ########.fr       */
+/*   Created: 2020/08/11 01:04:56 by kdustin           #+#    #+#             */
+/*   Updated: 2020/08/11 01:11:37 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINIRT_H
-# define MINIRT_H
+#ifndef REFLECTION_H
+# define REFLECTION_H
 
-# include <libft.h>
-# include <math.h>
-# include "mlx.h"
-# include "color.h"
-# include "vector.h"
-# include "ray.h"
-# include "sphere.h"
-# include "object.h"
-# include "camera.h"
-# include "screen_and_canvas.h"
 # include "scene.h"
-# include "draw.h"
-# include "light.h"
-# include "reflection.h"
+
+double	calculate_reflection(t_scene scene, double nearest_root,
+							t_object nearest_obj);
+
+double			calculate_diffuse_reflection(t_point3d point,
+				t_vector3d norm, t_light_environment env,
+								t_list *lights);
 
 #endif
