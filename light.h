@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 14:23:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/10 15:52:15 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/10 15:55:58 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,8 @@ void			*create_light_point(t_point3d position,
 							double brightness);
 void			*create_light_directional(t_vector3d direction,
 							double brightness);
+double			calculate_diffuse_reflection(t_point3d point,
+				t_vector3d norm, t_light_environment env,
+								t_list *lights);
 
 #endif
