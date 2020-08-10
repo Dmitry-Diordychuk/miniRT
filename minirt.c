@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/08 03:32:41 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/10 15:50:07 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,11 @@ double	calculate_diffuse_reflection(t_point3d point, t_vector3d norm, t_light_en
 	while (lights != NULL)
 	{
 		light = (t_object*)lights->content;
-		if (ft_strcmp(light->type, "Light_directional"))
+		if (ft_strcmp(light->type, "Light_directional") == 0)
 		{
 			light_d = *(t_light_directional*)light->container;
 		}
-		else if (ft_strcmp(light->type, "Light_point"))
+		else if (ft_strcmp(light->type, "Light_point") == 0)
 		{
 			light_p = *(t_light_point*)light->container;
 			light_d.direction = minus_vec(light_p.position, point);
@@ -93,10 +93,9 @@ int	trace_ray(t_ray3d r, t_list *objects, t_light_environment env, t_list *light
 	if (nearest_root != -1)
 	{
 		point = ray_param_func(r, nearest_root);
-		norm = unit_vec(minus_vec(((t_sphere*)(nearest_obj.container))->position, point));	//считаем для сферы нужно обобщить
+		norm = unit_vec(minus_vec(point, ((t_sphere*)(nearest_obj.container))->position));	//считаем для сферы нужно обобщить
 		reflection_result = calculate_diffuse_reflection(point, norm, env, lights);
-		return (create_trgb(0, nearest_obj.color.x, nearest_obj.color.y,
-							nearest_obj.color.z));
+		return (color3d_to_trgb(mul_vec_scalar(nearest_obj.color, reflection_result)));
 	}
 	return (-1);
 }
@@ -107,33 +106,7 @@ int	render_return(int ret, t_list *objects)
 	return (ret);
 }
 
-t_list	*init_lights()
-{
-	t_list			*lights;
-	t_list			*temp;
-	t_object		*object;
 
-	if (!(object = create_object("Light_point", create_light_point((t_point3d){5, 5, 5}, 0.6), (t_color3d){255, 255, 255})))
-		return (NULL);
-	if (!(lights = ft_lstnew(object)))
-	{
-		delete_object(object);
-		return (NULL);
-	}
-	if (!(object = create_object("Light_directional", create_light_directional((t_vector3d){1, 4, 4}, 0.2), (t_color3d){255, 255, 255})))
-	{
-		ft_lstclear(&lights, delete_object);
-		return (NULL);
-	}
-	if (!(temp = ft_lstnew(object)))
-	{
-		delete_object(object);
-		ft_lstclear(&lights, delete_object);
-		return (NULL);
-	}
-	ft_lstadd_back(&lights, temp);
-	return (lights);
-}
                                                                                 //  разобратся с t_data, разобратся с цветами  initobj initlight malloc
 int	render(t_screen screen, t_data *img)
 {
@@ -156,8 +129,7 @@ int	render(t_screen screen, t_data *img)
 						canvas, scene.camera.viewport);
 			if ((color = trace_ray(scene.camera.ray, scene.objects, scene.environment_light, scene.lights))
 									>= 0)
-				draw_pixel(img, canvas_to_screen(point, screen),
-									color);
+				draw_pixel(img, canvas_to_screen(point, screen), color);
 			else if (color == -2)
 				return (render_return(-2, scene.objects));
 		}

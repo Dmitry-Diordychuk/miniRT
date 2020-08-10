@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 14:23:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 17:55:24 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/10 15:52:15 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "libft.h"
 # include "vector.h"
+# include "object.h"
 
 typedef struct		s_light_point
 {
@@ -33,9 +34,9 @@ typedef struct		s_light_environment
 	double		brightness;
 }			t_light_environment;
 
+t_list			*init_lights();
 void			*create_light_point(t_point3d position,
 							double brightness);
-
 void			*create_light_directional(t_vector3d direction,
 							double brightness);
 

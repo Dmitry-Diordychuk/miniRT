@@ -17,6 +17,7 @@
 
 typedef t_point3d	t_color3d;
 
+int			color3d_to_trgb(t_color3d color);
 int			create_trgb(int t, int r, int g, int b);
 int			get_t(unsigned int trgb);
 int			get_r(unsigned int trgb);

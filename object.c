@@ -57,7 +57,7 @@ t_list		*init_objects(void)
 	t_list		*objects;
 
 	if (!(obj = create_object("Sphere",
-	create_sphere((t_point3d){-10, 10, 95}, 1), (t_color3d){0, 255, 0})))
+	create_sphere((t_point3d){0, -1, 3}, 1), (t_color3d){0, 255, 0})))
 		return (NULL);
 	if (!(objects = ft_lstnew((void*)obj)))
 	{
@@ -65,7 +65,7 @@ t_list		*init_objects(void)
 		return (NULL);
 	}
 	if (!(obj = create_object("Sphere",
-	create_sphere((t_point3d){-10, 10, 100}, 5), (t_color3d){255, 0, 0})))
+	create_sphere((t_point3d){2, 0, 4}, 1), (t_color3d){255, 0, 0})))
 	{
 		ft_lstclear(&objects, delete_object);
 		return (NULL);

@@ -14,5 +14,5 @@
 
 t_point3d	ray_param_func(t_ray3d r, double t)
 {
-	return ((t_point3d)minus_vec(r.origin, mul_vec_scalar(r.direction, t)));
+	return ((t_point3d)sum_vec(r.origin, mul_vec_scalar(r.direction, t)));
 }
