@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 17:10:22 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/01 20:42:56 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/11 18:37:34 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	color3d_to_trgb(t_color3d color)
 	t = 0;
 
 	if (color.x > 255)
-			color.x = 255;
+		color.x = 255;
 	else if (color.x < 0)
 		color.x = 0;
 	if (color.y > 255)

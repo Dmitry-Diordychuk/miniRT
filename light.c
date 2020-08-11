@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 16:31:50 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/11 01:10:27 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/11 19:00:07 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ t_list	*init_lights()
 	t_object		*object;
 
 	if (!(object = create_object("Light_point",
-			create_light_point((t_point3d){2, 2, 4}, 0.2),
-						(t_color3d){255, 255, 255})))
+			create_light_point((t_point3d){2, 1, 0}, 0.6),
+						(t_color3d){255, 255, 255}, 0)))
 		return (NULL);
 	if (!(lights = ft_lstnew(object)))
 	{
@@ -28,8 +28,8 @@ t_list	*init_lights()
 		return (NULL);
 	}
 	if (!(object = create_object("Light_directional",
-			create_light_directional((t_vector3d){1, 4, 4}, 0.6),
-						(t_color3d){255, 255, 255})))
+			create_light_directional((t_vector3d){1, 4, 4}, 0.2),
+						(t_color3d){255, 255, 255}, 0)))
 	{
 		ft_lstclear(&lights, delete_object);
 		return (NULL);
@@ -64,7 +64,7 @@ void	*create_light_directional(t_vector3d direction,
 	if (!(new_light_directional =
 			(t_light_directional*)malloc(sizeof(t_light_directional))))
 		return (NULL);
-	new_light_directional->direction = mul_vec_scalar(direction, -1);
+	new_light_directional->direction = direction;
 	new_light_directional->brightness = brightness;
 	return ((void*)new_light_directional);
 }

@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/04 23:34:42 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 17:53:51 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/11 16:47:27 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,12 @@ typedef struct		s_object {
 	void		*container;
 	double		*(*intersect_function)(t_ray3d ray, void* object);
 	t_color3d	color;
+	double		specular;
 }			t_object;
 
 void			delete_content(const char *type, void *content);
 t_object		*create_object(const char *type, void *obj,
-							t_color3d color);
+							t_color3d color, double specular);
 void			delete_object(void *object);
 t_list			*init_objects();
 

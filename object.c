@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/04 23:36:42 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 17:41:04 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/11 18:57:57 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void		delete_content(const char *type, void *content)
 		free((t_light_directional*)content);
 }
 
-t_object	*create_object(const char *type, void *obj, t_color3d color)
+t_object	*create_object(const char *type, void *obj, t_color3d color, double specular)
 {
 	t_object *object;
 
@@ -38,6 +38,7 @@ t_object	*create_object(const char *type, void *obj, t_color3d color)
 	if (ft_strcmp("Sphere", type) == 0)
 		object->intersect_function = intersect_sphere;
 	object->color = color;
+	object->specular = specular;
 	return (object);
 }
 
@@ -57,7 +58,7 @@ t_list		*init_objects(void)
 	t_list		*objects;
 
 	if (!(obj = create_object("Sphere",
-	create_sphere((t_point3d){0, -1, 3}, 1), (t_color3d){0, 255, 0})))
+	create_sphere((t_point3d){0, -1, 3}, 1), (t_color3d){255, 0, 0}, 500)))
 		return (NULL);
 	if (!(objects = ft_lstnew((void*)obj)))
 	{
@@ -65,7 +66,7 @@ t_list		*init_objects(void)
 		return (NULL);
 	}
 	if (!(obj = create_object("Sphere",
-	create_sphere((t_point3d){2, 0, 4}, 1), (t_color3d){255, 0, 0})))
+	create_sphere((t_point3d){-2, 1, 3}, 1), (t_color3d){0, 0, 255}, 500)))
 	{
 		ft_lstclear(&objects, delete_object);
 		return (NULL);
