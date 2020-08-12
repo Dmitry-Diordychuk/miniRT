@@ -6,31 +6,37 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/11 01:05:50 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/12 13:18:58 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/12 13:35:36 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "reflection.h"
 
-typedef	struct			s_reflection_data
-{
-		t_point3d		point;
-		t_vector3d		normal;
-		t_light_directional	light;
-		double			specular;
-}					t_reflection_data;
-
-double	specular(t_scene scene, t_reflection_data data)
+double	reflect_specular(t_scene scene, t_reflection_data data)
 {
 	double		temp;
 	t_vector3d	v;
 	t_vector3d	r;
 
 	v = minus_vec(scene.camera.ray.origin, data.point);
-	r = minus_vec(mul_vec_scalar(mul_vec_scalar(data.normal, 2), dot_vec(data.normal, data.light.direction)), data.light.direction);
+	r = minus_vec(mul_vec_scalar(mul_vec_scalar(data.normal, 2),
+	dot_vec(data.normal, data.light.direction)), data.light.direction);
 	if ((temp = dot_vec(r, v)) > 0)
-		return (data.light.brightness * pow(temp / (module_vec(r) * module_vec(v)), data.specular));
+		return (data.light.brightness *
+		pow(temp / (module_vec(r) * module_vec(v)), data.specular));
 	return (0);
+}
+
+double	reflect_diffusion(t_scene scene, t_reflection_data data)
+{
+	double	result;
+	double	temp;
+
+	if ((temp =
+	(data.light.brightness * dot_vec(data.normal, data.light.direction)) /
+	(module_vec(data.normal) * module_vec(data.light.direction))) > 0)
+		result += temp;
+	return (result);
 }
 
 double	calculate_diffusion_specular(t_scene scene, t_reflection_data data)
@@ -48,17 +54,14 @@ double	calculate_diffusion_specular(t_scene scene, t_reflection_data data)
 		else if (ft_strcmp(light->type, "Light_point") == 0)
 		{
 			data.light.direction = minus_vec(((t_light_point*)light
-						->container)->position, data.point);
-			data.light.brightness = ((t_light_point*)light->container)
-								->brightness;
+					->container)->position, data.point);
+			data.light.brightness = ((t_light_point*)light->
+					container)->brightness;
 		}
-		if ((temp =
-		(data.light.brightness * dot_vec(data.normal, data.light.direction)) /
-		(module_vec(data.normal) * module_vec(data.light.direction))) > 0)
-			point_brightness += temp;
+		point_brightness += reflect_diffusion(scene, data);
 		if (data.specular >= 0)
 		{
-			point_brightness += specular(scene, data);
+			point_brightness += reflect_specular(scene, data);
 		}
 		scene.lights = (scene.lights)->next;
 	}
@@ -72,8 +75,8 @@ double	calculate_reflection(t_scene scene, double nearest_root,
 	double			reflection_result;
 
 	data.point = ray_param_func(scene.camera.ray, nearest_root);
-	data.normal = unit_vec(minus_vec(data.point, ((t_sphere*)(nearest_obj.container))->
-								position));	//считаем для сферы нужно обобщить
+	data.normal = unit_vec(minus_vec(data.point, 
+			((t_sphere*)(nearest_obj.container))->position));	//считаем для сферы нужно обобщить
 	data.specular = nearest_obj.specular;
 	reflection_result = calculate_diffusion_specular(scene, data);	
 	return (reflection_result);
