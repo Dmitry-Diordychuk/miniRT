@@ -13,7 +13,7 @@
 #ifndef OBJECT_H
 # define OBJECT_H
 
-# include "libft.h"
+# include "libft/libft.h"
 # include "ray.h"
 # include "math.h"
 # include "sphere.h"

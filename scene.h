@@ -14,7 +14,7 @@
 # define SCENE_H
 
 # include "camera.h"
-# include "libft.h"
+# include "libft/libft.h"
 # include "light.h"
 
 typedef struct		s_scene

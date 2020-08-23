@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sphere.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/03 20:11:31 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 13:32:14 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/22 19:49:29 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,12 +55,10 @@ double	*intersect_sphere(t_ray3d r, void *obj)
 	k[2] = dot_vec(oc, oc) - s.radius * s.radius;
 	k[3] = (-1.0 / 2.0) * (k[1] + sgn(k[1]) *
 					sqrt(k[1] * k[1] - 4.0 * k[0] * k[2]));
-	if (!(x = malloc(sizeof(int) * 2)))
+	if (!(x = malloc(sizeof(double) * 2)))
 	{
 		return (NULL);
 	}
-	x[0] = -1;
-	x[1] = -1;
 	x[0] = k[3] / k[0];
 	x[1] = k[2] / k[3];
 	return (x);

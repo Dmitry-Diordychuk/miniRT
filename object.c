@@ -6,7 +6,7 @@
 /*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/04 23:36:42 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/11 18:57:57 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/20 02:45:26 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ t_list		*init_objects(void)
 		return (NULL);
 	}
 	if (!(obj = create_object("Sphere",
-	create_sphere((t_point3d){-2, 1, 3}, 1), (t_color3d){0, 0, 255}, 500)))
+	create_sphere((t_point3d){0, -5001, 0}, 5000), (t_color3d){255, 255, 0}, 1000)))
 	{
 		ft_lstclear(&objects, delete_object);
 		return (NULL);

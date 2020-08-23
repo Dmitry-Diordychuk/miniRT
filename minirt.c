@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/11 01:06:26 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/23 14:58:14 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,19 @@ int	apply_intersect(t_ray3d r, t_object obj, double *nearest_root,
 
 	if (!(roots = obj.intersect_function(r, obj.container)))
 		return (-1);
-	if ((roots[0] > -1 || roots[1] > -1) &&
-	(*nearest_root == -1 || (roots[0] < *nearest_root || roots[1] <
-																*nearest_root)))
+	if ((roots[0] >= 0 || roots[1] >= 0) &&
+	(*nearest_root == -1 || roots[0] < *nearest_root || roots[1] < *nearest_root))
 	{
-		*nearest_obj = obj;
-		*nearest_root = roots[0] < roots[1] ? roots[0] : roots[1];
+		if (nearest_obj != NULL)
+			*nearest_obj = obj;
+		if (roots[0] < 0)
+			*nearest_root = roots[1];
+		else if (roots[1] < 0)
+			*nearest_root = roots[0];
+		else if (roots[0] < roots[1])
+			*nearest_root = roots[0];
+		else
+			*nearest_root = roots[1];;
 	}
 	free(roots);
 	return (0);
@@ -48,19 +55,20 @@ int	trace_ray(t_scene scene)//t_ray3d r, t_list *objects, t_light_environment en
 	t_object	obj;
 	t_object	nearest_obj;
 	double		nearest_root;
+	t_list		*objects;
 
+	objects = scene.objects;
 	nearest_root = -1;
-	while (scene.objects != NULL)
+	while (objects != NULL)
 	{
-		obj = *(t_object*)(scene.objects->content);
+		obj = *(t_object*)(objects->content);
 		if (apply_intersect(scene.camera.ray, obj, &nearest_root, &nearest_obj) < 0)
 			return (-2);
-
-		scene.objects = scene.objects->next;
+		objects = objects->next;
 	}
 	if (nearest_root != -1)
 	{
-		return (color3d_to_trgb(mul_vec_scalar(nearest_obj.color, 
+		return (color3d_to_trgb(mul_vec_scalar(nearest_obj.color,
 		calculate_reflection(scene, nearest_root, nearest_obj))));
 	}
 	return (-1);

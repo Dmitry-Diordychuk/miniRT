@@ -3,14 +3,70 @@
 /*                                                        :::      ::::::::   */
 /*   reflection.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/11 01:05:50 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/12 13:35:36 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/23 16:21:27 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "reflection.h"
+
+/*
+** 	apply intersect function choosen for certain primitive.                copy
+*/
+
+int	apply_intersect_copy(t_ray3d r, t_object obj, double *nearest_root,
+							t_object *nearest_obj)
+{
+	double	*roots;
+
+	if (!(roots = obj.intersect_function(r, obj.container)))
+		return (-1);
+	if ((roots[0] > 0 || roots[1] > 0) &&
+	(*nearest_root == 0 || roots[0] < *nearest_root || roots[1] < *nearest_root))
+	{
+		if (nearest_obj != NULL)
+			*nearest_obj = obj;
+		if (roots[0] < 0)
+			*nearest_root = roots[1];
+		else if (roots[1] < 0)
+			*nearest_root = roots[0];
+		else if (roots[0] < roots[1])
+			*nearest_root = roots[0];
+		else
+			*nearest_root = roots[1];;
+	}
+	free(roots);
+	return (0);
+}
+
+int	check_shadow(t_scene scene, t_reflection_data data)
+{
+	t_ray3d		l;
+	t_object	obj;
+	double		t;
+	t_list		*objects;
+
+	l.origin = data.point;
+	l.direction = data.light.direction;
+	objects = scene.objects;
+
+	if (data.point.x < -1.49 && data.point.x > -1.495 && data.point.z > 3.49 && data.point.z < 3.5)
+		printf("%lf:%lf:%lf\n", data.point.x, data.point.y, data.point.z);
+
+	while (objects != NULL)
+	{
+		t = 0;
+		obj = *(t_object*)(objects->content);
+		if (apply_intersect_copy(l, obj, &t, NULL))
+			return (-1);
+		if (t > 0.000001)
+			return (1);
+		objects = objects->next;
+	}
+	return (0);
+}
 
 double	reflect_specular(t_scene scene, t_reflection_data data)
 {
@@ -32,6 +88,7 @@ double	reflect_diffusion(t_scene scene, t_reflection_data data)
 	double	result;
 	double	temp;
 
+	result = 0;
 	if ((temp =
 	(data.light.brightness * dot_vec(data.normal, data.light.direction)) /
 	(module_vec(data.normal) * module_vec(data.light.direction))) > 0)
@@ -44,11 +101,13 @@ double	calculate_diffusion_specular(t_scene scene, t_reflection_data data)
 	double			temp;
 	double			point_brightness;
 	t_object		*light;
+	t_list			*lights;
 
+	lights = scene.lights;
 	point_brightness = scene.environment_light.brightness;
-	while (scene.lights != NULL)
+	while (lights != NULL)
 	{
-		light = (t_object*)(scene.lights->content);
+		light = (t_object*)(lights->content);
 		if (ft_strcmp(light->type, "Light_directional") == 0)
 			data.light = *(t_light_directional*)light->container;
 		else if (ft_strcmp(light->type, "Light_point") == 0)
@@ -58,12 +117,13 @@ double	calculate_diffusion_specular(t_scene scene, t_reflection_data data)
 			data.light.brightness = ((t_light_point*)light->
 					container)->brightness;
 		}
-		point_brightness += reflect_diffusion(scene, data);
-		if (data.specular >= 0)
+		if (check_shadow(scene, data) == 0)
 		{
-			point_brightness += reflect_specular(scene, data);
+			point_brightness += reflect_diffusion(scene, data);
+			if (data.specular >= 0)
+				point_brightness += reflect_specular(scene, data);
 		}
-		scene.lights = (scene.lights)->next;
+		lights = lights->next;
 	}
 	return (point_brightness);
 }
@@ -75,9 +135,9 @@ double	calculate_reflection(t_scene scene, double nearest_root,
 	double			reflection_result;
 
 	data.point = ray_param_func(scene.camera.ray, nearest_root);
-	data.normal = unit_vec(minus_vec(data.point, 
+	data.normal = unit_vec(minus_vec(data.point,
 			((t_sphere*)(nearest_obj.container))->position));	//считаем для сферы нужно обобщить
 	data.specular = nearest_obj.specular;
-	reflection_result = calculate_diffusion_specular(scene, data);	
+	reflection_result = calculate_diffusion_specular(scene, data);
 	return (reflection_result);
 }

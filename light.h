@@ -13,7 +13,7 @@
 #ifndef LIGHT_H
 # define LIGHT_H
 
-# include "libft.h"
+# include "libft/libft.h"
 # include "vector.h"
 # include "object.h"
 
