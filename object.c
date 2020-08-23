@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/04 23:36:42 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/23 17:30:09 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/23 19:05:16 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ void		delete_content(const char *type, void *content)
 {
 	if (ft_strcmp("Sphere", type) == 0)
 		free((t_sphere*)content);
+	if (ft_strcmp("Plane", type) == 0)
+		free((t_plane*)content);
 	if (ft_strcmp("Light_point", type) == 0)
 		free((t_light_point*)content);
 	if (ft_strcmp("Light_directional", type) == 0)
@@ -37,6 +39,8 @@ t_object	*create_object(const char *type, void *obj, t_color3d color, double spe
 	object->container = obj;
 	if (ft_strcmp("Sphere", type) == 0)
 		object->intersect_function = intersect_sphere;
+	if (ft_strcmp("Plane", type) == 0)
+		object->intersect_function = intersect_plane;
 	object->color = color;
 	object->specular = specular;
 	return (object);
@@ -65,8 +69,8 @@ t_list		*init_objects(void)
 		delete_object((void*)obj);
 		return (NULL);
 	}
-	if (!(obj = create_object("Sphere",
-	create_sphere((t_point3d){0, -5001, 0}, 5000), (t_color3d){255, 255, 0}, 1000)))
+	if (!(obj = create_object("Plane",
+	create_plane((t_point3d){0,-1,0}, (t_vector3d){0,1,0}), (t_color3d){255, 255, 0}, 1000)))
 	{
 		ft_lstclear(&objects, delete_object);
 		return (NULL);

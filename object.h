@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   object.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/04 23:34:42 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/11 16:47:27 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/23 19:02:36 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "ray.h"
 # include "math.h"
 # include "sphere.h"
+# include "plane.h"
 # include "color.h"
 # include "light.h"
 
