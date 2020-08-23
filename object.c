@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   object.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/04 23:36:42 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/20 02:45:26 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/23 17:30:09 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,35 @@ t_list		*init_objects(void)
 		return (NULL);
 	}
 	ft_lstadd_back(&objects, temp);
+
+	if (!(obj = create_object("Sphere",
+	create_sphere((t_point3d){-2, 0, 4}, 1), (t_color3d){0, 0, 255}, 500)))
+	{
+		ft_lstclear(&objects, delete_object);
+		return (NULL);
+	}
+	if (!(temp = ft_lstnew((void*)obj)))
+	{
+		delete_object((void*)obj);
+		ft_lstclear(&objects, delete_object);
+		return (NULL);
+	}
+	ft_lstadd_back(&objects, temp);
+
+	if (!(obj = create_object("Sphere",
+	create_sphere((t_point3d){2, 0, 4}, 1), (t_color3d){0, 255, 0}, 10)))
+	{
+		ft_lstclear(&objects, delete_object);
+		return (NULL);
+	}
+	if (!(temp = ft_lstnew((void*)obj)))
+	{
+		delete_object((void*)obj);
+		ft_lstclear(&objects, delete_object);
+		return (NULL);
+	}
+	ft_lstadd_back(&objects, temp);
+
 	return (objects);
 }
 
