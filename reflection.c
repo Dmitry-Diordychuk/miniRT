@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/11 01:05:50 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/23 17:22:07 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/24 00:19:16 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	check_shadow(t_scene scene, t_reflection_data data)
 
 	while (objects != NULL)
 	{
-		t = 0;
+		t = -1;
 		obj = *(t_object*)(objects->content);
 		if (apply_intersect(l, obj, &t, NULL))
 			return (-1);
@@ -107,8 +107,11 @@ double	calculate_reflection(t_scene scene, double nearest_root,
 	double			reflection_result;
 
 	data.point = ray_param_func(scene.camera.ray, nearest_root);
-	data.normal = unit_vec(minus_vec(data.point,
-			((t_sphere*)(nearest_obj.container))->position));	//считаем для сферы нужно обобщить
+	if (ft_strcmp(nearest_obj.type, "Sphere") == 0)
+		data.normal = unit_vec(minus_vec(data.point,
+				((t_sphere*)(nearest_obj.container))->position));
+	else if (ft_strcmp(nearest_obj.type, "Plane") == 0)
+		data.normal = ((t_plane*)nearest_obj.container)->normal;
 	data.specular = nearest_obj.specular;
 	reflection_result = calculate_diffusion_specular(scene, data);
 	return (reflection_result);

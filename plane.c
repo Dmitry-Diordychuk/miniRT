@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/23 17:47:42 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/23 18:57:28 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/23 23:04:19 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ double	*intersect_plane(t_ray3d r, void *obj)
 	double		temp2;
 
 	plane = *((t_plane*)obj);
-	temp1 = dot_vec(plane.q, minus_vec(plane.q, r.origin));
+	temp1 = dot_vec(plane.normal, minus_vec(plane.q, r.origin));
 	temp2 = dot_vec(plane.normal, r.direction);
 	if (!(t = (double*)malloc(sizeof(double) * 2)))
 		return (NULL);

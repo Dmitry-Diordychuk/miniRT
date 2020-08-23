@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   intersection.h                                     :+:      :+:    :+:   */
+/*   intersection.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/23 17:06:03 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/23 17:06:07 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/24 00:11:46 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,19 +23,29 @@ int	apply_intersect(t_ray3d r, t_object obj, double *nearest_root,
 
 	if (!(roots = obj.intersect_function(r, obj.container)))
 		return (-1);
-	if ((roots[0] > 0 || roots[1] > 0) &&
-	(*nearest_root == -1 || *nearest_root == 0 || roots[0] < *nearest_root || roots[1] < *nearest_root))
+	if (*nearest_root == -1 && roots[0] > 0)
 	{
 		if (nearest_obj != NULL)
 			*nearest_obj = obj;
-		if (roots[0] < 0)
-			*nearest_root = roots[1];
-		else if (roots[1] < 0)
-			*nearest_root = roots[0];
-		else if (roots[0] < roots[1])
-			*nearest_root = roots[0];
-		else
-			*nearest_root = roots[1];;
+		*nearest_root = roots[0];
+	}
+	if (*nearest_root == -1 && roots[1] > 0)
+	{
+		if (nearest_obj != NULL)
+			*nearest_obj = obj;
+		*nearest_root = roots[1];
+	}
+	if (*nearest_root > roots[0] && roots[0] > 0)
+	{
+		if (nearest_obj != NULL)
+			*nearest_obj = obj;
+		*nearest_root = roots[0];
+	}
+	if (*nearest_root > roots[1] && roots[1] > 0)
+	{
+		if (nearest_obj != NULL)
+			*nearest_obj = obj;
+		*nearest_root = roots[1];
 	}
 	free(roots);
 	return (0);

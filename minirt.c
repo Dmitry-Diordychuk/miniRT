@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/23 17:14:23 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/23 23:45:27 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ int	render(t_screen screen, t_data *img)
 	t_point2d	point;
 	int		color;
 
+	int h;
 	t_list	*lights;
 	scene = init_scene(init_objects(), init_lights(), (t_light_environment){0.2},
 				(t_viewport){1, 1, 1}, (t_point3d){0, 0, 0});
@@ -67,6 +68,8 @@ int	render(t_screen screen, t_data *img)
 			draw_background(img, point, screen, canvas);
 			scene.camera.ray.direction = canvas_to_viewport(point,
 						canvas, scene.camera.viewport);
+			if (point.x >= -0.1 && point.x <= 0.1 && point.y == -10)
+				h = 2 + 2;
 			if ((color = trace_ray(scene)) >= 0)
 				draw_pixel(img, canvas_to_screen(point, screen), color);
 			else if (color == -2)
