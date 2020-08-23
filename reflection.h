@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/11 01:04:56 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/23 17:09:22 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/23 17:21:09 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ typedef	struct				s_reflection_data
 		t_vector3d		normal;
 		t_light_directional	light;
 		double			specular;
+		double			max_t;
 }					t_reflection_data;
 
 double	calculate_reflection(t_scene scene, double nearest_root,

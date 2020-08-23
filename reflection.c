@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/11 01:05:50 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/23 17:09:49 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/23 17:22:07 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	check_shadow(t_scene scene, t_reflection_data data)
 		obj = *(t_object*)(objects->content);
 		if (apply_intersect(l, obj, &t, NULL))
 			return (-1);
-		if (t > 0.000001)
+		if (t > 0.000001 && t < data.max_t)
 			return (1);
 		objects = objects->next;
 	}
@@ -69,11 +69,11 @@ double	reflect_diffusion(t_scene scene, t_reflection_data data)
 
 double	calculate_diffusion_specular(t_scene scene, t_reflection_data data)
 {
-	double			temp;
 	double			point_brightness;
 	t_object		*light;
 	t_list			*lights;
 
+	data.max_t = MAXFLOAT;
 	lights = scene.lights;
 	point_brightness = scene.environment_light.brightness;
 	while (lights != NULL)
@@ -83,6 +83,7 @@ double	calculate_diffusion_specular(t_scene scene, t_reflection_data data)
 			data.light = *(t_light_directional*)light->container;
 		else if (ft_strcmp(light->type, "Light_point") == 0)
 		{
+			data.max_t = 1;
 			data.light.direction = minus_vec(((t_light_point*)light
 					->container)->position, data.point);
 			data.light.brightness = ((t_light_point*)light->
