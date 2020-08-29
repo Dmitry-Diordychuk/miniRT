@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:21:31 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/28 17:31:34 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/29 16:20:33 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,11 @@
 # define SQUARE_H
 
 # include <stdlib.h>
+# include <math.h>
 # include "ray.h"
 # include "vector.h"
 # include "plane.h"
+# include "matrix.h"
 
 typedef struct	s_square
 {

@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/04 23:36:42 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/23 23:00:26 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/29 03:06:07 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ void		delete_content(const char *type, void *content)
 		free((t_light_point*)content);
 	if (ft_strcmp("Light_directional", type) == 0)
 		free((t_light_directional*)content);
+	if (ft_strcmp("Square", type) == 0)
+		free((t_square*)content);
 }
 
 t_object	*create_object(const char *type, void *obj, t_color3d color, double specular)
@@ -41,6 +43,8 @@ t_object	*create_object(const char *type, void *obj, t_color3d color, double spe
 		object->intersect_function = intersect_sphere;
 	if (ft_strcmp("Plane", type) == 0)
 		object->intersect_function = intersect_plane;
+	if (ft_strcmp("Square", type) == 0)
+		object->intersect_function = intersect_square;
 	object->color = color;
 	object->specular = specular;
 	return (object);
@@ -112,6 +116,19 @@ t_list		*init_objects(void)
 	}
 	ft_lstadd_back(&objects, temp);
 
+	if (!(obj = create_object("Square",
+	create_square((t_point3d){0,0,1}, (t_vector3d){0, 0, 1}, 1), (t_color3d){255, 0, 255}, 800)))
+	{
+		ft_lstclear(&objects, delete_object);
+		return (NULL);
+	}
+	if (!(temp = ft_lstnew((void*)obj)))
+	{
+		delete_object((void*)obj);
+		ft_lstclear(&objects, delete_object);
+		return (NULL);
+	}
+	ft_lstadd_back(&objects, temp);
 	return (objects);
 }
 

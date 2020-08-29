@@ -6,11 +6,11 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:21:28 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/28 17:31:27 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/29 18:18:00 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <square.h>
+#include "square.h"
 
 void	*create_square(t_point3d center, t_vector3d normal, double side)
 {
@@ -38,8 +38,11 @@ double	*intersect_square(t_ray3d r, void *obj)
 	half_side = square.side / 2;
 	square.v1 = (t_point3d){square.center.x - half_side, square.center.y + half_side, square.center.z};
 	square.v2 = (t_point3d){square.center.x - half_side, square.center.y - half_side, square.center.z};
-	square.v3 = (t_point3d){square.center.x + half_side, square.center.y _ half_side, square.center.z};
+	square.v3 = (t_point3d){square.center.x + half_side, square.center.y - half_side, square.center.z};
 	square.v4 = (t_point3d){square.center.x + half_side, square.center.y - half_side, square.center.z};
+	t_matrix3d m;
+
+	m = init_mat(m);
 	plane = (t_plane){square.normal, square.center};
 	if (!(t = intersect_plane(r, (void*)(&plane))))
 		return (NULL);
@@ -63,7 +66,7 @@ double	*intersect_square(t_ray3d r, void *obj)
 	}
 	if (t[1] >= 0 && t[1] <= 1)
 	{
-		t[1] == -1;
+		t[1] = -1;
 		return (t);
 	}
 	t[0] = -1;

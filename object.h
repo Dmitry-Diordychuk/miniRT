@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/04 23:34:42 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/23 19:02:36 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/28 17:35:30 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "math.h"
 # include "sphere.h"
 # include "plane.h"
+# include "square.h"
 # include "color.h"
 # include "light.h"
 
