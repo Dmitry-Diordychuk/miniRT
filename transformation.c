@@ -6,34 +6,12 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/29 19:21:44 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/30 04:46:25 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/31 02:18:34 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "transformation.h"
 
-t_matrix4d	transformation_mat(t_matrix3d m, t_vector3d t)
-{
-	t_matrix4d res;
-
-	res.m00 = m.m00;
-	res.m01 = m.m01;
-	res.m02 = m.m02;
-	res.m10 = m.m10;
-	res.m11 = m.m11;
-	res.m12 = m.m12;
-	res.m20 = m.m20;
-	res.m21 = m.m21;
-	res.m22 = m.m22;
-	res.m03 = t.x;
-	res.m13 = t.y;
-	res.m23 = t.z;
-	res.m30 = 0;
-	res.m31 = 0;
-	res.m32 = 0;
-	res.m33 = 1;
-	return (res);
-}
 
 t_matrix4d	translate(t_matrix4d m, t_vector3d v)
 {
@@ -132,4 +110,43 @@ int			is_empty(t_matrix4d m)
 	)
 		return (1);
 	return (0);
+}
+
+t_matrix4d	invers(t_matrix4d m)
+{
+	t_matrix3d	res;
+
+	res.m00 = m.m00;
+	res.m01 = m.m01;
+	res.m02 = m.m02;
+	res.m10 = m.m10;
+	res.m11 = m.m11;
+	res.m12 = m.m12;
+	res.m20 = m.m20;
+	res.m21 = m.m21;
+	res.m22 = m.m22;
+	res = invert_mat3d(res);
+	m.m00 = res.m00;
+	m.m01 = res.m01;
+	m.m02 = res.m02;
+	m.m10 = res.m10;
+	m.m11 = res.m11;
+	m.m12 = res.m12;
+	m.m20 = res.m20;
+	m.m21 = res.m21;
+	m.m22 = res.m22;
+	return (m);
+}
+
+t_matrix4d	rotate_local(t_matrix4d m, double a, t_vector3d v, t_vector3d obj)
+{
+	t_vector3d temp;
+
+	temp.x = obj.x;
+	temp.y = obj.y;
+	temp.z = obj.z;
+	m = translate(m, (t_vector3d){-obj.x, -obj.y, -obj.z});
+	m = rotate(m, a, v);
+	m = translate(m, temp);
+	return (m);
 }

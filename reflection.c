@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/11 01:05:50 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/24 00:19:16 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/31 01:44:30 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ double	calculate_diffusion_specular(t_scene scene, t_reflection_data data)
 			data.light.brightness = ((t_light_point*)light->
 					container)->brightness;
 		}
+		data.light.direction = unit_vec(data.light.direction);
 		if (check_shadow(scene, data) == 0)
 		{
 			point_brightness += reflect_diffusion(scene, data);
@@ -112,6 +113,8 @@ double	calculate_reflection(t_scene scene, double nearest_root,
 				((t_sphere*)(nearest_obj.container))->position));
 	else if (ft_strcmp(nearest_obj.type, "Plane") == 0)
 		data.normal = ((t_plane*)nearest_obj.container)->normal;
+	else if (ft_strcmp(nearest_obj.type, "Square") == 0)
+		data.normal = ((t_square*)nearest_obj.container)->normal;
 	data.specular = nearest_obj.specular;
 	reflection_result = calculate_diffusion_specular(scene, data);
 	return (reflection_result);

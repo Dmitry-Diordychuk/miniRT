@@ -1,41 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   point.h                                            :+:      :+:    :+:   */
+/*   point.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/07 03:11:41 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/30 15:06:54 by kdustin          ###   ########.fr       */
+/*   Created: 2020/08/30 15:03:42 by kdustin           #+#    #+#             */
+/*   Updated: 2020/08/30 15:09:15 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef POINT_H
-# define POINT_H
+#include "point.h"
 
-typedef struct	s_point2d
+t_point4d	p3_to_p4(t_point3d p3)
 {
-	int	x;
-	int	y;
-}		t_point2d;
+	t_point4d	p4;
 
-typedef struct	s_point3d
+	p4.x = p3.x;
+	p4.y = p3.y;
+	p4.z = p3.z;
+	p4.w = 1;
+	return (p4);
+}
+
+t_point3d	p4_to_p3(t_point4d p4)
 {
-	double	x;
-	double	y;
-	double	z;
-}		t_point3d;
+	t_point3d p3;
 
-typedef struct	s_point4d
-{
-	double x;
-	double y;
-	double z;
-	double w;
-}				t_point4d;
-
-t_point4d	p3_to_p4(t_point3d p3);
-t_point3d	p4_to_p3(t_point4d p4);
-
-#endif
-
+	p3.x = p4.x;
+	p3.y = p4.y;
+	p3.z = p4.z;
+	return (p3);
+}

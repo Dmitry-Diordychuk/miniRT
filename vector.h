@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:34:01 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/30 04:47:12 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/30 15:03:23 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,6 @@ t_vector4d		div_vec4d_scalar(t_vector4d a, double n);
 double			module_vec4d(t_vector4d a);
 t_vector4d		unit_vec4d(t_vector4d a);
 
-t_vector4d		to_vec4d(t_vector3d v);
-t_vector3d		to_vec3d(t_vector4d v);
+t_vector4d		v3_to_v4(t_vector3d v);
+t_vector3d		v4_to_v3(t_vector4d v);
 #endif
