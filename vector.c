@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:33:47 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 03:56:17 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/30 04:46:02 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,49 @@ t_vector3d	cross_vec(t_vector3d a, t_vector3d b)
 t_vector3d	unit_vec(t_vector3d a)
 {
 	return (div_vec_scalar(a, module_vec(a)));
+}
+
+t_vector4d	sum_vec4d(t_vector4d a, t_vector4d b)
+{
+	return ((t_vector4d){a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w});
+}
+
+t_vector4d	minus_vec4d(t_vector4d a, t_vector4d b)
+{
+	return ((t_vector4d){a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w});
+}
+
+double		dot_vec4d(t_vector4d a, t_vector4d b)
+{
+	return ((a.x * b.x) + (a.y * b.y) + (a.z * b.z) + (a.w * b.w));
+}
+
+t_vector4d	mul_vec4d_scalar(t_vector4d a, double n)
+{
+	return ((t_vector4d){a.x * n, a.y * n, a.z * n, a.w * n});
+}
+
+t_vector4d	div_vec4d_scalar(t_vector4d a, double n)
+{
+	return ((t_vector4d){a.x / n, a.y / n, a.z / n, a.w / n});
+}
+
+double		module_vec4d(t_vector4d a)
+{
+	return (sqrt(a.x * a.x + a.y * a.y + a.z * a.z + a.w * a.w));
+}
+
+t_vector4d	unit_vec4d(t_vector4d a)
+{
+	return (div_vec4d_scalar(a, module_vec4d(a)));
+}
+
+t_vector4d	to_vec4d(t_vector3d v)
+{
+	return ((t_vector4d){v.x, v.y, v.z, 1});
+}
+
+t_vector3d	to_vec3d(t_vector4d v)
+{
+	return ((t_vector3d){v.x, v.y, v.z});
 }

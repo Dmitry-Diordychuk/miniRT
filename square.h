@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:21:31 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/29 16:20:33 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/30 04:34:11 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include "ray.h"
 # include "vector.h"
 # include "plane.h"
-# include "matrix.h"
+# include "transformation.h"
 
 typedef struct	s_square
 {

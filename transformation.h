@@ -1,28 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   plane.h                                            :+:      :+:    :+:   */
+/*   transformation.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/23 17:47:40 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/30 04:33:41 by kdustin          ###   ########.fr       */
+/*   Created: 2020/08/29 19:21:43 by kdustin           #+#    #+#             */
+/*   Updated: 2020/08/30 04:42:06 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PLANE_H
-# define PLANE_H
+#ifndef TRANSFORMATION_H
+# define TRANSFORMATION_H
 
-#include <stdlib.h>
-#include "ray.h"
+# include <math.h>
+# include "matrix.h"
 
-typedef struct	s_plane
-{
-	t_vector3d	normal;
-	t_point3d	q;
-}				t_plane;
-
-void	*create_plane(t_point3d q, t_vector3d normal);
-double	*intersect_plane(t_ray3d r, void *obj);
+t_matrix4d	transformation_mat(t_matrix3d m, t_vector3d t);
+t_matrix4d	translate(t_matrix4d m, t_vector3d v);
+t_matrix4d	rotate(t_matrix4d m, double a, t_vector3d v);
+t_matrix4d	scale(t_matrix4d m, t_vector3d v);
+int			is_empty(t_matrix4d m);
 
 #endif

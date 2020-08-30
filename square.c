@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:21:28 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/29 18:18:00 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/30 04:49:13 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	*create_square(t_point3d center, t_vector3d normal, double side)
 	if (!(s = (t_square*)malloc(sizeof(t_square))))
 		return (NULL);
 	s->center = center;
-	s->normal = normal;
+	s->normal = center;
 	s->side = side;
 	return ((void*)s);
 }
@@ -40,9 +40,15 @@ double	*intersect_square(t_ray3d r, void *obj)
 	square.v2 = (t_point3d){square.center.x - half_side, square.center.y - half_side, square.center.z};
 	square.v3 = (t_point3d){square.center.x + half_side, square.center.y - half_side, square.center.z};
 	square.v4 = (t_point3d){square.center.x + half_side, square.center.y - half_side, square.center.z};
-	t_matrix3d m;
+	t_matrix4d m;
 
-	m = init_mat(m);
+	m = transformation_mat((t_matrix3d){1, 0, 0, 0, 1, 0, 0, 0, 1}, square.center);
+	m = translate(m, (t_vector3d){0, 0, 1});
+	square.center = to_vec3d(mul_mat4d_vec4d(m, to_vec4d(square.center)));
+	square.v1 = to_vec3d(mul_mat4d_vec4d(m, to_vec4d(square.v1)));
+	square.v2 = to_vec3d(mul_mat4d_vec4d(m, to_vec4d(square.v2)));
+	square.v3 = to_vec3d(mul_mat4d_vec4d(m, to_vec4d(square.v3)));
+	square.v4 = to_vec3d(mul_mat4d_vec4d(m, to_vec4d(square.v4)));
 	plane = (t_plane){square.normal, square.center};
 	if (!(t = intersect_plane(r, (void*)(&plane))))
 		return (NULL);
