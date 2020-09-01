@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/04 23:36:42 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/30 22:41:55 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/01 20:04:12 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ t_list		*init_objects(void)
 	ft_lstadd_back(&objects, temp);
 
 	if (!(obj = create_object("Square",
-	create_square((t_point3d){0,0,2}, (t_vector3d){0, 0, -1}, 1), (t_color3d){255, 0, 255}, 800)))
+	create_square((t_point3d){0,0,2}, (t_vector3d){1/sqrt(2), 1/sqrt(2), 0}, 1), (t_color3d){255, 0, 255}, 800)))
 	{
 		ft_lstclear(&objects, delete_object);
 		return (NULL);

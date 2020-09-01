@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/29 19:21:44 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/31 02:18:34 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/08/31 23:49:25 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,33 +33,34 @@ t_matrix4d	translate(t_matrix4d m, t_vector3d v)
 	res.m31 = 0;
 	res.m32 = 0;
 	res.m33 = 1;
-	if (is_empty(m) == 0)
-		res = mul_mat4d(res, m);
+	res = mul_mat4d(res, m);
 	return (res);
 }
 
 t_matrix4d	rotate(t_matrix4d m, double a, t_vector3d v)
 {
-	t_matrix4d res;
+	t_matrix4d		res;
+	const double	c = cos(a);
+	const double	one_sub_c = 1 - cos(a);
+	const double	s = sin(a);
 
-	res.m00 = cos(a) + pow(v.x, 2) * (1 - cos(a));
-	res.m01 = v.x * v.y * (1 - cos(a)) - v.z * sin(a);
-	res.m02 = v.x * v.z * (1 - cos(a)) + v.y * sin(a);
+	res.m00 = c + pow(v.x, 2) * (one_sub_c);
+	res.m01 = v.x * v.y * (one_sub_c) - s * v.z;
+	res.m02 = v.x * v.z * (one_sub_c) + v.y * s;
 	res.m03 = 0;
-	res.m10 = v.y * v.x * (1 - cos(a)) + v.z * sin(a);
-	res.m11 = cos(a) + pow(v.y, 2) * (1 - cos(a));
-	res.m12 = v.y * v.z * (1 - cos(a)) - v.x * sin(a);
+	res.m10 = v.x * v.y * (one_sub_c) + v.z * s;
+	res.m11 = c + pow(v.y, 2) * (one_sub_c);
+	res.m12 = v.y * v.z * (one_sub_c) - v.x * s;
 	res.m13 = 0;
-	res.m20 = v.z * v.x * (1 - cos(a)) - v.y * sin(a);
-	res.m21 = v.z * v.y * (1 - cos(a)) + v.x * sin(a);
-	res.m22 = cos(a) + pow(v.z, 2) * (1 - cos(a));
+	res.m20 = v.x * v.z * (one_sub_c) - v.y * s;
+	res.m21 = v.y * v.z * (one_sub_c) + v.x * s;
+	res.m22 = c + pow(v.z, 2) * (one_sub_c);
 	res.m23 = 0;
 	res.m30 = 0;
 	res.m31 = 0;
 	res.m32 = 0;
 	res.m33 = 1;
-	if(is_empty(m) == 0)
-		res = mul_mat4d(res, m);
+	res = mul_mat4d(res, m);
 	return (res);
 }
 
@@ -83,8 +84,7 @@ t_matrix4d	scale(t_matrix4d m, t_vector3d v)
 	res.m31 = 0;
 	res.m32 = 0;
 	res.m33 = 1;
-	if (is_empty(m) == 0)
-		res = mul_mat4d(res, m);
+	res = mul_mat4d(res, m);
 	return (res);
 }
 
@@ -142,6 +142,8 @@ t_matrix4d	rotate_local(t_matrix4d m, double a, t_vector3d v, t_vector3d obj)
 {
 	t_vector3d temp;
 
+	if (a == 0)
+		return (m);
 	temp.x = obj.x;
 	temp.y = obj.y;
 	temp.z = obj.z;

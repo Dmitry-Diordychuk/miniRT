@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:21:28 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/31 02:22:57 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/01 20:05:02 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,60 +19,138 @@ void	*create_square(t_point3d center, t_vector3d normal, double side)
 	if (!(s = (t_square*)malloc(sizeof(t_square))))
 		return (NULL);
 	s->center = center;
-	s->normal = center;
+	s->normal = normal;
 	s->side = side;
 	return ((void*)s);
 }
 
-int	is_intersect_segment(t_point3d v1, t_point3d v2, t_point3d in_p)
+typedef	struct	s_point
 {
-	double		t;
-	t_vector3d	vec1;
-	t_vector3d	vec2;
-	t_vector3d	vec3;
+	double x;
+	double y;
+}				t_point;
 
-	v1.z = 0;
-	v2.z = 0;
-	vec1 = minus_vec(in_p, v1);
-	vec2 = minus_vec(v2, v1);
-	vec3 = (t_vector3d){-1, 0, 0};
-	t = module_vec(cross_vec(vec2, vec1)) / dot_vec(vec2, vec3);
-	if (t >= 0)
+
+double	square_area(t_point3d v1, t_point3d v2, t_point3d v3, t_point3d v4)
+{
+	const double f1 = v1.x * v2.y - v1.y * v2.x;
+	const double f2 = v2.x * v3.y - v2.y * v3.x;
+	const double f3 = v3.x * v4.y - v3.y * v4.x;
+	const double f4 = v4.x * v1.y - v4.y * v1.x;
+	const double sum = fabs(f1 + f2 + f3 + f4);
+	return (sum / 2);
+}
+
+int	choose_biggest_square(t_square square)
+{
+	const double areaxy = square_area((t_point3d){square.v1.x, square.v1.y, 0},
+								(t_point3d){square.v2.x, square.v2.y, 0},
+								(t_point3d){square.v3.x, square.v3.y, 0},
+								(t_point3d){square.v4.x, square.v4.y, 0});
+	const double areaxz = square_area((t_point3d){square.v1.x, square.v1.z, 0},
+								(t_point3d){square.v2.x, square.v2.z, 0},
+								(t_point3d){square.v3.x, square.v3.z, 0},
+								(t_point3d){square.v4.x, square.v4.z, 0});
+	const double areayz = square_area((t_point3d){square.v1.y, square.v1.z, 0},
+								(t_point3d){square.v2.y, square.v2.z, 0},
+								(t_point3d){square.v3.y, square.v3.z, 0},
+								(t_point3d){square.v4.y, square.v4.z, 0});
+	int result;
+
+	result = areaxy >= areaxz ? 1 : 2;
+	if (result == 1)
+		result = areaxy >= areayz ? 1 : 3;
+	if (result == 2)
+		result = areaxz >= areayz ? 2 : 3;
+	return (result);
+}
+
+int	get_quadrant(t_point3d v, t_point3d in_p)
+{
+	int quadrant;
+
+	if (v.x > in_p.x)
 	{
-		t = dot_vec(vec1, vec3) / dot_vec(vec2, vec3);
-		if (t >= 0 && t <= 1)
-			return (1);
-		return (0);
+		quadrant = v.y > in_p.y ? 0 : 3;
+		return (quadrant);
 	}
+	quadrant = v.y > in_p.y ? 1 : 2;
+	return (quadrant);
+}
+
+double	x_intercept(t_point3d pt1, t_point3d pt2, double yy)
+{
+	return (pt2.x -((pt2.y - yy) * ((pt1.x - pt2.x) / (pt1.y - pt2.y))));
+}
+
+void	adjust_delta(int *delta, t_point3d v1, t_point3d v2, t_point3d p_in)
+{
+	if (*delta == 3)
+		*delta = -1;
+	else if (*delta == -3)
+		*delta = 1;
+	else if (*delta == 2 || *delta == -2)
+	{
+		if (x_intercept(v1, v2, p_in.y) > p_in.x)
+			*delta = -(*delta);
+	}
+}
+// graphic gems 4
+int	angle_test(t_square square, t_point3d in_p)
+{
+	double		angle;
+	int			delta;
+
+	angle = 0;
+	delta = get_quadrant(square.v2, in_p) - get_quadrant(square.v1, in_p);
+	adjust_delta(&delta, square.v1, square.v2, in_p);
+	angle += delta;
+	delta = get_quadrant(square.v3, in_p) - get_quadrant(square.v2, in_p);
+	adjust_delta(&delta, square.v2, square.v3, in_p);
+	angle += delta;
+	delta = get_quadrant(square.v4, in_p) - get_quadrant(square.v3, in_p);
+	adjust_delta(&delta, square.v3, square.v4, in_p);
+	angle += delta;
+	delta = get_quadrant(square.v1, in_p) - get_quadrant(square.v4, in_p);
+	adjust_delta(&delta, square.v4, square.v1, in_p);
+	angle += delta;
+	if (angle == 4 || angle == -4)
+		return (1);
 	return (0);
 }
 
 int	is_in_square(t_square square, t_point3d in_p)
 {
-	double x_max;
-	double x_min;
-	double y_max;
-	double y_min;
+	int chosen_plane;
 
-	x_max = square.v1.x;
-	x_min = square.v1.x;
-	y_max = square.v1.y;
-	y_min = square.v1.y;
-	x_max < square.v2.x ? x_max = square.v2.x : 0;
-	x_max < square.v3.x ? x_max = square.v3.x : 0;
-	x_max < square.v4.x ? x_max = square.v4.x : 0;
-	x_min > square.v2.x ? x_min = square.v2.x : 0;
-	x_min > square.v3.x ? x_min = square.v3.x : 0;
-	x_min > square.v4.x ? x_min = square.v4.x : 0;
-	y_min > square.v2.y ? y_min = square.v2.y : 0;
-	y_min > square.v3.y ? y_min = square.v3.y : 0;
-	y_min > square.v4.y ? y_min = square.v4.y : 0;
-	y_max < square.v2.y ? y_max = square.v2.y : 0;
-	y_max < square.v3.y ? y_max = square.v3.y : 0;
-	y_max < square.v4.y ? y_max = square.v4.y : 0;
-	if (in_p.x < x_min || in_p.x > x_max || in_p.y < y_min || in_p.y > y_max)
-		return (0);
-	return (1);
+	chosen_plane = choose_biggest_square(square);
+	chosen_plane = 3;
+	if (chosen_plane == 1)
+	{
+		if (angle_test(square, in_p))
+			return (1);
+	}
+	else if (chosen_plane == 2)
+	{
+		in_p = (t_point3d){in_p.x, in_p.z, 0};
+		square.v1 = (t_point3d){square.v1.x, square.v1.z, 0};
+		square.v2 = (t_point3d){square.v2.x, square.v2.z, 0};
+		square.v3 = (t_point3d){square.v3.x, square.v3.z, 0};
+		square.v4 = (t_point3d){square.v4.x, square.v4.z, 0};
+		if (angle_test(square, in_p))
+			return (1);
+	}
+	else
+	{
+		in_p = (t_point3d){in_p.y, in_p.z, 0};
+		square.v1 = (t_point3d){square.v1.y, square.v1.z, 0};
+		square.v2 = (t_point3d){square.v2.y, square.v2.z, 0};
+		square.v3 = (t_point3d){square.v3.y, square.v3.z, 0};
+		square.v4 = (t_point3d){square.v4.y, square.v4.z, 0};
+		if (angle_test(square, in_p))
+			return (1);
+	}
+	return (0);
 }
 
 double	*intersect_square(t_ray3d r, void *obj)
@@ -88,13 +166,17 @@ double	*intersect_square(t_ray3d r, void *obj)
 	square = *(t_square*)(obj);
 	half_side = square.side / 2;
 	square.v1 = (t_point3d){square.center.x - half_side, square.center.y + half_side, square.center.z};
-	square.v2 = (t_point3d){square.center.x - half_side, square.center.y - half_side, square.center.z};
+	square.v2 = (t_point3d){square.center.x + half_side, square.center.y + half_side, square.center.z};
 	square.v3 = (t_point3d){square.center.x + half_side, square.center.y - half_side, square.center.z};
-	square.v4 = (t_point3d){square.center.x + half_side, square.center.y + half_side, square.center.z};
+	square.v4 = (t_point3d){square.center.x - half_side, square.center.y - half_side, square.center.z};
 	t_matrix4d m;
 
 	m = get_i_mat4d();
-	m = rotate_local(m, 3.14 / 2, (t_vector3d){0.0, 0.0, 0.0}, square.center);
+	t_vector3d prev_norm = (t_vector3d){0,0,-1};
+	m = rotate_local(m, acos(dot_vec(prev_norm, square.normal)), unit_vec(cross_vec(prev_norm, square.normal)), square.center);
+	//m = rotate_local(m, M_PI_4, (t_vector3d){1,0,0}, square.center);
+	//m = rotate(m, 0.01, prev_norm);
+	square.normal = prev_norm;
 	square.normal = v4_to_v3(mul_mat4d_vec4d(m, v3_to_v4(square.normal)));
 	square.center = p4_to_p3(mul_mat4d_vec4d(m, p3_to_p4(square.center)));
 	square.v1 = p4_to_p3(mul_mat4d_vec4d(m, p3_to_p4(square.v1)));
