@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/11 01:05:50 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/01 17:07:42 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/01 21:07:20 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,8 @@ double	calculate_reflection(t_scene scene, double nearest_root,
 		data.normal = ((t_plane*)nearest_obj.container)->normal;
 	else if (ft_strcmp(nearest_obj.type, "Square") == 0)
 		data.normal = ((t_square*)nearest_obj.container)->normal;
+	else if (ft_strcmp(nearest_obj.type, "Triangle") == 0)
+		data.normal = ((t_triangle*)nearest_obj.container)->normal;
 	data.specular = nearest_obj.specular;
 	reflection_result = calculate_diffusion_specular(scene, data);
 	return (reflection_result);

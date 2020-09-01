@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:21:28 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/01 20:05:02 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/01 21:15:10 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,6 @@ int	is_in_square(t_square square, t_point3d in_p)
 	int chosen_plane;
 
 	chosen_plane = choose_biggest_square(square);
-	chosen_plane = 3;
 	if (chosen_plane == 1)
 	{
 		if (angle_test(square, in_p))
