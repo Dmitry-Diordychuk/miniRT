@@ -1,33 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minirt.h                                           :+:      :+:    :+:   */
+/*   cylinder.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/05 13:44:09 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/03 22:16:26 by kdustin          ###   ########.fr       */
+/*   Created: 2020/09/02 19:53:17 by kdustin           #+#    #+#             */
+/*   Updated: 2020/09/03 16:03:27 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINIRT_H
-# define MINIRT_H
+#ifndef CYLINDER_H
+# define CYLINDER_H
 
-# include <libft.h>
 # include <math.h>
-# include "mlx.h"
-# include "color.h"
+# include <stdlib.h>
+# include "point.h"
 # include "vector.h"
 # include "ray.h"
-# include "sphere.h"
-# include "object.h"
-# include "camera.h"
-# include "screen_and_canvas.h"
-# include "scene.h"
-# include "draw.h"
-# include "light.h"
-# include "reflection.h"
-# include "camera.h"
-# include "transformation.h"
+
+typedef struct	s_cylinder
+{
+	t_point3d	position;
+	t_vector3d	center_line;
+	double		diameter;
+	double		height;
+}				t_cylinder;
+
+void	*create_cylinder(t_point3d position, t_vector3d center_line, double diameter, double height);
+double	*intersect_cylinder(t_ray3d r, void *obj);
+t_vector3d	calculate_cylinder_normal(t_cylinder cylinder, t_point3d int_point);
 
 #endif

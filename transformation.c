@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/29 19:21:44 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/31 23:49:25 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/04 02:12:40 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,4 +151,9 @@ t_matrix4d	rotate_local(t_matrix4d m, double a, t_vector3d v, t_vector3d obj)
 	m = rotate(m, a, v);
 	m = translate(m, temp);
 	return (m);
+}
+
+t_vector3d	apply_matrix(t_matrix4d m, t_vector3d target)
+{
+	return (v4_to_v3(mul_mat4d_vec4d(m, v3_to_v4(target))));
 }

@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 16:31:50 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/21 00:47:49 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/04 15:43:33 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ t_list	*init_lights()
 	t_object		*object;
 
 	if (!(object = create_object("Light_point",
-			create_light_point((t_point3d){2, 1, 0}, 0.6),
+			create_light_point((t_point3d){-1, 1, 1}, 1),
 						(t_color3d){255, 255, 255}, 0)))
 		return (NULL);
 	if (!(lights = ft_lstnew(object)))
@@ -27,20 +27,21 @@ t_list	*init_lights()
 		delete_object(object);
 		return (NULL);
 	}
-	if (!(object = create_object("Light_directional",
-			create_light_directional((t_vector3d){1, 4, 4}, 0.2),
-						(t_color3d){255, 255, 255}, 0)))
-	{
-		ft_lstclear(&lights, delete_object);
-		return (NULL);
-	}
-	if (!(temp = ft_lstnew(object)))
-	{
-		delete_object(object);
-		ft_lstclear(&lights, delete_object);
-		return (NULL);
-	}
-	ft_lstadd_back(&lights, temp);
+
+//	if (!(object = create_object("Light_directional",
+//			create_light_directional((t_vector3d){1, 4, 4}, 0.2),
+//						(t_color3d){255, 255, 255}, 0)))
+//	{
+//		ft_lstclear(&lights, delete_object);
+//		return (NULL);
+//	}
+//	if (!(temp = ft_lstnew(object)))
+//	{
+//		delete_object(object);
+//		ft_lstclear(&lights, delete_object);
+//		return (NULL);
+//	}
+//	ft_lstadd_back(&lights, temp);
 	return (lights);
 }
 

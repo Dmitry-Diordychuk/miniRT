@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/31 01:41:16 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/04 17:03:39 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,13 @@ int	render(t_screen screen, t_data *img)
 	t_scene		scene;
 	t_point2d	point;
 	int		color;
-
 	t_list	*lights;
+
 	scene = init_scene(init_objects(), init_lights(), (t_light_environment){0.2},
-				(t_viewport){1, 1, 1}, (t_point3d){0, 0, 0});
+				create_camera((t_point3d){-5, 2, 4}, (t_viewport){1,1,1}, unit_vec((t_vector3d){1,-0.5,0}), 120));
+				//create_camera((t_point3d){5, 2, 4}, (t_viewport){1,1,1}, unit_vec((t_vector3d){-1,-0.5,0}), 120));
+				//create_camera((t_point3d){0, 0, 0}, (t_viewport){1,1,1}, unit_vec((t_vector3d){0,0,1}), 120));
+				//create_camera((t_point3d){0,0,6}, (t_viewport){1,1,1}, unit_vec((t_vector3d){0,-0.5,-1}), 120));
 	point.y = canvas.top_border + 1;
 	while (--point.y > canvas.bottom_border)
 	{
@@ -65,8 +68,7 @@ int	render(t_screen screen, t_data *img)
 		while (++point.x < canvas.right_border)
 		{
 			draw_background(img, point, screen, canvas);
-			scene.camera.ray.direction = unit_vec(canvas_to_viewport(point,
-						canvas, scene.camera.viewport));
+			scene.camera.ray.direction = unit_vec(apply_matrix(scene.camera.rotation_matrix, canvas_to_viewport(point, canvas, scene.camera.viewport)));
 			if ((color = trace_ray(scene)) >= 0)
 				draw_pixel(img, canvas_to_screen(point, screen), color);
 			else if (color == -2)

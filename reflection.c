@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/11 01:05:50 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/01 21:07:20 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/04 15:36:57 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,13 @@ int	check_shadow(t_scene scene, t_reflection_data data)
 	l.origin = data.point;
 	l.direction = data.light.direction;
 	objects = scene.objects;
-
-	if (data.point.x < -1.49 && data.point.x > -1.495 && data.point.z > 3.49 && data.point.z < 3.5)
-		printf("%lf:%lf:%lf\n", data.point.x, data.point.y, data.point.z);
-
 	while (objects != NULL)
 	{
 		t = -1;
 		obj = *(t_object*)(objects->content);
 		if (apply_intersect(l, obj, &t, NULL))
 			return (-1);
-		if (t > 0.000001 && t < data.max_t)
+		if (t > (0.0000000000001) && t < data.max_t)
 			return (1);
 		objects = objects->next;
 	}
@@ -89,7 +85,6 @@ double	calculate_diffusion_specular(t_scene scene, t_reflection_data data)
 			data.light.brightness = ((t_light_point*)light->
 					container)->brightness;
 		}
-		data.light.direction = unit_vec(data.light.direction);
 		if (check_shadow(scene, data) == 0)
 		{
 			point_brightness += reflect_diffusion(scene, data);
@@ -105,7 +100,8 @@ double	calculate_reflection(t_scene scene, double nearest_root,
 							t_object nearest_obj)
 {
 	t_reflection_data	data;
-	double			reflection_result;
+	double				reflection_result;
+	t_point3d			int_point;
 
 	data.point = ray_param_func(scene.camera.ray, nearest_root);
 	if (ft_strcmp(nearest_obj.type, "Sphere") == 0)
@@ -117,6 +113,8 @@ double	calculate_reflection(t_scene scene, double nearest_root,
 		data.normal = ((t_square*)nearest_obj.container)->normal;
 	else if (ft_strcmp(nearest_obj.type, "Triangle") == 0)
 		data.normal = ((t_triangle*)nearest_obj.container)->normal;
+	else if (ft_strcmp(nearest_obj.type, "Cylinder") == 0)
+		data.normal = calculate_cylinder_normal(*(t_cylinder*)nearest_obj.container, ray_param_func(scene.camera.ray, nearest_root));
 	data.specular = nearest_obj.specular;
 	reflection_result = calculate_diffusion_specular(scene, data);
 	return (reflection_result);

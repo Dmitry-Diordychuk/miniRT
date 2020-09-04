@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:21:28 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/01 21:15:10 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/04 13:55:25 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,30 @@
 
 void	*create_square(t_point3d center, t_vector3d normal, double side)
 {
-	t_square *s;
+	t_square			*s;
+	double				half_side;
+	t_matrix4d			m;
+	const t_vector3d	prev_norm = (t_vector3d){0,0,-1};
 
 	if (!(s = (t_square*)malloc(sizeof(t_square))))
 		return (NULL);
 	s->center = center;
 	s->normal = normal;
 	s->side = side;
+	half_side = s->side / 2;
+	s->v1 = (t_point3d){s->center.x - half_side, s->center.y + half_side, s->center.z};
+	s->v2 = (t_point3d){s->center.x + half_side, s->center.y + half_side, s->center.z};
+	s->v3 = (t_point3d){s->center.x + half_side, s->center.y - half_side, s->center.z};
+	s->v4 = (t_point3d){s->center.x - half_side, s->center.y - half_side, s->center.z};
+	m = get_i_mat4d();
+	m = rotate_local(m, acos(dot_vec(prev_norm, s->normal)), unit_vec(cross_vec(prev_norm, s->normal)), s->center);
+	s->normal = prev_norm;
+	s->normal = v4_to_v3(mul_mat4d_vec4d(m, v3_to_v4(s->normal)));
+	s->center = p4_to_p3(mul_mat4d_vec4d(m, p3_to_p4(s->center)));
+	s->v1 = p4_to_p3(mul_mat4d_vec4d(m, p3_to_p4(s->v1)));
+	s->v2 = p4_to_p3(mul_mat4d_vec4d(m, p3_to_p4(s->v2)));
+	s->v3 = p4_to_p3(mul_mat4d_vec4d(m, p3_to_p4(s->v3)));
+	s->v4 = p4_to_p3(mul_mat4d_vec4d(m, p3_to_p4(s->v4)));
 	return ((void*)s);
 }
 
@@ -157,38 +174,13 @@ double	*intersect_square(t_ray3d r, void *obj)
 	double		*t;
 	t_square	square;
 	t_plane		plane;
-	double		half_side;
-	t_vector3d	vlen;
-	t_vector3d	plen;
-	t_point3d	inter_point;
 
-	square = *(t_square*)(obj);
-	half_side = square.side / 2;
-	square.v1 = (t_point3d){square.center.x - half_side, square.center.y + half_side, square.center.z};
-	square.v2 = (t_point3d){square.center.x + half_side, square.center.y + half_side, square.center.z};
-	square.v3 = (t_point3d){square.center.x + half_side, square.center.y - half_side, square.center.z};
-	square.v4 = (t_point3d){square.center.x - half_side, square.center.y - half_side, square.center.z};
-	t_matrix4d m;
-
-	m = get_i_mat4d();
-	t_vector3d prev_norm = (t_vector3d){0,0,-1};
-	m = rotate_local(m, acos(dot_vec(prev_norm, square.normal)), unit_vec(cross_vec(prev_norm, square.normal)), square.center);
-	//m = rotate_local(m, M_PI_4, (t_vector3d){1,0,0}, square.center);
-	//m = rotate(m, 0.01, prev_norm);
-	square.normal = prev_norm;
-	square.normal = v4_to_v3(mul_mat4d_vec4d(m, v3_to_v4(square.normal)));
-	square.center = p4_to_p3(mul_mat4d_vec4d(m, p3_to_p4(square.center)));
-	square.v1 = p4_to_p3(mul_mat4d_vec4d(m, p3_to_p4(square.v1)));
-	square.v2 = p4_to_p3(mul_mat4d_vec4d(m, p3_to_p4(square.v2)));
-	square.v3 = p4_to_p3(mul_mat4d_vec4d(m, p3_to_p4(square.v3)));
-	square.v4 = p4_to_p3(mul_mat4d_vec4d(m, p3_to_p4(square.v4)));
+	square = *(t_square*)obj;
 	plane = (t_plane){square.normal, square.center};
 	if (!(t = intersect_plane(r, (void*)(&plane))))
 		return (NULL);
 	if (t[0] >= 0 && is_in_square(square, ray_param_func(r, t[0])))
-	{
 		return(t);
-	}
 	t[0] = -1;
 	t[1] = -1;
 	return (t);

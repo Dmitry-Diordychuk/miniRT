@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 20:31:56 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/01 21:19:08 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/02 19:34:11 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	*create_triangle(t_point3d v1, t_point3d v2, t_point3d v3)
 {
 	const t_vector3d v12 = minus_vec(v1, v2);
 	const t_vector3d v13 = minus_vec(v1, v3);
-	const t_vector3d normal = unit_vec(cross_vec(v13, v12));
+	const t_vector3d normal = unit_vec(cross_vec(v12, v13));
 	t_triangle *t;
 
 	if (!(t = (t_triangle*)malloc(sizeof(t_triangle))))
@@ -30,11 +30,8 @@ void	*create_triangle(t_point3d v1, t_point3d v2, t_point3d v3)
 
 double	triangle_area(t_point3d v1, t_point3d v2, t_point3d v3)
 {
-	const double f1 = v1.x * v2.y - v1.y * v2.x;
-	const double f2 = v2.x * v3.y - v2.y * v3.x;
-	const double f3 = v3.x * v1.y - v3.y * v1.x;
-	const double sum = fabs(f1 + f2 + f3);
-	return (sum / 2);
+	return (fabs(v1.x * (v2.y - v3.y) + v2.x * (v3.y - v1.y) +
+													v3.x * (v1.y - v2.y)) / 2);
 }
 
 int	tri_choose_biggest_projection(t_triangle tri)
