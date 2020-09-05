@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 20:31:56 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/02 19:34:11 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/04 23:00:37 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	*create_triangle(t_point3d v1, t_point3d v2, t_point3d v3)
 {
 	const t_vector3d v12 = minus_vec(v1, v2);
 	const t_vector3d v13 = minus_vec(v1, v3);
-	const t_vector3d normal = unit_vec(cross_vec(v12, v13));
+	const t_vector3d normal = normalize(cross_vec(v12, v13));
 	t_triangle *t;
 
 	if (!(t = (t_triangle*)malloc(sizeof(t_triangle))))

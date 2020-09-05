@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:21:28 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/04 13:55:25 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/04 23:00:39 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	*create_square(t_point3d center, t_vector3d normal, double side)
 	s->v3 = (t_point3d){s->center.x + half_side, s->center.y - half_side, s->center.z};
 	s->v4 = (t_point3d){s->center.x - half_side, s->center.y - half_side, s->center.z};
 	m = get_i_mat4d();
-	m = rotate_local(m, acos(dot_vec(prev_norm, s->normal)), unit_vec(cross_vec(prev_norm, s->normal)), s->center);
+	m = rotate_local(m, acos(dot_vec(prev_norm, s->normal)), normalize(cross_vec(prev_norm, s->normal)), s->center);
 	s->normal = prev_norm;
 	s->normal = v4_to_v3(mul_mat4d_vec4d(m, v3_to_v4(s->normal)));
 	s->center = p4_to_p3(mul_mat4d_vec4d(m, p3_to_p4(s->center)));

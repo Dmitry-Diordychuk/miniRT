@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sphere.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/03 20:09:25 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 03:41:00 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/05 23:22:06 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ typedef struct		s_sphere
 void			*create_sphere(t_point3d p, double r);
 double			sgn(double x);
 double			*intersect_sphere(t_ray3d r, void *obj);
+t_vector3d		calculate_sphere_normal(t_sphere s, t_point3d p, t_point3d ro);
 
 #endif
 

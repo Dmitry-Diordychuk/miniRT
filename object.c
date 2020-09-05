@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/04 23:36:42 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/04 15:42:09 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/06 00:27:00 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,33 +97,33 @@ t_list		*init_objects(void)
 //	}
 //	ft_lstadd_back(&objects, temp);
 
-//	if (!(obj = create_object("Sphere",
-//	create_sphere((t_point3d){0, -1, 4}, 1), (t_color3d){0, 0, 255}, 1000)))
-//	{
-//		ft_lstclear(&objects, delete_object);
-//		return (NULL);
-//	}
-//	if (!(temp = ft_lstnew((void*)obj)))
-//	{
-//		delete_object((void*)obj);
-//		ft_lstclear(&objects, delete_object);
-//		return (NULL);
-//	}
-//	ft_lstadd_back(&objects, temp);
-//
-//	if (!(obj = create_object("Sphere",
-//	create_sphere((t_point3d){2, 0, 4}, 1), (t_color3d){0, 255, 0}, 10)))
-//	{
-//		ft_lstclear(&objects, delete_object);
-//		return (NULL);
-//	}
-//	if (!(temp = ft_lstnew((void*)obj)))
-//	{
-//		delete_object((void*)obj);
-//		ft_lstclear(&objects, delete_object);
-//		return (NULL);
-//	}
-//	ft_lstadd_back(&objects, temp);
+	if (!(obj = create_object("Sphere",
+	create_sphere((t_point3d){0, 0, 0}, 4), (t_color3d){0, 0, 255}, 1000)))
+	{
+		ft_lstclear(&objects, delete_object);
+		return (NULL);
+	}
+	if (!(temp = ft_lstnew((void*)obj)))
+	{
+		delete_object((void*)obj);
+		ft_lstclear(&objects, delete_object);
+		return (NULL);
+	}
+	ft_lstadd_back(&objects, temp);
+
+	if (!(obj = create_object("Sphere",
+	create_sphere((t_point3d){0, 0, 1}, 0.3), (t_color3d){0, 255, 0}, 500)))
+	{
+		ft_lstclear(&objects, delete_object);
+		return (NULL);
+	}
+	if (!(temp = ft_lstnew((void*)obj)))
+	{
+		delete_object((void*)obj);
+		ft_lstclear(&objects, delete_object);
+		return (NULL);
+	}
+	ft_lstadd_back(&objects, temp);
 //
 //	if (!(obj = create_object("Sphere",
 //	create_sphere((t_point3d){0, -1, 3}, 1), (t_color3d){255, 255, 0}, 1000)))
@@ -167,19 +167,19 @@ t_list		*init_objects(void)
 //	}
 //	ft_lstadd_back(&objects, temp);
 //
-	if (!(obj = create_object("Cylinder",
-	create_cylinder((t_point3d){0,0,3}, (t_vector3d){0.7, 0.7, 0}, 1, 2), (t_color3d){90, 90, 180}, 800)))
-	{
-		ft_lstclear(&objects, delete_object);
-		return (NULL);
-	}
-	if (!(temp = ft_lstnew((void*)obj)))
-	{
-		delete_object((void*)obj);
-		ft_lstclear(&objects, delete_object);
-		return (NULL);
-	}
-	ft_lstadd_back(&objects, temp);
+//	if (!(obj = create_object("Cylinder",
+//	create_cylinder((t_point3d){0,0,3}, (t_vector3d){0, 0, 1}, 0.5, 0.5), (t_color3d){90, 90, 180}, 800)))
+//	{
+//		ft_lstclear(&objects, delete_object);
+//		return (NULL);
+//	}
+//	if (!(temp = ft_lstnew((void*)obj)))
+//	{
+//		delete_object((void*)obj);
+//		ft_lstclear(&objects, delete_object);
+//		return (NULL);
+//	}
+//	ft_lstadd_back(&objects, temp);
 	return (objects);
 }
 

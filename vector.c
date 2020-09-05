@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:33:47 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/30 15:09:07 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/04 23:04:47 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ t_vector3d	cross_vec(t_vector3d a, t_vector3d b)
 							});
 }
 
-t_vector3d	unit_vec(t_vector3d a)
+t_vector3d	normalize(t_vector3d a)
 {
 	return (div_vec_scalar(a, module_vec(a)));
 }
@@ -61,7 +61,7 @@ t_vector4d	sum_vec4d(t_vector4d a, t_vector4d b)
 	return ((t_vector4d){a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w});
 }
 
-t_vector4d	minus_vec4d(t_vector4d a, t_vector4d b)
+t_vector4d	sub_vec4d(t_vector4d a, t_vector4d b)
 {
 	return ((t_vector4d){a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w});
 }

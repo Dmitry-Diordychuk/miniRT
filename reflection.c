@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/11 01:05:50 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/04 15:36:57 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/05 23:22:46 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	check_shadow(t_scene scene, t_reflection_data data)
 	double		t;
 	t_list		*objects;
 
-	l.origin = data.point;
+	l.origin = sum_vec(data.point, mul_vec_scalar(data.normal, 0.001));
 	l.direction = data.light.direction;
 	objects = scene.objects;
 	while (objects != NULL)
@@ -28,7 +28,7 @@ int	check_shadow(t_scene scene, t_reflection_data data)
 		obj = *(t_object*)(objects->content);
 		if (apply_intersect(l, obj, &t, NULL))
 			return (-1);
-		if (t > (0.0000000000001) && t < data.max_t)
+		if (t > 0 && t < data.max_t)//(t > (0.0000000000001) && t < data.max_t)
 			return (1);
 		objects = objects->next;
 	}
@@ -105,8 +105,9 @@ double	calculate_reflection(t_scene scene, double nearest_root,
 
 	data.point = ray_param_func(scene.camera.ray, nearest_root);
 	if (ft_strcmp(nearest_obj.type, "Sphere") == 0)
-		data.normal = unit_vec(minus_vec(data.point,
-				((t_sphere*)(nearest_obj.container))->position));
+		data.normal = calculate_sphere_normal(*(t_sphere*)(nearest_obj.container), data.point, scene.camera.ray.origin);
+		//data.normal = normalize(minus_vec(data.point,
+		//		((t_sphere*)(nearest_obj.container))->position));
 	else if (ft_strcmp(nearest_obj.type, "Plane") == 0)
 		data.normal = ((t_plane*)nearest_obj.container)->normal;
 	else if (ft_strcmp(nearest_obj.type, "Square") == 0)
