@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/11 01:05:50 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/05 23:22:46 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/06 01:07:33 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,14 +106,12 @@ double	calculate_reflection(t_scene scene, double nearest_root,
 	data.point = ray_param_func(scene.camera.ray, nearest_root);
 	if (ft_strcmp(nearest_obj.type, "Sphere") == 0)
 		data.normal = calculate_sphere_normal(*(t_sphere*)(nearest_obj.container), data.point, scene.camera.ray.origin);
-		//data.normal = normalize(minus_vec(data.point,
-		//		((t_sphere*)(nearest_obj.container))->position));
 	else if (ft_strcmp(nearest_obj.type, "Plane") == 0)
-		data.normal = ((t_plane*)nearest_obj.container)->normal;
+		data.normal = calculate_plane_normal(((t_plane*)nearest_obj.container)->normal, scene.camera.ray.direction);
 	else if (ft_strcmp(nearest_obj.type, "Square") == 0)
-		data.normal = ((t_square*)nearest_obj.container)->normal;
+		data.normal = calculate_plane_normal(((t_square*)nearest_obj.container)->normal, scene.camera.ray.direction);
 	else if (ft_strcmp(nearest_obj.type, "Triangle") == 0)
-		data.normal = ((t_triangle*)nearest_obj.container)->normal;
+		data.normal = calculate_plane_normal(((t_triangle*)nearest_obj.container)->normal, scene.camera.ray.direction);
 	else if (ft_strcmp(nearest_obj.type, "Cylinder") == 0)
 		data.normal = calculate_cylinder_normal(*(t_cylinder*)nearest_obj.container, ray_param_func(scene.camera.ray, nearest_root));
 	data.specular = nearest_obj.specular;

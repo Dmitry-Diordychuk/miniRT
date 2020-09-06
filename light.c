@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 16:31:50 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/06 00:28:33 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/06 04:02:02 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ t_list	*init_lights()
 	t_object		*object;
 
 	if (!(object = create_object("Light_point",
-			create_light_point((t_point3d){-1, 0.5, 0}, 1),
+			create_light_point((t_point3d){-1, 0.5, 0}, 0.2),
 						(t_color3d){255, 255, 255}, 0)))
 		return (NULL);
 	if (!(lights = ft_lstnew(object)))
@@ -27,6 +27,36 @@ t_list	*init_lights()
 		delete_object(object);
 		return (NULL);
 	}
+
+	if (!(object = create_object("Light_point",
+			create_light_directional((t_point3d){-15, 4, 4}, 0.5),
+						(t_color3d){255, 255, 255}, 0)))
+	{
+		ft_lstclear(&lights, delete_object);
+		return (NULL);
+	}
+	if (!(temp = ft_lstnew(object)))
+	{
+		delete_object(object);
+		ft_lstclear(&lights, delete_object);
+		return (NULL);
+	}
+	ft_lstadd_back(&lights, temp);
+
+	if (!(object = create_object("Light_point",
+			create_light_directional((t_point3d){1, 4, 4}, 0.5),
+						(t_color3d){255, 255, 255}, 0)))
+	{
+		ft_lstclear(&lights, delete_object);
+		return (NULL);
+	}
+	if (!(temp = ft_lstnew(object)))
+	{
+		delete_object(object);
+		ft_lstclear(&lights, delete_object);
+		return (NULL);
+	}
+	ft_lstadd_back(&lights, temp);
 
 //	if (!(object = create_object("Light_directional",
 //			create_light_directional((t_vector3d){1, 4, 4}, 0.2),

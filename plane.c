@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/23 17:47:42 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/30 18:31:37 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/06 00:57:08 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,16 @@ void	*create_plane(t_point3d q, t_vector3d normal)
 	plane->q = q;
 	plane->normal = normal;
 	return (plane);
+}
+
+t_vector3d	calculate_plane_normal(t_vector3d normal, t_vector3d rd)
+{
+	double	dot;
+
+	dot = dot_vec(normal, rd);
+	if (dot > 0)
+		return (mul_vec_scalar(normal, -1));
+	return (normal);
 }
 
 double	*intersect_plane(t_ray3d r, void *obj)
