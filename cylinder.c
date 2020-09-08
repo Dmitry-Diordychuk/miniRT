@@ -6,18 +6,17 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/02 19:53:14 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/05 13:59:13 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/09 02:10:50 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cylinder.h"
 
+t_vector3d	normal;
+
 t_vector3d	calculate_cylinder_normal(t_cylinder cylinder, t_point3d int_point)
 {
-	const t_vector3d	vec_h = minus_vec(int_point, cylinder.position);
-
-	return (div_vec_scalar(minus_vec(vec_h, mul_vec_scalar(cylinder.center_line,
-			dot_vec(vec_h, cylinder.center_line))), (cylinder.diameter / 2)));
+	return (normal);
 }
 
 void	*create_cylinder(t_point3d position, t_vector3d center_line, double diameter, double height)
@@ -32,122 +31,145 @@ void	*create_cylinder(t_point3d position, t_vector3d center_line, double diamete
 	return ((void*)cylinder);
 }
 
-// True if in
-int		parallel_ray_cast(t_ray3d r, t_cylinder cylinder)
+int	sign(double n)
 {
-	double		d;
-	t_vector3d	v_d;
-	t_vector3d	rc;
-
-	rc = minus_vec(r.origin, cylinder.position);
-	d = dot_vec(rc, cylinder.center_line);
-	v_d = minus_vec(rc, mul_vec_scalar(cylinder.center_line, d));
-	d = module_vec(v_d);
-	if (d <= (cylinder.diameter / 2))
-		return (1);
-	return (0);
+	if (n < 0)
+		return (-1);
+	if (n == 0)
+		return (0);
+	return (1);
 }
-//realtime collision p233
+
+void	ft_swap_double(double *a, double *b)
+{
+	double	temp;
+
+	temp = *a;
+	*a = *b;
+	*b = temp;
+}
+
 double	*intersect_cylinder(t_ray3d r, void *obj)
 {
 	t_cylinder	cylinder = *(t_cylinder*)obj;
-//	t_vector3d			v_d;
-//	double				d;
-	double				*t;
-//	t_vector3d			v_o;
-	t_point3d			q;
-	t_vector3d			d;
-	t_vector3d			m; //n = ray.direction
-	double				discreminant;
+	double		*t;
+	double		d;
+	t_vector3d	vec_d;
+	t_vector3d	vec_o;
 
-	if (!(t = (double*)malloc(sizeof(double) * 2)))
+	if (!(t = (double*)malloc(sizeof(double) * 4)))
 		return (0);
 	t[0] = -1;
 	t[1] = -1;
-	q = sum_vec(
-		mul_vec_scalar(normalize(cylinder.center_line), cylinder.height),
-		cylinder.position);
-	d = minus_vec(q, cylinder.position);
-	m = minus_vec(r.origin, cylinder.position);
-	cylinder.md = dot_vec(m, d);
-	cylinder.nd = dot_vec(r.direction, d);
-	cylinder.dd = dot_vec(d, d);
-//	if (cylinder.md < 0.0 && cylinder.md + cylinder.nd < 0.0)
-//		return (t);
-//	if (cylinder.md > cylinder.dd && cylinder.md + cylinder.nd > cylinder.dd)
-//		return (t);
-	cylinder.nn = dot_vec(r.direction, r.direction);
-	cylinder.mn = dot_vec(m, r.direction);
-	cylinder.a = cylinder.dd * cylinder.nn - cylinder.nd * cylinder.nd;
-	cylinder.k = dot_vec(m, m) - pow(cylinder.diameter / 2 , 2);
-	cylinder.c = cylinder.dd * cylinder.k - cylinder.md * cylinder.md;
-	if (fabs(cylinder.a) < __DBL_EPSILON__)
+	t[2] = -1;
+	t[3] = -1;
+	vec_d = normalize(cross_vec(r.direction, cylinder.center_line));
+	if (module_vec(vec_d) == 0)
 	{
-		if (cylinder.c > 0.0)
-			return (t);
-		if (cylinder.md < 0.0)
-			t[0] = -cylinder.mn / cylinder.nn;
-		else if (cylinder.md > cylinder.dd)
-			t[0] = (cylinder.nd - cylinder.mn) / cylinder.nn;
+		d = dot_vec(minus_vec(r.origin, cylinder.position), cylinder.center_line);
+		t_vector3d D = minus_vec(minus_vec(r.origin, cylinder.position), mul_vec_scalar(cylinder.center_line, d));
+		d = module_vec(D);
+		t[0] = __DBL_MAX__;
+		t[1] = __DBL_MIN__;
+		return (t);
+	}
+	t_vector3d	rc = minus_vec(r.origin, cylinder.position);
+	d = fabs(dot_vec(rc, vec_d));
+	t_vector3d	b = sum_vec(cylinder.position, mul_vec_scalar(cylinder.center_line, cylinder.height));
+	if (d > cylinder.diameter / 2)
+		return (t);
+	vec_o = cross_vec(rc, cylinder.center_line);
+	double tt = - dot_vec(vec_o, vec_d) / module_vec(cross_vec(r.direction, cylinder.center_line));
+	vec_o = normalize(cross_vec(vec_d, cylinder.center_line));
+	double		s = sqrt(pow(cylinder.diameter/2, 2) - d * d) / dot_vec(r.direction, vec_o);
+	t[0] = tt - s;
+	t[1] = tt + s;
+
+	t_plane	*p;
+	if (!(p = (t_plane*)malloc(sizeof(t_plane))))
+		return (NULL);
+	double	*tbottom;
+	double	*ttop;
+	p->normal = normalize(cylinder.center_line);
+	p->q = cylinder.position;
+	if (!(tbottom = intersect_plane(r, (void*)p)))
+		return (NULL);
+	p->q = b;
+	if (!(ttop = intersect_plane(r, (void*)p)))
+		return (NULL);
+	if (tbottom[0] >= 0)
+	{
+		t_point3d h_bottom = ray_param_func(r, tbottom[0]);
+		if (module_vec(minus_vec(h_bottom, cylinder.position)) > cylinder.diameter / 2)
+			t[2] = -1;
 		else
-			t[0] = 0.0;
-		return (t);
+			t[2] = tbottom[0];
 	}
-	cylinder.b = cylinder.dd * cylinder.mn - cylinder.nd * cylinder.md;
-	discreminant = cylinder.b * cylinder.b - cylinder.a * cylinder.c;
-	if (discreminant < 0.0)
-		return (t);
-	t[0] = (-cylinder.b - sqrt(discreminant)) / cylinder.a;
-	if (t[0] < 0.0)// || t[0] > 1.0)
+	if (ttop[0] >= 0)
 	{
-		t[0] = -1;
-		return (t);
+		t_point3d h_top = ray_param_func(r, ttop[0]);
+		if (module_vec(minus_vec(h_top, b)) > cylinder.diameter / 2)
+			t[3] = -1;
+		else
+			t[3] = ttop[0];
 	}
-	if (cylinder.md + t[0] * cylinder.nd < 0.0)
+	double	s1 = fabs(dot_vec(minus_vec(cylinder.position, ray_param_func(r, t[0])), cylinder.center_line)) / module_vec(cylinder.center_line);
+	double	s2 = fabs(dot_vec(minus_vec(b, ray_param_func(r, t[0])), cylinder.center_line)) / module_vec(cylinder.center_line);
+	if (!(fabs(s1) < fabs(cylinder.height) && sign(s1) == sign(cylinder.height) && fabs(s2) < fabs(cylinder.height) && sign(s2) == sign(cylinder.height)))
+		t[0] = -1;
+	double	s3 = fabs(dot_vec(minus_vec(cylinder.position, ray_param_func(r, t[1])), cylinder.center_line)) / module_vec(cylinder.center_line);
+	double	s4 = fabs(dot_vec(minus_vec(b, ray_param_func(r, t[1])), cylinder.center_line)) / module_vec(cylinder.center_line);
+	if (!(fabs(s3) < fabs(cylinder.height) && sign(s3) == sign(cylinder.height) && fabs(s4) < fabs(cylinder.height) && sign(s4) == sign(cylinder.height)))
+		t[1] = -1;
+	int	number_1;
+	if (t[0] < 0)
+		if (t[1] < 0)
+			number_1 = -1;
+		else
+			number_1 = 1;
+	else
+		if (t[1] < 0)
+			number_1 = 0;
+		else
+			number_1 = t[0] < t[1] ? 0 : 1;
+	int number_2;
+	if (t[2] < 0)
+		if (t[3] < 0)
+			number_2 = -1;
+		else
+			number_2 = 3;
+	else
+		if (t[3] < 0)
+			number_2 = 2;
+		else
+			number_2 = t[2] < t[3] ? 2 : 3;
+	int number_3;
+	if (number_1 == -1)
+		if (number_2 == -1)
+			number_3 = -1;
+		else
+			number_3 = number_2;
+	else
+		if (number_2 == -1)
+			number_3 = number_1;
+		else
+			number_3 = t[number_1] < t[number_2] ? number_1 : number_2;
+	if (number_3 == 0 || number_3 == 1)
 	{
-		if (cylinder.nd <= 0.0)
-		{
-			t[0] = -1;
-			return (t);
-		}
-		t[0] = -cylinder.md / cylinder.nd;
-		if (cylinder.k + 2 * t[0] * (cylinder.mn + t[0] * cylinder.nn) <= 0.0)
-			return (t);
-		t[0] = -1;
-		return (t);
+		t_point3d hb = minus_vec(ray_param_func(r, t[number_3]), cylinder.position);
+		normal = calculate_plane_normal(div_vec_scalar(minus_vec(hb, mul_vec_scalar(cylinder.center_line, dot_vec(hb, cylinder.center_line))), cylinder.diameter/2), r.direction);
 	}
-	else if (cylinder.md + t[0] * cylinder.nd > cylinder.dd)
+	else if (number_3 == 2 || number_3 == 3)
 	{
-		if (cylinder.nd >= 0.0)
-		{
-			t[0] = -1;
-			return (t);
-		}
-		t[0] = (cylinder.dd - cylinder.md) / cylinder.nd;
-		if (cylinder.k + cylinder.dd - 2 * cylinder.md + t[0] * (2 * (cylinder.mn - cylinder.nd) + t[0] * cylinder.nn) <= 0.0)
-			return (t);
-		t[0] = -1;
-		return (t);
+		normal = calculate_plane_normal(cylinder.center_line, r.direction);
 	}
+	if (number_3 != -1)
+	{
+		t[0] = t[number_3];
+		t[1] = -1;
+	}
+	free(p);
+	free(tbottom);
+	free(ttop);
 	return (t);
-//	if (module_vec(cross_vec(r.direction, cylinder.center_line)) == 0)
-//	{
-//		if (parallel_ray_cast(r, cylinder))
-//		{
-//			t[0] = HUGE;
-//			t[1] = -HUGE;
-//		}
-//		return (t);
-//	}
-//	v_d = normalize(cross_vec(r.direction, cylinder.center_line));
-//	d = fabs(dot_vec(minus_vec(r.origin, cylinder.position), v_d));
-//	if (d > (cylinder.diameter / 2))
-//		return (t);
-//	v_o = cross_vec(minus_vec(r.origin, cylinder.position), cylinder.center_line);
-//	t[0] = -dot_vec(v_o, v_d) / module_vec(v_d);
-//	v_o = normalize(cross_vec(v_d, cylinder.center_line));
-//	double s = fabs(sqrt(pow(cylinder.diameter / 2, 2) - pow(d, 2)) / dot_vec(r.direction, v_o));
-//	t[1] = t[0] + s;
-//	t[0] = t[0] - s;
-//	return (t);
 }

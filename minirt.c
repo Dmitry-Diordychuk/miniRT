@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/06 04:01:34 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/09 02:11:24 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,12 +55,12 @@ int	render(t_screen screen, t_data *img)
 	t_point2d	point;
 	int		color;
 	t_list	*lights;
-
+	// Камера вниз не показывает
 	scene = init_scene(init_objects(), init_lights(), (t_light_environment){0.2},
-				//create_camera((t_point3d){-5, 2, 4}, (t_viewport){1,1,1}, normalize((t_vector3d){1,-0.5,0}), 120));
-				//create_camera((t_point3d){5, 0, 4}, (t_viewport){1,1,1}, normalize((t_vector3d){-1,-1,0}), 120));
-				create_camera((t_point3d){0, 0, -1}, (t_viewport){1,1,1}, normalize((t_vector3d){0,0,1}), 120));
-				//create_camera((t_point3d){0,0,10}, (t_viewport){1,1,1}, normalize((t_vector3d){0,0,-1}), 120));
+				//create_camera((t_point3d){-5, 0, 4}, (t_viewport){1,1,1}, normalize((t_vector3d){1,0,0}), 120));
+				//create_camera((t_point3d){5, 0, 4}, (t_viewport){1,1,1}, normalize((t_vector3d){-1,0,0}), 120));
+				create_camera((t_point3d){0,0, 0}, (t_viewport){1,1,1}, normalize((t_vector3d){0,0,1}), 120));
+				//create_camera((t_point3d){0,0,6}, (t_viewport){1,1,1}, normalize((t_vector3d){0,0,-1}), 120));
 	point.y = canvas.top_border + 1;
 	while (--point.y > canvas.bottom_border)
 	{

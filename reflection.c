@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/11 01:05:50 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/06 01:07:33 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/09 01:26:06 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ int	check_shadow(t_scene scene, t_reflection_data data)
 	double		t;
 	t_list		*objects;
 
-	l.origin = sum_vec(data.point, mul_vec_scalar(data.normal, 0.001));
+	//l.origin = sum_vec(data.point, mul_vec_scalar(data.normal, 0.00001));
+	l.origin = data.point;
 	l.direction = data.light.direction;
 	objects = scene.objects;
 	while (objects != NULL)
@@ -28,7 +29,7 @@ int	check_shadow(t_scene scene, t_reflection_data data)
 		obj = *(t_object*)(objects->content);
 		if (apply_intersect(l, obj, &t, NULL))
 			return (-1);
-		if (t > 0 && t < data.max_t)//(t > (0.0000000000001) && t < data.max_t)
+		if (t > (0.0000000000001) && t < data.max_t)
 			return (1);
 		objects = objects->next;
 	}
@@ -113,7 +114,7 @@ double	calculate_reflection(t_scene scene, double nearest_root,
 	else if (ft_strcmp(nearest_obj.type, "Triangle") == 0)
 		data.normal = calculate_plane_normal(((t_triangle*)nearest_obj.container)->normal, scene.camera.ray.direction);
 	else if (ft_strcmp(nearest_obj.type, "Cylinder") == 0)
-		data.normal = calculate_cylinder_normal(*(t_cylinder*)nearest_obj.container, ray_param_func(scene.camera.ray, nearest_root));
+		data.normal = calculate_cylinder_normal(*(t_cylinder*)nearest_obj.container, scene.camera.ray.direction);
 	data.specular = nearest_obj.specular;
 	reflection_result = calculate_diffusion_specular(scene, data);
 	return (reflection_result);
