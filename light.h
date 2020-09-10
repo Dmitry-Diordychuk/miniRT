@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   light.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 14:23:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/11 01:11:25 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/09 14:06:55 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef struct		s_light_directional
 typedef struct		s_light_environment
 {
 	double		brightness;
+	t_color3d	color;
 }			t_light_environment;
 
 t_list			*init_lights();

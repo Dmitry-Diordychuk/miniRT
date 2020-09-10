@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/09 02:11:24 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/11 00:12:31 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,7 @@ int	trace_ray(t_scene scene)//t_ray3d r, t_list *objects, t_light_environment en
 	}
 	if (nearest_root != -1)
 	{
-		return (color3d_to_trgb(mul_vec_scalar(nearest_obj.color,
-		calculate_reflection(scene, nearest_root, nearest_obj))));
+		return (color3d_to_trgb(calculate_reflection(scene, nearest_root, nearest_obj)));
 	}
 	return (-1);
 }
@@ -56,7 +55,7 @@ int	render(t_screen screen, t_data *img)
 	int		color;
 	t_list	*lights;
 	// Камера вниз не показывает
-	scene = init_scene(init_objects(), init_lights(), (t_light_environment){0.2},
+	scene = init_scene(init_objects(), init_lights(), (t_light_environment){0.2, (t_color3d){255, 255, 255}},
 				//create_camera((t_point3d){-5, 0, 4}, (t_viewport){1,1,1}, normalize((t_vector3d){1,0,0}), 120));
 				//create_camera((t_point3d){5, 0, 4}, (t_viewport){1,1,1}, normalize((t_vector3d){-1,0,0}), 120));
 				create_camera((t_point3d){0,0, 0}, (t_viewport){1,1,1}, normalize((t_vector3d){0,0,1}), 120));

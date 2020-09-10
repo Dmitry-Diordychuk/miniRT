@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 16:31:50 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/08 22:48:25 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/10 23:38:03 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ t_list	*init_lights()
 	t_object		*object;
 
 	if (!(object = create_object("Light_point",
-			create_light_point((t_point3d){1, 1, 0}, 0.5),
-						(t_color3d){255, 255, 255}, 0)))
+			create_light_point((t_point3d){1, 1, 0}, 0.8),
+						(t_color3d){255, 0, 0}, 0)))
 		return (NULL);
 	if (!(lights = ft_lstnew(object)))
 	{
@@ -30,7 +30,7 @@ t_list	*init_lights()
 
 	if (!(object = create_object("Light_point",
 			create_light_directional((t_point3d){-1, 1, 0}, 0.5),
-						(t_color3d){255, 255, 255}, 0)))
+						(t_color3d){0, 255, 0}, 0)))
 	{
 		ft_lstclear(&lights, delete_object);
 		return (NULL);

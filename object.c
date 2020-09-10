@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/04 23:36:42 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/09 02:25:48 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/11 00:00:59 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ t_list		*init_objects(void)
 	ft_lstadd_back(&objects, temp);
 
 	if (!(obj = create_object("Sphere",
-	create_sphere((t_point3d){0, 0, 3}, 0.5), (t_color3d){0, 255, 0}, 500)))
+	create_sphere((t_point3d){0, 0, 3}, 0.5), (t_color3d){255, 255, 255}, 500)))
 	{
 		ft_lstclear(&objects, delete_object);
 		return (NULL);
@@ -168,7 +168,7 @@ t_list		*init_objects(void)
 	ft_lstadd_back(&objects, temp);
 
 	if (!(obj = create_object("Cylinder",
-	create_cylinder((t_point3d){0,-1,3}, normalize((t_vector3d){0, 1, 0}), 0.5, 0.5), (t_color3d){255, 0, 0}, 800)))
+	create_cylinder((t_point3d){0,-1,3}, normalize((t_vector3d){0, 1, 0}), 0.5, 0.5), (t_color3d){100, 100, 100}, 2000)))
 	{
 		ft_lstclear(&objects, delete_object);
 		return (NULL);
