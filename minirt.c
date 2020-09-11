@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/11 17:52:11 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/11 20:35:19 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,17 +50,12 @@ int	render_return(int ret, t_list *objects)
 int	render(t_screen screen, t_data *img)
 {
 	const t_canvas	canvas = create_canvas(screen);
-	t_scene		scene;
-	t_point2d	point;
-	int		color;
-	t_list	*lights;
-	int test;
+	t_scene			scene;
+	t_point2d		point;
+	int				color;
+	t_list			*lights;
 	// Камера вниз не показывает
-	scene = init_scene(init_objects(), init_lights(), (t_light_environment){0.2, (t_color3d){255, 255, 255}},
-				//create_camera((t_point3d){-5, 0, 4}, (t_viewport){1,1,1}, normalize((t_vector3d){1,0,0}), 120));
-				//create_camera((t_point3d){5, 0, 4}, (t_viewport){1,1,1}, normalize((t_vector3d){-1,0,0}), 120));
-				create_camera((t_point3d){0,0, 0}, (t_viewport){1,1,1}, normalize((t_vector3d){0,0,1}), 120));
-				//create_camera((t_point3d){0,0,6}, (t_viewport){1,1,1}, normalize((t_vector3d){0,0,-1}), 120));
+	scene = init_scene(init_objects(), init_lights(), init_cameras(), (t_light_environment){0.2, (t_color3d){255, 255, 255}});
 	point.y = canvas.top_border + 1;
 	while (--point.y > canvas.bottom_border)
 	{
@@ -69,8 +64,6 @@ int	render(t_screen screen, t_data *img)
 		{
 			draw_background(img, point, screen, canvas);
 			scene.camera.ray.direction = normalize(apply_matrix(scene.camera.rotation_matrix, canvas_to_viewport(point, canvas, scene.camera.viewport)));
-			if (point.y == 0)
-					test = 1;
 			if ((color = trace_ray(scene)) >= 0)
 			{
 				draw_pixel(img, canvas_to_screen(point, screen), color);

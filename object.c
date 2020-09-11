@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/04 23:36:42 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/11 18:09:09 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/11 21:50:48 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ t_list		*init_objects(void)
 	ft_lstadd_back(&objects, temp);
 
 	if (!(obj = create_object("Sphere",
-	create_sphere((t_point3d){0, 0, 0}, 5), (t_color3d){0, 0, 255}, 1000)))
+	create_sphere((t_point3d){0, 0, 0}, 10), (t_color3d){0, 0, 255}, 1000)))
 	{
 		ft_lstclear(&objects, delete_object);
 		return (NULL);
