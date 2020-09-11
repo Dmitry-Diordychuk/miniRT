@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/11 22:12:10 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/12 02:34:50 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,23 @@ int	render_return(int ret, t_list *objects)
 	ft_lstclear(&objects, delete_object);
 	return (ret);
 }
+
+void	*ft_lstget(t_list *list, int number)
+{
+	int	i;
+
+	i = 0;
+	while (i < number && list != NULL)
+	{
+		list = list->next;
+		i++;
+	}
+	if (list != NULL)
+		return (list->content);
+	return (NULL);
+}
                                                                                 //  разобратся с t_data, разобратся с цветами  initobj initlight malloc
-int	render(t_screen screen, t_data *img)
+int	render(t_screen screen, t_data *img, int camera_number)
 {
 	const t_canvas	canvas = create_canvas(screen);
 	t_scene			scene;
@@ -56,6 +71,7 @@ int	render(t_screen screen, t_data *img)
 	t_list			*lights;
 	// Камера вниз не показывает
 	scene = init_scene(init_objects(), init_lights(), init_cameras(), (t_light_environment){0.2, (t_color3d){255, 255, 255}});
+	scene.camera = *(t_camera*)ft_lstget(scene.cameras, abs(camera_number % 4)); // 4 заменить на кол-во камер
 	point.y = canvas.top_border + 1;
 	while (--point.y > canvas.bottom_border)
 	{
@@ -75,22 +91,51 @@ int	render(t_screen screen, t_data *img)
 	return (render_return(0, scene.objects));
 }
 
+typedef struct	s_vars
+{
+	void		*mlx;
+	void		*win;
+	t_data		data;
+	t_screen	screen;
+
+}				t_vars;
+
+int	keys_handler(int keycode, t_vars *vars)
+{
+	static int	camera_number;
+
+	if (keycode == 53)
+		mlx_destroy_window(vars->mlx, vars->win);
+	if (keycode == 123)
+	{
+		camera_number--;
+		render(vars->screen, &vars->data, camera_number);
+		mlx_put_image_to_window(vars->mlx, vars->win, vars->data.img, 0, 0);
+	}
+	if (keycode == 124)
+	{
+		camera_number++;
+		render(vars->screen, &vars->data, camera_number);
+		mlx_put_image_to_window(vars->mlx, vars->win, vars->data.img, 0, 0);
+	}
+	return (0);
+}
+
 int	main(void)
 {
-	const t_screen	screen = (t_screen){800, 600};
-	void		*mlx;
-	void		*mlx_win;
-	t_data		img;
+	t_vars	vars;
 
-	mlx = mlx_init();
-	mlx_win = mlx_new_window(mlx, screen.width, screen.height, "MLX!");
-	img.img = mlx_new_image(mlx, screen.width, screen.height);
-	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel,
-						&img.line_length, &img.endian);
-	if (render(screen, &img) < 0)
+	vars.screen = (t_screen){800, 600};
+	vars.mlx = mlx_init();
+	vars.win = mlx_new_window(vars.mlx, vars.screen.width, vars.screen.height, "MLX!");
+	vars.data.img = mlx_new_image(vars.mlx, vars.screen.width, vars.screen.height);
+	vars.data.addr = mlx_get_data_addr(vars.data.img, &vars.data.bits_per_pixel,
+						&vars.data.line_length, &vars.data.endian);
+	if (render(vars.screen, &vars.data, 0) < 0)
 		return (-1);
-	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
-	mlx_loop(mlx);
+	mlx_put_image_to_window(vars.mlx, vars.win, vars.data.img, 0, 0);
+	mlx_hook(vars.win, 2, 1L<<0, keys_handler, &vars);
+	mlx_loop(vars.mlx);
 	return (0);
 }
 
