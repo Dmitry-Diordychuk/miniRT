@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 20:31:59 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/01 21:01:13 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/11 15:11:52 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,6 @@ typedef struct	s_triangle
 }				t_triangle;
 
 void	*create_triangle(t_point3d v1, t_point3d v2, t_point3d v3);
-double	*intersect_triangle(t_ray3d r, void *obj);
+double	intersect_triangle(t_ray3d r, void *obj);
 
 #endif

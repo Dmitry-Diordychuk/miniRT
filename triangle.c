@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 20:31:56 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/04 23:00:37 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/11 17:58:18 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,19 +111,12 @@ int	is_in_triangle(t_triangle tri, t_point3d in_p)
 	int chosen_plane;
 
 	chosen_plane = tri_choose_biggest_projection(tri);
-	if (chosen_plane == 1)
-	{
-		if (tri_angle_test(tri, in_p))
-			return (1);
-	}
-	else if (chosen_plane == 2)
+	if (chosen_plane == 2)
 	{
 		in_p = (t_point3d){in_p.x, in_p.z, 0};
 		tri.v1 = (t_point3d){tri.v1.x, tri.v1.z, 0};
 		tri.v2 = (t_point3d){tri.v2.x, tri.v2.z, 0};
 		tri.v3 = (t_point3d){tri.v3.x, tri.v3.z, 0};
-		if (tri_angle_test(tri, in_p))
-			return (1);
 	}
 	else
 	{
@@ -131,28 +124,25 @@ int	is_in_triangle(t_triangle tri, t_point3d in_p)
 		tri.v1 = (t_point3d){tri.v1.y, tri.v1.z, 0};
 		tri.v2 = (t_point3d){tri.v2.y, tri.v2.z, 0};
 		tri.v3 = (t_point3d){tri.v3.y, tri.v3.z, 0};
-		if (tri_angle_test(tri, in_p))
-			return (1);
 	}
+	if (tri_angle_test(tri, in_p))
+		return (1);
 	return (0);
 }
 
-double	*intersect_triangle(t_ray3d r, void *obj)
+double	intersect_triangle(t_ray3d r, void *obj)
 {
-	double		*t;
+	double		t;
 	t_triangle	triangle;
 	t_plane		plane;
 	t_point3d	inter_point;
 
 	triangle = *(t_triangle*)(obj);
 	plane = (t_plane){triangle.normal, triangle.v1};
-	if (!(t = intersect_plane(r, (void*)(&plane))))
-		return (NULL);
-	if (t[0] >= 0 && is_in_triangle(triangle, ray_param_func(r, t[0])))
+	t = intersect_plane(r, (void*)(&plane));
+	if (t >= 0 && is_in_triangle(triangle, ray_param_func(r, t)))
 	{
 		return(t);
 	}
-	t[0] = -1;
-	t[1] = -1;
-	return (t);
+	return (-1);
 }

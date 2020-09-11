@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:21:28 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/04 23:00:39 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/11 15:07:26 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,6 @@ void	*create_square(t_point3d center, t_vector3d normal, double side)
 	s->v4 = p4_to_p3(mul_mat4d_vec4d(m, p3_to_p4(s->v4)));
 	return ((void*)s);
 }
-
-typedef	struct	s_point
-{
-	double x;
-	double y;
-}				t_point;
-
 
 double	square_area(t_point3d v1, t_point3d v2, t_point3d v3, t_point3d v4)
 {
@@ -141,20 +134,13 @@ int	is_in_square(t_square square, t_point3d in_p)
 	int chosen_plane;
 
 	chosen_plane = choose_biggest_square(square);
-	if (chosen_plane == 1)
-	{
-		if (angle_test(square, in_p))
-			return (1);
-	}
-	else if (chosen_plane == 2)
+	if (chosen_plane == 2)
 	{
 		in_p = (t_point3d){in_p.x, in_p.z, 0};
 		square.v1 = (t_point3d){square.v1.x, square.v1.z, 0};
 		square.v2 = (t_point3d){square.v2.x, square.v2.z, 0};
 		square.v3 = (t_point3d){square.v3.x, square.v3.z, 0};
 		square.v4 = (t_point3d){square.v4.x, square.v4.z, 0};
-		if (angle_test(square, in_p))
-			return (1);
 	}
 	else
 	{
@@ -163,25 +149,22 @@ int	is_in_square(t_square square, t_point3d in_p)
 		square.v2 = (t_point3d){square.v2.y, square.v2.z, 0};
 		square.v3 = (t_point3d){square.v3.y, square.v3.z, 0};
 		square.v4 = (t_point3d){square.v4.y, square.v4.z, 0};
-		if (angle_test(square, in_p))
-			return (1);
 	}
+	if (angle_test(square, in_p))
+		return (1);
 	return (0);
 }
 
-double	*intersect_square(t_ray3d r, void *obj)
+double	intersect_square(t_ray3d r, void *obj)
 {
-	double		*t;
+	double		t;
 	t_square	square;
 	t_plane		plane;
 
 	square = *(t_square*)obj;
 	plane = (t_plane){square.normal, square.center};
-	if (!(t = intersect_plane(r, (void*)(&plane))))
-		return (NULL);
-	if (t[0] >= 0 && is_in_square(square, ray_param_func(r, t[0])))
+	t = intersect_plane(r, (void*)(&plane));
+	if (t >= 0 && is_in_square(square, ray_param_func(r, t)))
 		return(t);
-	t[0] = -1;
-	t[1] = -1;
-	return (t);
+	return (-1);
 }
