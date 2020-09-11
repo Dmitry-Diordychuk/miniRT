@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 03:31:51 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/11 20:31:36 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/11 23:19:10 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ t_camera	*create_camera(t_point3d position, t_viewport viewport, t_vector3d dire
 	if (!(camera = (t_camera*)malloc(sizeof(t_camera))))
 		return (NULL);
 	camera->ray.origin = position;
-	camera->viewport = viewport;
+	camera->viewport = (t_viewport){1 / (2 * tan((fov / 2) * (M_PI / 180))), viewport.height, viewport.width};
 	camera->direction = direction;
 	camera->rotation_matrix = generate_rotation_matrix(*camera);
 	camera->fov = fov;
