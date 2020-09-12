@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/11 01:05:50 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/11 18:06:37 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/13 02:46:58 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	reflect_diffusion(t_scene scene, t_reflection_data data, t_vector3d *color)
 t_color3d	calculate_diffusion_specular(t_scene scene, t_reflection_data data)
 {
 	t_color3d		point_color;
-	t_object		*light;
+	t_light_point	*light;
 	t_list			*lights;
 
 	data.max_t = MAXFLOAT;
@@ -73,16 +73,12 @@ t_color3d	calculate_diffusion_specular(t_scene scene, t_reflection_data data)
 	point_color = mul_vec_scalar(div_vec_scalar(scene.environment_light.color, 255), scene.environment_light.brightness);
 	while (lights != NULL)
 	{
-		light = (t_object*)(lights->content);
-		if (ft_strcmp(light->type, "Light_point") == 0)
-		{
-			data.max_t = 1;
-			data.light.direction = minus_vec(((t_light_point*)light
-					->container)->position, data.point);
-			data.light.brightness = ((t_light_point*)light->container)->brightness;
-			data.light_position = ((t_light_point*)light->container)->position;
-			data.light_color = mul_vec_scalar(div_vec_scalar(light->color, 255), data.light.brightness);
-		}
+		light = (t_light_point*)lights->content;
+		data.max_t = 1;
+		data.light.direction = minus_vec(light->position, data.point);
+		data.light.brightness = light->brightness;
+		data.light_position = light->position;
+		data.light_color = mul_vec_scalar(div_vec_scalar(light->color, 255), data.light.brightness);
 		point_color = sum_vec(point_color, mul_vec_scalar(data.light_color, 0.25));
 		if (check_shadow(scene, data) == 0)
 		{

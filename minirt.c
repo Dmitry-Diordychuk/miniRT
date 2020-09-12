@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/12 22:20:33 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/13 02:32:53 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ int	render(t_screen screen, t_data *img, t_scene scene,int camera_number)
 	//scene.camera = *(t_camera)scene.cameras;
 	scene.camera = *(t_camera*)ft_lstget(scene.cameras, abs(camera_number % scene.cameras_counter)); // 4 заменить на кол-во камер
 	scene.objects = init_objects();
-	scene.lights = init_lights();
 	point.y = canvas.top_border + 1;
 	while (--point.y > canvas.bottom_border)
 	{
@@ -295,6 +294,32 @@ int	parse_camera(char *str, t_list **cameras)
 	return (0);
 }
 
+int	parse_light(char *str, t_list **lights)
+{
+	t_light_point	light;
+	t_light_point	*new;
+
+	str++;
+	while (*str == ' ')
+		str++;
+	light.position = parse_vector(str);
+	str = ft_strchr(str, ' ');
+	while (*str == ' ')
+		str++;
+	light.brightness = ft_atof(str);
+	str = ft_strchr(str, ' ');
+	while (*str == ' ')
+		str++;
+	light.color = parse_color(str);
+	if (!(new = create_light_point(light.position, light.brightness, light.color)))
+		return (-1);
+	if (*lights == NULL)
+		*lights = ft_lstnew((void*)new);
+	else
+		ft_lstadd_back(lights, ft_lstnew((void*)new));
+	return (0);
+}
+
 int	parse_file(char **file_content, t_vars *vars)
 {
 	int i;
@@ -311,6 +336,8 @@ int	parse_file(char **file_content, t_vars *vars)
 			parse_camera(file_content[i], &(vars->scene.cameras));
 			vars->scene.cameras_counter++;
 		}
+		if (file_content[i][0] == 'l')
+			parse_light(file_content[i], &(vars->scene.lights));
 		i++;
 	}
 	return (0);
@@ -329,6 +356,8 @@ int	main(int argc, char **argv)
 		return (-1);
 	vars.scene.cameras_counter = 0;
 	vars.scene.cameras = NULL;
+	vars.scene.lights = NULL;
+	vars.scene.objects = NULL;
 	parse_file(file_content, &vars);
 	vars.mlx = mlx_init();
 	vars.win = mlx_new_window(vars.mlx, vars.screen.width, vars.screen.height, "MLX!");
