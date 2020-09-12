@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 03:30:35 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/11 20:27:19 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/12 21:41:18 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,7 @@ typedef	struct		s_camera
 
 t_point3d	canvas_to_viewport(t_point2d canvas_point, t_canvas canvas, t_viewport viewport);
 t_matrix4d	generate_rotation_matrix(t_camera camera);
-t_camera	*create_camera(t_point3d position, t_viewport viewport, t_vector3d direction, double fov);
-t_list		*init_cameras();
+t_camera	*create_camera(t_point3d position, t_vector3d direction, double fov);
 
 #endif
 

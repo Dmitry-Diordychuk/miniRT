@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 03:31:51 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/11 23:19:10 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/12 21:41:08 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,14 +63,14 @@ t_matrix4d	generate_rotation_matrix(t_camera camera)
 	return (m);
 }
 
-t_camera	*create_camera(t_point3d position, t_viewport viewport, t_vector3d direction, double fov)
+t_camera	*create_camera(t_point3d position, t_vector3d direction, double fov)
 {
 	t_camera	*camera;
 
 	if (!(camera = (t_camera*)malloc(sizeof(t_camera))))
 		return (NULL);
 	camera->ray.origin = position;
-	camera->viewport = (t_viewport){1 / (2 * tan((fov / 2) * (M_PI / 180))), viewport.height, viewport.width};
+	camera->viewport = (t_viewport){1 / (2 * tan((fov / 2) * (M_PI / 180))), 1, 1};
 	camera->direction = direction;
 	camera->rotation_matrix = generate_rotation_matrix(*camera);
 	camera->fov = fov;
@@ -83,40 +83,4 @@ void	delete_camera(void *obj)
 
 	camera = (t_camera*)obj;
 	free(camera);
-}
-
-t_list *init_cameras()
-{
-	t_list		*cameras;
-	t_list		*temp;
-	t_camera	*cam;
-
-	cam = create_camera((t_point3d){-5, 0, 4}, (t_viewport){1,1,1}, normalize((t_vector3d){1,0,0}), 120);
-	if (!(cameras = ft_lstnew((void*)cam)))
-	{
-		free((t_camera*)cam);
-		return (NULL);
-	}
-
-	cam = create_camera((t_point3d){5, 0, 4}, (t_viewport){1,1,1}, normalize((t_vector3d){-1,0,0}), 120);
-	if (!(temp = ft_lstnew((void*)cam)))
-	{
-		ft_lstclear(&cameras, delete_camera);
-	}
-	ft_lstadd_back(&cameras, temp);
-
-	cam = create_camera((t_point3d){0, 0, 0}, (t_viewport){1,1,1}, normalize((t_vector3d){0,0,1}), 120);
-	if (!(temp = ft_lstnew((void*)cam)))
-	{
-		ft_lstclear(&cameras, delete_camera);
-	}
-	ft_lstadd_back(&cameras, temp);
-
-	cam = create_camera((t_point3d){0,0,6}, (t_viewport){1,1,1}, normalize((t_vector3d){0,0,-1}), 120);
-	if (!(temp = ft_lstnew((void*)cam)))
-	{
-		ft_lstclear(&cameras, delete_camera);
-	}
-	ft_lstadd_back(&cameras, temp);
-	return (cameras);
 }

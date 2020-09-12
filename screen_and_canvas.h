@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   screen_and_canvas.h                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 03:35:13 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 03:39:29 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/12 19:21:40 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 # include "point.h"
 
 typedef struct		s_screen {
-	const int	width;
-	const int	height;
+	int	width;
+	int	height;
 }			t_screen;
 
 typedef struct		s_canvas {

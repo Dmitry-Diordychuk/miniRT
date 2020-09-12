@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/12 15:25:41 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/12 22:20:33 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,16 +62,19 @@ void	*ft_lstget(t_list *list, int number)
 	return (NULL);
 }
                                                                                 //  разобратся с t_data, разобратся с цветами  initobj initlight malloc
-int	render(t_screen screen, t_data *img, int camera_number)
+int	render(t_screen screen, t_data *img, t_scene scene,int camera_number)
 {
 	const t_canvas	canvas = create_canvas(screen);
-	t_scene			scene;
 	t_point2d		point;
 	int				color;
 	t_list			*lights;
+	int				test;
 	// Камера вниз не показывает
-	scene = init_scene(init_objects(), init_lights(), init_cameras(), (t_light_environment){0.2, (t_color3d){255, 255, 255}});
-	scene.camera = *(t_camera*)ft_lstget(scene.cameras, abs(camera_number % 4)); // 4 заменить на кол-во камер
+	//scene = init_scene(init_objects(), init_lights(), scene.cameras);
+	//scene.camera = *(t_camera)scene.cameras;
+	scene.camera = *(t_camera*)ft_lstget(scene.cameras, abs(camera_number % scene.cameras_counter)); // 4 заменить на кол-во камер
+	scene.objects = init_objects();
+	scene.lights = init_lights();
 	point.y = canvas.top_border + 1;
 	while (--point.y > canvas.bottom_border)
 	{
@@ -97,7 +100,7 @@ typedef struct	s_vars
 	void		*win;
 	t_data		data;
 	t_screen	screen;
-
+	t_scene		scene;
 }				t_vars;
 
 int	keys_handler(int keycode, t_vars *vars)
@@ -109,13 +112,13 @@ int	keys_handler(int keycode, t_vars *vars)
 	if (keycode == 123)
 	{
 		camera_number--;
-		render(vars->screen, &vars->data, camera_number);
+		render(vars->screen, &vars->data, vars->scene, camera_number);
 		mlx_put_image_to_window(vars->mlx, vars->win, vars->data.img, 0, 0);
 	}
 	if (keycode == 124)
 	{
 		camera_number++;
-		render(vars->screen, &vars->data, camera_number);
+		render(vars->screen, &vars->data, vars->scene, camera_number);
 		mlx_put_image_to_window(vars->mlx, vars->win, vars->data.img, 0, 0);
 	}
 	return (0);
@@ -175,8 +178,142 @@ void	free_file_content(char **file_content)
 
 	i = 0;
 	while (file_content[i] != NULL)
+	{
 		free(file_content[i]);
+		i++;
+	}
 	free(file_content);
+}
+
+t_screen	parse_resolution(char *str)
+{
+	t_screen	screen;
+
+	str++;
+	while (*str == ' ')
+		str++;
+	screen.width = ft_atoi(str);
+	str = ft_strchr(str, ' ');
+	while (*str == ' ')
+		str++;
+	screen.height = ft_atoi(str);
+	return (screen);
+}
+
+double	ft_atof(char *str)
+{
+	int		n;
+	double	d;
+	int		len;
+	int		i;
+
+	d = 0;
+	n = ft_atoi(str);
+	if ((str = ft_strchr(str, '.')) != NULL)
+	{
+		str++;
+		len = 0;
+		while (str[len] != ' ' && str[len] != '\0')
+			len++;
+		d = ft_atoi(str);
+	}
+	i = 0;
+	while (i < len)
+	{
+		d = d / 10;
+		i++;
+	}
+	return ((double)n + d);
+}
+
+t_color3d	parse_color(char *str)
+{
+	t_color3d	color;
+
+	color.x = ft_atoi(str);
+	str = ft_strchr(str, ',');
+	str++;
+	color.y = ft_atoi(str);
+	str = ft_strchr(str, ',');
+	str++;
+	color.z = ft_atoi(str);
+	return (color);
+}
+
+t_light_environment	parse_ambient(char *str)
+{
+	t_light_environment	amb;
+
+	str++;
+	while (*str == ' ')
+		str++;
+	amb.brightness = ft_atof(str);
+	str = ft_strchr(str, ' ');
+	while (*str == ' ')
+		str++;
+	amb.color = parse_color(str);
+	return (amb);
+}
+
+t_vector3d	parse_vector(char *str)
+{
+	t_vector3d	vector;
+
+	vector.x = atof(str);
+	str = ft_strchr(str, ',');
+	str++;
+	vector.y = atof(str);
+	str = ft_strchr(str, ',');
+	str++;
+	vector.z = atof(str);
+	return (vector);
+}
+
+int	parse_camera(char *str, t_list **cameras)
+{
+	t_camera camera;
+	t_camera *new;
+
+	str++;
+	while (*str == ' ')
+		str++;
+	camera.ray.origin = parse_vector(str);
+	str = ft_strchr(str, ' ');
+	while (*str == ' ')
+		str++;
+	camera.direction = parse_vector(str);
+	str = ft_strchr(str, ' ');
+	while (*str == ' ')
+		str++;
+	camera.fov = ft_atoi(str);
+	if (!(new = create_camera(camera.ray.origin, camera.direction, camera.fov)))
+		return (-1);
+	if (*cameras == NULL)
+		*cameras = ft_lstnew((void*)new);                                                   ///malloc
+	else
+		ft_lstadd_back(cameras, ft_lstnew((void*)new));
+	return (0);
+}
+
+int	parse_file(char **file_content, t_vars *vars)
+{
+	int i;
+
+	i = 0;
+	while (file_content[i] != NULL)
+	{
+		if (file_content[i][0] == 'R')
+			vars->screen = parse_resolution(file_content[i]);
+		if (file_content[i][0] == 'A')
+			vars->scene.environment_light = parse_ambient(file_content[i]);
+		if (file_content[i][0] == 'c' && file_content[i][1] == ' ')
+		{
+			parse_camera(file_content[i], &(vars->scene.cameras));
+			vars->scene.cameras_counter++;
+		}
+		i++;
+	}
+	return (0);
 }
 
 int	main(int argc, char **argv)
@@ -190,13 +327,15 @@ int	main(int argc, char **argv)
 		return (-1);
 	if (!(file_content = get_file_content(argv[1])))
 		return (-1);
-	vars.screen = (t_screen){800, 600};
+	vars.scene.cameras_counter = 0;
+	vars.scene.cameras = NULL;
+	parse_file(file_content, &vars);
 	vars.mlx = mlx_init();
 	vars.win = mlx_new_window(vars.mlx, vars.screen.width, vars.screen.height, "MLX!");
 	vars.data.img = mlx_new_image(vars.mlx, vars.screen.width, vars.screen.height);
 	vars.data.addr = mlx_get_data_addr(vars.data.img, &vars.data.bits_per_pixel,
 						&vars.data.line_length, &vars.data.endian);
-	if (render(vars.screen, &vars.data, 0) < 0)
+	if (render(vars.screen, &vars.data, vars.scene, 0) < 0)
 		return (-1);
 	mlx_put_image_to_window(vars.mlx, vars.win, vars.data.img, 0, 0);
 	mlx_hook(vars.win, 2, 1L<<0, keys_handler, &vars);

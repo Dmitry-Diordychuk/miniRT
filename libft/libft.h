@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/04 18:50:18 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/05 21:54:04 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/12 14:51:56 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <stdlib.h>
 # include <unistd.h>
+# include "get_next_line.h"
 
 void				ft_bzero(void *s, size_t n);
 void				*ft_memset(void *b, int c, size_t n);
