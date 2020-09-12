@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 13:44:09 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/03 22:16:26 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/12 14:45:50 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <libft.h>
 # include <math.h>
+# include <fcntl.h>
 # include "mlx.h"
 # include "color.h"
 # include "vector.h"
