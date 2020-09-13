@@ -6,7 +6,7 @@
 #    By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/05/06 16:34:49 by kdustin           #+#    #+#              #
-#    Updated: 2020/09/12 15:11:01 by kdustin          ###   ########.fr        #
+#    Updated: 2020/09/13 15:13:41 by kdustin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,7 +52,8 @@ REG_OBJS =	ft_memset.o			\
 			ft_strrotate.o		\
 			ft_strcpy.o			\
 			get_next_line.o		\
-			get_next_line_utils.o
+			get_next_line_utils.o \
+			ft_isspace.o
 
 BONUS_OBJS =	ft_lstnew.o			\
 				ft_lstadd_front.o	\

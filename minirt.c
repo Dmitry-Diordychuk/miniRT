@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/13 03:31:44 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/13 22:32:45 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,19 +183,99 @@ void	free_file_content(char **file_content)
 	free(file_content);
 }
 
-t_screen	parse_resolution(char *str)
+int	skip_spaces(char **str)
 {
-	t_screen	screen;
+	int counter;
 
+	counter = 0;
+	while (ft_isspace(**str))
+	{
+		(*str)++;
+		counter++;
+	}
+	if (counter != 0)
+		return (0);
+	return (-1);
+}
+
+int	validate_int(char *str)
+{
+	int counter;
+
+	counter = 0;
+	while (ft_isdigit(*str))
+	{
+		str++;
+		counter++;
+	}
+	if (ft_isspace(*str) || *str == '\0')
+		return (0);
+	return (-1);
+}
+
+int	validate_double(char *str)
+{
+	int counter;
+
+	counter = 0;
+	while (ft_isdigit(*str))
+	{
+		str++;
+		counter++;
+	}
+	if (*str == '.')
+	{
+		counter++;
+		str++;
+		while (ft_isdigit(*str))
+		{
+			str++;
+			counter++;
+		}
+	}
+	if (ft_isspace(*str) || *str == '\0')
+		return (0);
+	return (-1);
+}
+
+int	skip_count_digit(char **str)
+{
+	int counter;
+
+	counter = 0;
+	if (**str == '-')
+		(*str)++;
+	while (ft_isdigit(**str))
+	{
+		(*str)++;
+		counter++;
+	}
+	if (**str == '.')
+	{
+		(*str)++;
+		while (ft_isdigit(**str))
+		{
+			(*str)++;
+			counter++;
+		}
+	}
+	return (counter);
+}
+
+int	parse_resolution(char *str, t_screen *screen)
+{
+	int			error;
+
+	error = 0;
 	str++;
-	while (*str == ' ')
-		str++;
-	screen.width = ft_atoi(str);
-	str = ft_strchr(str, ' ');
-	while (*str == ' ')
-		str++;
-	screen.height = ft_atoi(str);
-	return (screen);
+	error += skip_spaces(&str);
+	error += validate_int(str);
+	screen->width = ft_atoi(str);
+	skip_count_digit(&str);
+	error += skip_spaces(&str);
+	error += validate_int(str);
+	screen->height = ft_atoi(str);
+	return (error);
 }
 
 double	ft_atof(char *str)
@@ -211,7 +291,7 @@ double	ft_atof(char *str)
 	{
 		str++;
 		len = 0;
-		while (str[len] != ' ' && str[len] != '\0')
+		while (!ft_isspace(str[len]) && str[len] != '\0')
 			len++;
 		d = ft_atoi(str);
 	}
@@ -224,295 +304,339 @@ double	ft_atof(char *str)
 	return ((double)n + d);
 }
 
-t_color3d	parse_color(char *str)
+int	parse_color(char *str, t_color3d *color)
 {
-	t_color3d	color;
+	int	counter;
 
-	color.x = ft_atoi(str);
-	str = ft_strchr(str, ',');
+	color->x = ft_atoi(str);
+	counter = 0;
+	counter += skip_count_digit(&str);
+	if (*str != ',' || counter > 3 || counter == 0 || color->x > 255 || color->x < 0)
+		return (-1);
 	str++;
-	color.y = ft_atoi(str);
-	str = ft_strchr(str, ',');
+	color->y = ft_atoi(str);
+	counter = 0;
+	counter += skip_count_digit(&str);
+	if (*str != ',' || counter > 3 || counter == 0 || color->y > 255 || color->y < 0)
+		return (-1);
 	str++;
-	color.z = ft_atoi(str);
-	return (color);
+	color->z = ft_atoi(str);
+	counter = 0;
+	counter += skip_count_digit(&str);
+	if ((!ft_isspace(*str) && *str != '\0') || counter > 3 || counter == 0 || color->z > 255 || color->z < 0)
+		return (-1);
+	return (0);
 }
 
-t_light_environment	parse_ambient(char *str)
+int	parse_ambient(char *str, t_light_environment *amb)
 {
-	t_light_environment	amb;
+	int	error;
 
+	error = 0;
 	str++;
-	while (*str == ' ')
-		str++;
-	amb.brightness = ft_atof(str);
-	str = ft_strchr(str, ' ');
-	while (*str == ' ')
-		str++;
-	amb.color = parse_color(str);
-	return (amb);
+	error += skip_spaces(&str);
+	error += validate_double(str);
+	amb->brightness = ft_atof(str);
+	skip_count_digit(&str);
+	error += skip_spaces(&str);
+	error += parse_color(str, &(amb->color));
+	return (error);
 }
 
-t_vector3d	parse_vector(char *str)
+int	parse_vector(char *str, t_vector3d *vector)
 {
-	t_vector3d	vector;
+	vector->x = ft_atof(str);
+	skip_count_digit(&str);
+	if (*str == '.' && str++)
+		skip_count_digit(&str);
+	if (*str != ',')
+		return (-1);
+	str++;
+	vector->y = ft_atof(str);
+	skip_count_digit(&str);
+	if (*str == '.' && str++)
+		skip_count_digit(&str);
+	if (*str != ',')
+		return (-1);
+	str++;
+	vector->z = ft_atof(str);
+	skip_count_digit(&str);
+	if (*str == '.' && str++)
+		skip_count_digit(&str);
+	if (!ft_isspace(*str) && *str != '\0')
+		return (-1);
+	return (0);
+}
 
-	vector.x = atof(str);
-	str = ft_strchr(str, ',');
-	str++;
-	vector.y = atof(str);
-	str = ft_strchr(str, ',');
-	str++;
-	vector.z = atof(str);
-	return (vector);
+void	ft_lstpush(t_list **list, t_list *elem)
+{
+	if (*list == NULL)
+		*list = elem;
+	else
+		ft_lstadd_back(list, elem);
+}
+
+void	skip_vector(char **str)
+{
+	if (**str == '-')
+		(*str)++;
+	while (ft_isdigit(**str) || **str == '.')
+		(*str)++;
+	(*str)++;
+	if (**str == '-')
+		(*str)++;
+	while (ft_isdigit(**str) || **str == '.')
+		(*str)++;
+	(*str)++;
+	if (**str == '-')
+		(*str)++;
+	while (ft_isdigit(**str) || **str == '.')
+		(*str)++;
 }
 
 int	parse_camera(char *str, t_list **cameras)
 {
-	t_camera camera;
-	t_camera *new;
+	t_camera	c;
+	t_camera	*new_camera;
+	int			error;
+	t_list		*new_elem;
 
+	error = 0;
 	str++;
-	while (*str == ' ')
-		str++;
-	camera.ray.origin = parse_vector(str);
-	str = ft_strchr(str, ' ');
-	while (*str == ' ')
-		str++;
-	camera.direction = parse_vector(str);
-	str = ft_strchr(str, ' ');
-	while (*str == ' ')
-		str++;
-	camera.fov = ft_atoi(str);
-	if (!(new = create_camera(camera.ray.origin, camera.direction, camera.fov)))
-		return (-1);
-	if (*cameras == NULL)
-		*cameras = ft_lstnew((void*)new);                                                   ///malloc
-	else
-		ft_lstadd_back(cameras, ft_lstnew((void*)new));
-	return (0);
+	error += skip_spaces(&str);
+	error += parse_vector(str, &(c.ray.origin));
+	skip_vector(&str);
+	error += skip_spaces(&str);
+	error += parse_vector(str, &(c.direction));
+	skip_vector(&str);
+	error += skip_spaces(&str);
+	error += validate_double(str);
+	c.fov = ft_atoi(str);
+	if (!(new_camera = create_camera(c.ray.origin, c.direction, c.fov)))
+		return (error - 1);
+	if (!(new_elem = ft_lstnew((void*)new_camera)))
+	{
+		free(new_camera);
+		return (error - 1);
+	}
+	ft_lstpush(cameras, new_elem);
+	return (error);
 }
 
 int	parse_light(char *str, t_list **lights)
 {
 	t_light_point	light;
-	t_light_point	*new;
+	t_light_point	*new_light;
+	t_list			*new_elem;
+	int				error;
 
+	error = 0;
 	str++;
-	while (*str == ' ')
-		str++;
-	light.position = parse_vector(str);
-	str = ft_strchr(str, ' ');
-	while (*str == ' ')
-		str++;
+	error += skip_spaces(&str);
+	error += parse_vector(str, &(light.position));
+	skip_vector(&str);
+	error += skip_spaces(&str);
 	light.brightness = ft_atof(str);
-	str = ft_strchr(str, ' ');
-	while (*str == ' ')
-		str++;
-	light.color = parse_color(str);
-	if (!(new = create_light_point(light.position, light.brightness, light.color)))
+	error += validate_double(str);
+	skip_count_digit(&str);
+	error += skip_spaces(&str);
+	error += parse_color(str, &(light.color));
+	if (!(new_light = create_light_point(light.position, light.brightness, light.color)))
 		return (-1);
-	if (*lights == NULL)
-		*lights = ft_lstnew((void*)new);
-	else
-		ft_lstadd_back(lights, ft_lstnew((void*)new));
-	return (0);
+	if (!(new_elem = ft_lstnew(new_light)))
+		return (-1);
+	ft_lstpush(lights, new_elem);
+	return (error);
 }
 
 int	parse_sphere(char *str, t_list **objects)
 {
 	t_sphere	sphere;
-	t_object	*obj;
-	void		*new_sp;
+	void		*new;
 	t_color3d	color;
+	int			error;
+	t_list		*new_elem;
 
+	error = 0;
 	str += 2;
-	while (*str == ' ')
-		str++;
-	sphere.position = parse_vector(str);
-	str = ft_strchr(str, ' ');
-	while (*str == ' ')
-		str++;
+	error += skip_spaces(&str);
+	error += parse_vector(str, &(sphere.position));
+	skip_vector(&str);
+	error += skip_spaces(&str);
 	sphere.radius = ft_atof(str) / 2;
-	str = ft_strchr(str, ' ');
-	while (*str == ' ')
-		str++;
-	color = parse_color(str);
-	if (!(new_sp = create_sphere(sphere.position, sphere.radius)))
+	error += validate_double(str);
+	skip_count_digit(&str);
+	error += skip_spaces(&str);
+	error += parse_color(str, &color);
+	if (!(new = create_sphere(sphere.position, sphere.radius)))                  //malloc free
 		return (-1);
-	if (!(obj = create_object("Sphere", new_sp, color)))
+	if (!(new = create_object("Sphere", new, color)))
 		return (-1);
-	if (*objects == NULL)
-		*objects = ft_lstnew((void*)obj);
-	else
-		ft_lstadd_back(objects, ft_lstnew((void*)obj));
-	return (0);
+	if (!(new_elem = ft_lstnew(new)))
+		return (-1);
+	ft_lstpush(objects, new_elem);
+	return (error);
 }
 
 int	parse_plane(char *str, t_list **objects)
 {
 	t_plane		plane;
-	t_object	*obj;
-	void		*new_pl;
+	void		*new;
+	t_list		*new_elem;
 	t_color3d	color;
+	int			error;
 
+	error = 0;
 	str += 2;
-	while (*str == ' ')
-		str++;
-	plane.q = parse_vector(str);
-	str = ft_strchr(str, ' ');
-	while (*str == ' ')
-		str++;
-	plane.normal = parse_vector(str);
-	str = ft_strchr(str, ' ');
-	while (*str == ' ')
-		str++;
-	color = parse_color(str);
-	if (!(new_pl = create_plane(plane.q, plane.normal)))
+	error += skip_spaces(&str);
+	error += parse_vector(str, &(plane.q));
+	skip_vector(&str);
+	error += skip_spaces(&str);
+	error += parse_vector(str, &(plane.normal));
+	skip_vector(&str);
+	error += skip_spaces(&str);
+	error += parse_color(str, &color);
+	if (!(new = create_plane(plane.q, plane.normal)))
 		return (-1);
-	if (!(obj = create_object("Plane", new_pl, color)))
+	if (!(new = create_object("Plane", new, color)))
 		return (-1);
-	if (*objects == NULL)
-		*objects = ft_lstnew((void*)obj);
-	else
-		ft_lstadd_back(objects, ft_lstnew((void*)obj));
-	return (0);
+	if (!(new_elem = ft_lstnew(new)))
+		return (-1);
+	ft_lstpush(objects, new_elem);
+	return (error);
 }
 
 int	parse_square(char *str, t_list **objects)
 {
 	t_square	square;
-	t_object	*obj;
-	void		*new_sq;
+	void		*new;
+	t_list		*new_elem;
 	t_color3d	color;
+	int			error;
 
+	error = 0;
 	str += 2;
-	while (*str == ' ')
-		str++;
-	square.center = parse_vector(str);
-	str = ft_strchr(str, ' ');
-	while (*str == ' ')
-		str++;
-	square.normal = parse_vector(str);
-	str = ft_strchr(str, ' ');
-	while (*str == ' ')
-		str++;
+	error += skip_spaces(&str);
+	error += parse_vector(str, &(square.center));
+	skip_vector(&str);
+	error += skip_spaces(&str);
+	error += parse_vector(str, &(square.normal));
+	skip_vector(&str);
+	error += skip_spaces(&str);
 	square.side = ft_atof(str);
-	str = ft_strchr(str, ' ');
-	while (*str == ' ')
-		str++;
-	color = parse_color(str);
-	if (!(new_sq = create_square(square.center, square.normal, square.side)))
+	error += validate_double(str);
+	skip_count_digit(&str);
+	error += skip_spaces(&str);
+	error += parse_color(str, &color);
+	if (!(new = create_square(square.center, square.normal, square.side)))
 		return (-1);
-	if (!(obj = create_object("Square", new_sq, color)))
+	if (!(new = create_object("Square", new, color)))
 		return (-1);
-	if (*objects == NULL)
-		*objects = ft_lstnew((void*)obj);
-	else
-		ft_lstadd_back(objects, ft_lstnew((void*)obj));
-	return (0);
+	if (!(new_elem = ft_lstnew(new)))
+		return (-1);
+	ft_lstpush(objects, new_elem);
+	return (error);
 }
 
 int	parse_cylinder(char *str, t_list **objects)
 {
 	t_cylinder	cylinder;
-	t_object	*obj;
-	void		*new_cy;
+	void		*new;
+	t_list		*new_elem;
 	t_color3d	color;
+	int			error;
 
+	error = 0;
 	str += 2;
-	while (*str == ' ')
-		str++;
-	cylinder.position = parse_vector(str);
-	str = ft_strchr(str, ' ');
-	while (*str == ' ')
-		str++;
-	cylinder.center_line = parse_vector(str);
-	str = ft_strchr(str, ' ');
-	while (*str == ' ')
-		str++;
+	error += skip_spaces(&str);
+	error += parse_vector(str, &(cylinder.position));
+	skip_vector(&str);
+	error += skip_spaces(&str);
+	error += parse_vector(str, &(cylinder.center_line));
+	skip_vector(&str);
+	error += skip_spaces(&str);
 	cylinder.diameter = ft_atof(str);
-	str = ft_strchr(str, ' ');
-	while (*str == ' ')
-		str++;
+	error += validate_double(str);
+	skip_count_digit(&str);
+	error += skip_spaces(&str);
 	cylinder.height = ft_atof(str);
-	str = ft_strchr(str, ' ');
-	while (*str == ' ')
-		str++;
-	color = parse_color(str);
-	if (!(new_cy = create_cylinder(cylinder.position, cylinder.center_line, cylinder.diameter, cylinder.height)))
+	error += validate_double(str);
+	skip_count_digit(&str);
+	error += skip_spaces(&str);
+	error += parse_color(str, &color);
+	if (!(new = create_cylinder(cylinder.position, cylinder.center_line, cylinder.diameter, cylinder.height)))
 		return (-1);
-	if (!(obj = create_object("Cylinder", new_cy, color)))
+	if (!(new = create_object("Cylinder", new, color)))
 		return (-1);
-	if (*objects == NULL)
-		*objects = ft_lstnew((void*)obj);
-	else
-		ft_lstadd_back(objects, ft_lstnew((void*)obj));
-	return (0);
+	if (!(new_elem = ft_lstnew(new)))
+		return (-1);
+	ft_lstpush(objects, new_elem);
+	return (error);
 }
 
 int	parse_triangle(char *str, t_list **objects)
 {
 	t_triangle	triangle;
-	t_object	*obj;
-	void		*new_tr;
+	void		*new;
+	t_list		*new_elem;
 	t_color3d	color;
+	int			error;
 
+	error = 0;
 	str += 2;
-	while (*str == ' ')
-		str++;
-	triangle.v1 = parse_vector(str);
-	str = ft_strchr(str, ' ');
-	while (*str == ' ')
-		str++;
-	triangle.v2 = parse_vector(str);
-	str = ft_strchr(str, ' ');
-	while (*str == ' ')
-		str++;
-	triangle.v3 = parse_vector(str);
-	str = ft_strchr(str, ' ');
-	while (*str == ' ')
-		str++;
-	color = parse_color(str);
-	if (!(new_tr = create_triangle(triangle.v1, triangle.v2, triangle.v3)))
+	error += skip_spaces(&str);
+	error += parse_vector(str, &(triangle.v1));
+	skip_vector(&str);
+	error += skip_spaces(&str);
+	error += parse_vector(str, &(triangle.v2));
+	skip_vector(&str);
+	error += skip_spaces(&str);
+	error += parse_vector(str, &(triangle.v3));
+	skip_vector(&str);
+	error += skip_spaces(&str);
+	error += parse_color(str, &color);
+	if (!(new = create_triangle(triangle.v1, triangle.v2, triangle.v3)))
 		return (-1);
-	if (!(obj = create_object("Triangle", new_tr, color)))
+	if (!(new = create_object("Triangle", new, color)))
 		return (-1);
-	if (*objects == NULL)
-		*objects = ft_lstnew((void*)obj);
-	else
-		ft_lstadd_back(objects, ft_lstnew((void*)obj));
-	return (0);
+	if (!(new_elem = ft_lstnew(new)))
+		return (-1);
+	ft_lstpush(objects, new_elem);
+	return (error);
 }
 
 int	parse_file(char **file_content, t_vars *vars)
 {
-	int i;
+	int	i;
+	int	error;
 
 	i = 0;
+	error = 0;
 	while (file_content[i] != NULL)
 	{
 		if (file_content[i][0] == 'R')
-			vars->screen = parse_resolution(file_content[i]);
-		if (file_content[i][0] == 'A')
-			vars->scene.environment_light = parse_ambient(file_content[i]);
-		if (file_content[i][0] == 'c' && file_content[i][1] == ' ')
+			error += parse_resolution(file_content[i], &vars->screen);
+		else if (file_content[i][0] == 'A')
+			error += parse_ambient(file_content[i], &(vars->scene.environment_light));
+		else if (file_content[i][0] == 'c' && ft_isspace(file_content[i][1]))
 		{
-			parse_camera(file_content[i], &(vars->scene.cameras));
+			error += parse_camera(file_content[i], &(vars->scene.cameras));
 			vars->scene.cameras_counter++;
 		}
-		if (file_content[i][0] == 'l')
-			parse_light(file_content[i], &(vars->scene.lights));
-		if (file_content[i][0] == 's' && file_content[i][1] == 'p')
-			parse_sphere(file_content[i], &(vars->scene.objects));
-		if (file_content[i][0] == 'p' && file_content[i][1] == 'l')
-			parse_plane(file_content[i], &(vars->scene.objects));
-		if (file_content[i][0] == 's' && file_content[i][1] == 'q')
-			parse_square(file_content[i], &(vars->scene.objects));
-		if (file_content[i][0] == 'c' && file_content[i][1] == 'y')
-			parse_cylinder(file_content[i], &(vars->scene.objects));
-		if (file_content[i][0] == 't' && file_content[i][1] == 'r')
-			parse_triangle(file_content[i], &(vars->scene.objects));
+		else if (file_content[i][0] == 'l')
+			error += parse_light(file_content[i], &(vars->scene.lights));
+		else if (file_content[i][0] == 's' && file_content[i][1] == 'p')
+			error += parse_sphere(file_content[i], &(vars->scene.objects));
+		else if (file_content[i][0] == 'p' && file_content[i][1] == 'l')
+			error += parse_plane(file_content[i], &(vars->scene.objects));
+		else if (file_content[i][0] == 's' && file_content[i][1] == 'q')
+			error += parse_square(file_content[i], &(vars->scene.objects));
+		else if (file_content[i][0] == 'c' && file_content[i][1] == 'y')
+			error += parse_cylinder(file_content[i], &(vars->scene.objects));
+		else if (file_content[i][0] == 't' && file_content[i][1] == 'r')
+			error += parse_triangle(file_content[i], &(vars->scene.objects));
+		if (error)
+			return (-1);
 		i++;
 	}
 	return (0);
@@ -533,7 +657,8 @@ int	main(int argc, char **argv)
 	vars.scene.cameras = NULL;
 	vars.scene.lights = NULL;
 	vars.scene.objects = NULL;
-	parse_file(file_content, &vars);
+	if (parse_file(file_content, &vars))
+		return (-1);
 	vars.mlx = mlx_init();
 	vars.win = mlx_new_window(vars.mlx, vars.screen.width, vars.screen.height, "MLX!");
 	vars.data.img = mlx_new_image(vars.mlx, vars.screen.width, vars.screen.height);

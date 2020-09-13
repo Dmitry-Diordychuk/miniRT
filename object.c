@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/04 23:36:42 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/13 03:30:03 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/13 21:11:18 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void		delete_content(const char *type, void *content)
 		free((t_cylinder*)content);
 }
 
-t_object	*create_object(const char *type, void *obj, t_color3d color)
+void	*create_object(const char *type, void *obj, t_color3d color)
 {
 	t_object *object;
 
@@ -54,7 +54,7 @@ t_object	*create_object(const char *type, void *obj, t_color3d color)
 	if (ft_strcmp("Cylinder", type) == 0)
 		object->intersect_function = intersect_cylinder;
 	object->color = color;
-	return (object);
+	return ((void*)object);
 }
 
 void		delete_object(void *item)
