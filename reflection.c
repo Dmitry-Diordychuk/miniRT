@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/11 01:05:50 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/13 02:46:58 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/13 03:31:05 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ t_color3d	calculate_reflection(t_scene scene, double nearest_root,
 		data.normal = calculate_plane_normal(((t_triangle*)nearest_obj.container)->normal, scene.camera.ray.direction);
 	else if (ft_strcmp(nearest_obj.type, "Cylinder") == 0)
 		data.normal = calculate_cylinder_normal(*(t_cylinder*)nearest_obj.container, scene.camera.ray.direction);
-	data.specular = nearest_obj.specular;
+	data.specular = 1000;
 	data.obj_color = nearest_obj.color;
 	reflection_result = calculate_diffusion_specular(scene, data);
 	return (reflection_result);

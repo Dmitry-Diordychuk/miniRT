@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/13 02:32:53 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/13 03:31:44 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ int	render(t_screen screen, t_data *img, t_scene scene,int camera_number)
 	//scene = init_scene(init_objects(), init_lights(), scene.cameras);
 	//scene.camera = *(t_camera)scene.cameras;
 	scene.camera = *(t_camera*)ft_lstget(scene.cameras, abs(camera_number % scene.cameras_counter)); // 4 заменить на кол-во камер
-	scene.objects = init_objects();
 	point.y = canvas.top_border + 1;
 	while (--point.y > canvas.bottom_border)
 	{
@@ -320,6 +319,172 @@ int	parse_light(char *str, t_list **lights)
 	return (0);
 }
 
+int	parse_sphere(char *str, t_list **objects)
+{
+	t_sphere	sphere;
+	t_object	*obj;
+	void		*new_sp;
+	t_color3d	color;
+
+	str += 2;
+	while (*str == ' ')
+		str++;
+	sphere.position = parse_vector(str);
+	str = ft_strchr(str, ' ');
+	while (*str == ' ')
+		str++;
+	sphere.radius = ft_atof(str) / 2;
+	str = ft_strchr(str, ' ');
+	while (*str == ' ')
+		str++;
+	color = parse_color(str);
+	if (!(new_sp = create_sphere(sphere.position, sphere.radius)))
+		return (-1);
+	if (!(obj = create_object("Sphere", new_sp, color)))
+		return (-1);
+	if (*objects == NULL)
+		*objects = ft_lstnew((void*)obj);
+	else
+		ft_lstadd_back(objects, ft_lstnew((void*)obj));
+	return (0);
+}
+
+int	parse_plane(char *str, t_list **objects)
+{
+	t_plane		plane;
+	t_object	*obj;
+	void		*new_pl;
+	t_color3d	color;
+
+	str += 2;
+	while (*str == ' ')
+		str++;
+	plane.q = parse_vector(str);
+	str = ft_strchr(str, ' ');
+	while (*str == ' ')
+		str++;
+	plane.normal = parse_vector(str);
+	str = ft_strchr(str, ' ');
+	while (*str == ' ')
+		str++;
+	color = parse_color(str);
+	if (!(new_pl = create_plane(plane.q, plane.normal)))
+		return (-1);
+	if (!(obj = create_object("Plane", new_pl, color)))
+		return (-1);
+	if (*objects == NULL)
+		*objects = ft_lstnew((void*)obj);
+	else
+		ft_lstadd_back(objects, ft_lstnew((void*)obj));
+	return (0);
+}
+
+int	parse_square(char *str, t_list **objects)
+{
+	t_square	square;
+	t_object	*obj;
+	void		*new_sq;
+	t_color3d	color;
+
+	str += 2;
+	while (*str == ' ')
+		str++;
+	square.center = parse_vector(str);
+	str = ft_strchr(str, ' ');
+	while (*str == ' ')
+		str++;
+	square.normal = parse_vector(str);
+	str = ft_strchr(str, ' ');
+	while (*str == ' ')
+		str++;
+	square.side = ft_atof(str);
+	str = ft_strchr(str, ' ');
+	while (*str == ' ')
+		str++;
+	color = parse_color(str);
+	if (!(new_sq = create_square(square.center, square.normal, square.side)))
+		return (-1);
+	if (!(obj = create_object("Square", new_sq, color)))
+		return (-1);
+	if (*objects == NULL)
+		*objects = ft_lstnew((void*)obj);
+	else
+		ft_lstadd_back(objects, ft_lstnew((void*)obj));
+	return (0);
+}
+
+int	parse_cylinder(char *str, t_list **objects)
+{
+	t_cylinder	cylinder;
+	t_object	*obj;
+	void		*new_cy;
+	t_color3d	color;
+
+	str += 2;
+	while (*str == ' ')
+		str++;
+	cylinder.position = parse_vector(str);
+	str = ft_strchr(str, ' ');
+	while (*str == ' ')
+		str++;
+	cylinder.center_line = parse_vector(str);
+	str = ft_strchr(str, ' ');
+	while (*str == ' ')
+		str++;
+	cylinder.diameter = ft_atof(str);
+	str = ft_strchr(str, ' ');
+	while (*str == ' ')
+		str++;
+	cylinder.height = ft_atof(str);
+	str = ft_strchr(str, ' ');
+	while (*str == ' ')
+		str++;
+	color = parse_color(str);
+	if (!(new_cy = create_cylinder(cylinder.position, cylinder.center_line, cylinder.diameter, cylinder.height)))
+		return (-1);
+	if (!(obj = create_object("Cylinder", new_cy, color)))
+		return (-1);
+	if (*objects == NULL)
+		*objects = ft_lstnew((void*)obj);
+	else
+		ft_lstadd_back(objects, ft_lstnew((void*)obj));
+	return (0);
+}
+
+int	parse_triangle(char *str, t_list **objects)
+{
+	t_triangle	triangle;
+	t_object	*obj;
+	void		*new_tr;
+	t_color3d	color;
+
+	str += 2;
+	while (*str == ' ')
+		str++;
+	triangle.v1 = parse_vector(str);
+	str = ft_strchr(str, ' ');
+	while (*str == ' ')
+		str++;
+	triangle.v2 = parse_vector(str);
+	str = ft_strchr(str, ' ');
+	while (*str == ' ')
+		str++;
+	triangle.v3 = parse_vector(str);
+	str = ft_strchr(str, ' ');
+	while (*str == ' ')
+		str++;
+	color = parse_color(str);
+	if (!(new_tr = create_triangle(triangle.v1, triangle.v2, triangle.v3)))
+		return (-1);
+	if (!(obj = create_object("Triangle", new_tr, color)))
+		return (-1);
+	if (*objects == NULL)
+		*objects = ft_lstnew((void*)obj);
+	else
+		ft_lstadd_back(objects, ft_lstnew((void*)obj));
+	return (0);
+}
+
 int	parse_file(char **file_content, t_vars *vars)
 {
 	int i;
@@ -338,6 +503,16 @@ int	parse_file(char **file_content, t_vars *vars)
 		}
 		if (file_content[i][0] == 'l')
 			parse_light(file_content[i], &(vars->scene.lights));
+		if (file_content[i][0] == 's' && file_content[i][1] == 'p')
+			parse_sphere(file_content[i], &(vars->scene.objects));
+		if (file_content[i][0] == 'p' && file_content[i][1] == 'l')
+			parse_plane(file_content[i], &(vars->scene.objects));
+		if (file_content[i][0] == 's' && file_content[i][1] == 'q')
+			parse_square(file_content[i], &(vars->scene.objects));
+		if (file_content[i][0] == 'c' && file_content[i][1] == 'y')
+			parse_cylinder(file_content[i], &(vars->scene.objects));
+		if (file_content[i][0] == 't' && file_content[i][1] == 'r')
+			parse_triangle(file_content[i], &(vars->scene.objects));
 		i++;
 	}
 	return (0);
