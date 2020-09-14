@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/11 01:05:50 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/13 03:31:05 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/14 21:04:58 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ int	check_shadow(t_scene scene, t_reflection_data data)
 	double		t;
 	t_list		*objects;
 
-	//l.origin = sum_vec(data.point, mul_vec_scalar(data.normal, __FLT));
-	l.origin = data.point;
+	l.origin = sum_vec(data.point, mul_vec_scalar(data.normal, 0.01));
+	//l.origin = data.point;
 	l.direction = data.light.direction;
 	objects = scene.objects;
 	while (objects != NULL)
@@ -29,7 +29,7 @@ int	check_shadow(t_scene scene, t_reflection_data data)
 		obj = *(t_object*)(objects->content);
 		if (apply_intersect(l, obj, &t, NULL))
 			return (-1);
-		if (t > __FLT_EPSILON__ && t < data.max_t)
+		if (t > 0 && t<data.max_t)//t > __FLT_EPSILON__ && t < data.max_t)
 			return (1);
 		objects = objects->next;
 	}

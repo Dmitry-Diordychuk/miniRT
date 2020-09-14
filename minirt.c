@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/13 22:32:45 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/14 22:31:33 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	trace_ray(t_scene scene)//t_ray3d r, t_list *objects, t_light_environment en
 
 int	render_return(int ret, t_list *objects)
 {
-	ft_lstclear(&objects, delete_object);
+	//ft_lstclear(&objects, delete_object);                                   //Переделать или другое место
 	return (ret);
 }
 
@@ -284,14 +284,22 @@ double	ft_atof(char *str)
 	double	d;
 	int		len;
 	int		i;
+	int		sign;
 
+	sign = 1;
+	if (str[0] == '-' && str[1] == '0')
+		sign = -1;
 	d = 0;
+	len = 0;
 	n = ft_atoi(str);
-	if ((str = ft_strchr(str, '.')) != NULL)
+	i = 0;
+	while (ft_isdigit(*str) || *str == '-')
+		str++;
+	if (*str == '.')
 	{
 		str++;
 		len = 0;
-		while (!ft_isspace(str[len]) && str[len] != '\0')
+		while (ft_isdigit(str[len]))
 			len++;
 		d = ft_atoi(str);
 	}
@@ -301,7 +309,7 @@ double	ft_atof(char *str)
 		d = d / 10;
 		i++;
 	}
-	return ((double)n + d);
+	return (((double)n + d) * sign);
 }
 
 int	parse_color(char *str, t_color3d *color)
@@ -397,7 +405,7 @@ void	skip_vector(char **str)
 int	parse_camera(char *str, t_list **cameras)
 {
 	t_camera	c;
-	t_camera	*new_camera;
+	void		*new_camera;
 	int			error;
 	t_list		*new_elem;
 
@@ -414,7 +422,7 @@ int	parse_camera(char *str, t_list **cameras)
 	c.fov = ft_atoi(str);
 	if (!(new_camera = create_camera(c.ray.origin, c.direction, c.fov)))
 		return (error - 1);
-	if (!(new_elem = ft_lstnew((void*)new_camera)))
+	if (!(new_elem = ft_lstnew(new_camera)))
 	{
 		free(new_camera);
 		return (error - 1);
@@ -426,7 +434,7 @@ int	parse_camera(char *str, t_list **cameras)
 int	parse_light(char *str, t_list **lights)
 {
 	t_light_point	light;
-	t_light_point	*new_light;
+	void			*new_light;
 	t_list			*new_elem;
 	int				error;
 

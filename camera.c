@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 03:31:51 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/12 21:41:08 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/14 20:07:43 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,41 +29,47 @@ t_point3d	canvas_to_viewport(t_point2d canvas_point, t_canvas canvas,
 
 t_matrix4d	generate_rotation_matrix(t_camera camera)
 {
-	t_matrix4d			m;
-	const t_vector3d	prev_direction = (t_vector3d){0,0,1};
-	const t_vector3d	up = (t_vector3d){0,1,0};
+	t_matrix4d			orientation;
+	t_matrix4d			translation;
+	orientation = get_i_mat4d();
+	translation = get_i_mat4d();
+	t_vector3d	forward = camera.direction;
+	t_vector3d	right = normalize(cross_vec((t_vector3d){0, 1, 0}, forward));
+	t_vector3d	up = normalize(cross_vec(forward, right));
 
-
-	m = get_i_mat4d();
-//	m = translate(m, (t_vector3d){-camera.ray.origin.x, -camera.ray.origin.y, -camera.ray.origin.z});
-	t_vector3d	z = normalize(camera.direction);
-	t_vector3d	x = normalize(cross_vec(up, z));
-	t_vector3d	y = normalize(cross_vec(z, x));
-
-	m.m00 = x.x;
-	m.m01 = y.x;
-	m.m02 = z.x;
-	m.m10 = x.y;
-	m.m11 = y.y;
-	m.m12 = z.y;
-	m.m20 = x.z;
-	m.m21 = y.z;
-	m.m22 = z.z;
-	m.m30 = -dot_vec(x, camera.ray.origin);
-	m.m31 = -dot_vec(y, camera.ray.origin);
-	m.m32 = -dot_vec(z, camera.ray.origin);
-
-//	m = translate(m, (t_vector3d){camera.ray.origin.x, camera.ray.origin.y, camera.ray.origin.z});
-//	m = rotate_local(
-//						m,
-//						acos(dot_vec(prev_direction, camera.direction)),
-//						unit_vec(cross_vec(prev_direction, camera.direction)),
-//						camera.ray.origin
-//					);
-	return (m);
+	if (camera.direction.x == 0 && camera.direction.y == 1 && camera.direction.z == 0)
+	{
+		orientation.m11 = 0;
+		orientation.m21 = -1;
+		orientation.m12 = 1;
+		orientation.m22 = 0;
+	}
+	else if (camera.direction.x == 0 && camera.direction.y == -1 && camera.direction.z == 0)
+	{
+		orientation.m11 = 0;
+		orientation.m21 = -1;
+		orientation.m12 = -1;
+		orientation.m22 = 0;
+	}
+	else
+	{
+		orientation.m00 = right.x;
+		orientation.m10 = right.y;
+		orientation.m20 = right.z;
+		orientation.m01 = up.x;
+		orientation.m11 = up.y;
+		orientation.m21 = up.z;
+		orientation.m02 = forward.x;
+		orientation.m12 = forward.y;
+		orientation.m22 = forward.z;
+	}
+	translation.m30 = -camera.ray.origin.x;
+	translation.m31 = -camera.ray.origin.y;
+	translation.m32 = -camera.ray.origin.z;
+	return (mul_mat4d(orientation, translation));
 }
 
-t_camera	*create_camera(t_point3d position, t_vector3d direction, double fov)
+void	*create_camera(t_point3d position, t_vector3d direction, double fov)
 {
 	t_camera	*camera;
 
@@ -71,10 +77,10 @@ t_camera	*create_camera(t_point3d position, t_vector3d direction, double fov)
 		return (NULL);
 	camera->ray.origin = position;
 	camera->viewport = (t_viewport){1 / (2 * tan((fov / 2) * (M_PI / 180))), 1, 1};
-	camera->direction = direction;
+	camera->direction = normalize(direction);
 	camera->rotation_matrix = generate_rotation_matrix(*camera);
 	camera->fov = fov;
-	return (camera);
+	return ((void*)camera);
 }
 
 void	delete_camera(void *obj)

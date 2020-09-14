@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/02 19:53:14 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/11 15:23:04 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/14 16:21:14 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	*create_cylinder(t_point3d position, t_vector3d center_line, double diamete
 
 	cylinder = (t_cylinder*)malloc(sizeof(t_cylinder));
 	cylinder->position = position;
-	cylinder->center_line = center_line;
+	cylinder->center_line = normalize(center_line);
 	cylinder->diameter = diameter;
 	cylinder->height = height;
 	return ((void*)cylinder);
