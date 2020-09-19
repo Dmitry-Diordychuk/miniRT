@@ -6,44 +6,44 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:33:47 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/14 01:19:11 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/19 22:00:57 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <math.h>
 #include "vector.h"
 
-t_vector3d	sum_vec(t_vector3d a, t_vector3d b)
+t_vector3d	sum_v(t_vector3d a, t_vector3d b)
 {
 	return ((t_vector3d){a.x + b.x, a.y + b.y, a.z + b.z});
 }
 
-t_vector3d	minus_vec(t_vector3d a, t_vector3d b)
+t_vector3d	sub_v(t_vector3d a, t_vector3d b)
 {
 	return ((t_vector3d){a.x - b.x, a.y - b.y, a.z - b.z});
 }
 
-double		dot_vec(t_vector3d a, t_vector3d b)
+double		dot_v(t_vector3d a, t_vector3d b)
 {
 	return ((a.x * b.x) + (a.y * b.y) + (a.z * b.z));
 }
 
-t_vector3d	mul_vec_scalar(t_vector3d a, double n)
+t_vector3d	mul_vs(t_vector3d a, double n)
 {
 	return ((t_vector3d){a.x * n, a.y * n, a.z * n});
 }
 
-t_vector3d	div_vec_scalar(t_vector3d a, double n)
+t_vector3d	div_vs(t_vector3d a, double n)
 {
 	return ((t_vector3d){a.x / n, a.y / n, a.z / n});
 }
 
-double		module_vec(t_vector3d a)
+double		module_v(t_vector3d a)
 {
 	return (sqrt(a.x * a.x + a.y * a.y + a.z * a.z));
 }
 
-t_vector3d	cross_vec(t_vector3d a, t_vector3d b)
+t_vector3d	cross_v(t_vector3d a, t_vector3d b)
 {
 	return ((t_vector3d){	a.y * b.z - a.z * b.y,
 				a.z * b.x - a.x * b.z,
@@ -53,7 +53,7 @@ t_vector3d	cross_vec(t_vector3d a, t_vector3d b)
 
 t_vector3d	normalize(t_vector3d a)
 {
-	return (div_vec_scalar(a, module_vec(a)));
+	return (div_vs(a, module_v(a)));
 }
 
 t_vector4d	sum_vec4d(t_vector4d a, t_vector4d b)

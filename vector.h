@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:34:01 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/04 23:05:47 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/19 22:01:00 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@
 typedef	t_point3d	t_vector3d;
 typedef t_point4d	t_vector4d;
 
-t_vector3d		sum_vec(t_vector3d a, t_vector3d b);
-t_vector3d		minus_vec(t_vector3d a, t_vector3d b);
-double			dot_vec(t_vector3d a, t_vector3d b);
-t_vector3d		cross_vec(t_vector3d a, t_vector3d b);
-t_vector3d		mul_vec_scalar(t_vector3d a, double n);
-t_vector3d		div_vec_scalar(t_vector3d a, double n);
-double			module_vec(t_vector3d a);
+t_vector3d		sum_v(t_vector3d a, t_vector3d b);
+t_vector3d		sub_v(t_vector3d a, t_vector3d b);
+double			dot_v(t_vector3d a, t_vector3d b);
+t_vector3d		cross_v(t_vector3d a, t_vector3d b);
+t_vector3d		mul_vs(t_vector3d a, double n);
+t_vector3d		div_vs(t_vector3d a, double n);
+double			module_v(t_vector3d a);
 t_vector3d		normalize(t_vector3d a);
 
 t_vector4d		sum_vec4d(t_vector4d a, t_vector4d b);

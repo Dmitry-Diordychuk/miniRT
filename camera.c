@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 03:31:51 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/14 20:07:43 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/19 22:00:58 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ t_matrix4d	generate_rotation_matrix(t_camera camera)
 	orientation = get_i_mat4d();
 	translation = get_i_mat4d();
 	t_vector3d	forward = camera.direction;
-	t_vector3d	right = normalize(cross_vec((t_vector3d){0, 1, 0}, forward));
-	t_vector3d	up = normalize(cross_vec(forward, right));
+	t_vector3d	right = normalize(cross_v((t_vector3d){0, 1, 0}, forward));
+	t_vector3d	up = normalize(cross_v(forward, right));
 
 	if (camera.direction.x == 0 && camera.direction.y == 1 && camera.direction.z == 0)
 	{

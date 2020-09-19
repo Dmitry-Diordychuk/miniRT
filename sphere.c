@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/03 20:11:31 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/11 14:59:33 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/19 22:00:18 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,10 @@ t_vector3d	calculate_sphere_normal(t_sphere s, t_point3d p, t_point3d ro)
 {
 	t_vector3d	oc;
 
-	oc = minus_vec(s.position, ro);
-	if (module_vec(oc) < s.radius)
-		return (normalize(minus_vec(s.position, p)));
-	return (normalize(minus_vec(p, s.position)));
+	oc = sub_v(s.position, ro);
+	if (module_v(oc) < s.radius)
+		return (normalize(sub_v(s.position, p)));
+	return (normalize(sub_v(p, s.position)));
 }
 
 /*
@@ -59,10 +59,10 @@ double	intersect_sphere(t_ray3d r, void *obj)
 	t_vector3d	oc;
 
 	s = *((t_sphere*)obj);
-	oc = minus_vec(r.origin, s.position);
-	k[0] = dot_vec(r.direction, r.direction);
-	k[1] = 2 * dot_vec(oc, r.direction);
-	k[2] = dot_vec(oc, oc) - s.radius * s.radius;
+	oc = sub_v(r.origin, s.position);
+	k[0] = dot_v(r.direction, r.direction);
+	k[1] = 2 * dot_v(oc, r.direction);
+	k[2] = dot_v(oc, oc) - s.radius * s.radius;
 	k[3] = pow(k[1], 2) - 4 * k[0] * k[2];
 	if (k[3] < 0)
 		return (-1);

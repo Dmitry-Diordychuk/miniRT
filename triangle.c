@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 20:31:56 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/11 17:58:18 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/19 22:02:54 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 void	*create_triangle(t_point3d v1, t_point3d v2, t_point3d v3)
 {
-	const t_vector3d v12 = minus_vec(v1, v2);
-	const t_vector3d v13 = minus_vec(v1, v3);
-	const t_vector3d normal = normalize(cross_vec(v12, v13));
+	const t_vector3d v12 = sub_v(v1, v2);
+	const t_vector3d v13 = sub_v(v1, v3);
+	const t_vector3d normal = normalize(cross_v(v12, v13));
 	t_triangle *t;
 
 	if (!(t = (t_triangle*)malloc(sizeof(t_triangle))))
@@ -140,7 +140,7 @@ double	intersect_triangle(t_ray3d r, void *obj)
 	triangle = *(t_triangle*)(obj);
 	plane = (t_plane){triangle.normal, triangle.v1};
 	t = intersect_plane(r, (void*)(&plane));
-	if (t >= 0 && is_in_triangle(triangle, ray_param_func(r, t)))
+	if (t >= 0 && is_in_triangle(triangle, ray_func(r, t)))
 	{
 		return(t);
 	}

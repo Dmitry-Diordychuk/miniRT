@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/17 02:37:14 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/19 22:16:38 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,25 +18,25 @@
 **	if we find two object in one spote we get color of neares.
 */
 
-int	trace_ray(t_scene scene)//t_ray3d r, t_list *objects, t_light_environment env, t_list *lights)
+int	trace_ray(t_scene scene)
 {
 	t_object	obj;
-	t_object	nearest_obj;
-	double		nearest_root;
+	t_object	near_obj;
+	double		near_root;
 	t_list		*objects;
 
 	objects = scene.objects;
-	nearest_root = -1;
+	near_root = -1;
 	while (objects != NULL)
 	{
 		obj = *(t_object*)(objects->content);
-		if (apply_intersect(scene.camera.ray, obj, &nearest_root, &nearest_obj) < 0)
+		if (apply_intersect(scene.camera.ray, obj, &near_root, &near_obj) < 0)
 			return (-2);
 		objects = objects->next;
 	}
-	if (nearest_root != -1)
+	if (near_root != -1)
 	{
-		return (color3d_to_trgb(calculate_reflection(scene, nearest_root, nearest_obj)));
+		return (color3d_to_trgb(calculate_reflection(scene, near_root, near_obj)));
 	}
 	return (-1);
 }
@@ -69,10 +69,8 @@ int	render(t_screen screen, t_data *img, t_scene scene,int camera_number)
 	int				color;
 	t_list			*lights;
 	int				test;
-	// Камера вниз не показывает
-	//scene = init_scene(init_objects(), init_lights(), scene.cameras);
-	//scene.camera = *(t_camera)scene.cameras;
-	scene.camera = *(t_camera*)ft_lstget(scene.cameras, abs(camera_number % scene.cameras_counter)); // 4 заменить на кол-во камер
+
+	scene.camera = *(t_camera*)ft_lstget(scene.cameras, abs(camera_number % scene.cameras_counter));
 	point.y = canvas.top_border + 1;
 	while (--point.y > canvas.bottom_border)
 	{
@@ -82,9 +80,7 @@ int	render(t_screen screen, t_data *img, t_scene scene,int camera_number)
 			draw_background(img, point, screen, canvas);
 			scene.camera.ray.direction = normalize(apply_matrix(scene.camera.rotation_matrix, canvas_to_viewport(point, canvas, scene.camera.viewport)));
 			if ((color = trace_ray(scene)) >= 0)
-			{
 				draw_pixel(img, canvas_to_screen(point, screen), color);
-			}
 			else if (color == -2)
 				return (render_return(-2, scene.objects));
 		}
@@ -164,6 +160,9 @@ char	**get_file_content(char *file)
 		if (!(file_content = resize_content(file_content, i + 1)))
 			return (NULL);
 	}
+	i++;
+	if (!(file_content = resize_content(file_content, i + 1)))
+		return (NULL);
 	file_content[i] = NULL;
 	if (close(fd))
 		return (NULL);
@@ -283,7 +282,6 @@ double	ft_atof(char *str)
 	int		n;
 	double	d;
 	int		len;
-	int		i;
 	int		sign;
 
 	sign = 1;
@@ -292,23 +290,17 @@ double	ft_atof(char *str)
 	d = 0;
 	len = 0;
 	n = ft_atoi(str);
-	i = 0;
 	while (ft_isdigit(*str) || *str == '-')
 		str++;
 	if (*str == '.')
 	{
 		str++;
-		len = 0;
 		while (ft_isdigit(str[len]))
 			len++;
 		d = ft_atoi(str);
 	}
-	i = 0;
-	while (i < len)
-	{
+	while (len-- > 0)
 		d = d / 10;
-		i++;
-	}
 	return (((double)n + d) * sign);
 }
 
@@ -560,19 +552,19 @@ int	parse_cylinder(char *str, t_list **objects)
 	error += parse_vector(str, &(cylinder.position));
 	skip_vector(&str);
 	error += skip_spaces(&str);
-	error += parse_vector(str, &(cylinder.center_line));
+	error += parse_vector(str, &(cylinder.direction));
 	skip_vector(&str);
 	error += skip_spaces(&str);
-	cylinder.diameter = ft_atof(str);
+	cylinder.d = ft_atof(str);
 	error += validate_double(str);
 	skip_count_digit(&str);
 	error += skip_spaces(&str);
-	cylinder.height = ft_atof(str);
+	cylinder.h = ft_atof(str);
 	error += validate_double(str);
 	skip_count_digit(&str);
 	error += skip_spaces(&str);
 	error += parse_color(str, &color);
-	if (!(new = create_cylinder(cylinder.position, cylinder.center_line, cylinder.diameter, cylinder.height)))
+	if (!(new = create_cylinder(cylinder.position, cylinder.direction, cylinder.d, cylinder.h)))
 		return (-1);
 	if (!(new = create_object("Cylinder", new, color)))
 		return (-1);

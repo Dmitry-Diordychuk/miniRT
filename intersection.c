@@ -16,23 +16,22 @@
 **	apply intersect function choosen for certain primitive.
 */
 
-int	apply_intersect(t_ray3d r, t_object obj, double *nearest_root,
-							t_object *nearest_obj)
+int	apply_intersect(t_ray3d r, t_object obj, double *near_t, t_object *near_obj)
 {
-	double	root;
+	double	t;
 
-	root = obj.intersect_function(r, obj.container);
-	if (*nearest_root == -1 && root >= 0)
+	t = obj.intersect_function(r, obj.container);
+	if (*near_t == -1 && t >= 0)
 	{
-		if (nearest_obj != NULL)
-			*nearest_obj = obj;
-		*nearest_root = root;
+		if (near_obj != NULL)
+			*near_obj = obj;
+		*near_t = t;
 	}
-	if (*nearest_root > root && root >= 0)
+	if (*near_t > t && t >= 0)
 	{
-		if (nearest_obj != NULL)
-			*nearest_obj = obj;
-		*nearest_root = root;
+		if (near_obj != NULL)
+			*near_obj = obj;
+		*near_t = t;
 	}
 	return (0);
 }
