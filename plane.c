@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/23 17:47:42 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/19 22:21:54 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/19 22:41:39 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ t_vector3d	normal_to_camera(t_vector3d normal, t_vector3d rd)
 	return (normal);
 }
 
-double	intersect_plane(t_ray3d r, void *obj)
+double	intersect_plane(t_ray3d r, void **obj)
 {
 	double		t;
 	t_plane		plane;
@@ -41,7 +41,7 @@ double	intersect_plane(t_ray3d r, void *obj)
 	double		temp2;
 
 	t = -1;
-	plane = *((t_plane*)obj);
+	plane = *((t_plane*)*obj);
 	temp2 = dot_v(plane.normal, r.direction);
 	if (temp2 != 0)
 	{

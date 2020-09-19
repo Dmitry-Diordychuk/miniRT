@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 20:31:56 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/19 22:02:54 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/19 22:41:19 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,14 +130,14 @@ int	is_in_triangle(t_triangle tri, t_point3d in_p)
 	return (0);
 }
 
-double	intersect_triangle(t_ray3d r, void *obj)
+double	intersect_triangle(t_ray3d r, void **obj)
 {
 	double		t;
 	t_triangle	triangle;
 	t_plane		plane;
 	t_point3d	inter_point;
 
-	triangle = *(t_triangle*)(obj);
+	triangle = *(t_triangle*)(*obj);
 	plane = (t_plane){triangle.normal, triangle.v1};
 	t = intersect_plane(r, (void*)(&plane));
 	if (t >= 0 && is_in_triangle(triangle, ray_func(r, t)))

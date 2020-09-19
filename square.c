@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:21:28 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/19 22:02:50 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/19 22:40:44 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,13 +155,13 @@ int	is_in_square(t_square square, t_point3d in_p)
 	return (0);
 }
 
-double	intersect_square(t_ray3d r, void *obj)
+double	intersect_square(t_ray3d r, void **obj)
 {
 	double		t;
 	t_square	square;
 	t_plane		plane;
 
-	square = *(t_square*)obj;
+	square = *(t_square*)*obj;
 	plane = (t_plane){square.normal, square.center};
 	t = intersect_plane(r, (void*)(&plane));
 	if (t >= 0 && is_in_square(square, ray_func(r, t)))

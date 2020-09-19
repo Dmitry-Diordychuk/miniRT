@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/03 20:11:31 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/19 22:00:18 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/19 22:40:28 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,14 +51,14 @@ double	sgn(double x)
 **	k3 = q;
 */
 
-double	intersect_sphere(t_ray3d r, void *obj)
+double	intersect_sphere(t_ray3d r, void **obj)
 {
 	t_sphere	s;
 	double		k[4];
 	double		x[2];
 	t_vector3d	oc;
 
-	s = *((t_sphere*)obj);
+	s = *((t_sphere*)*obj);
 	oc = sub_v(r.origin, s.position);
 	k[0] = dot_v(r.direction, r.direction);
 	k[1] = 2 * dot_v(oc, r.direction);

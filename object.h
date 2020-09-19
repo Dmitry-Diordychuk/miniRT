@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/04 23:34:42 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/13 21:11:45 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/19 22:39:37 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 typedef struct		s_object {
 	char		type[20];
 	void		*container;
-	double		(*intersect_function)(t_ray3d ray, void* object);
+	double		(*intersect_function)(t_ray3d ray, void **object);
 	t_color3d	color;
 }			t_object;
 
