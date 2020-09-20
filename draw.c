@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 03:03:04 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/07 03:04:17 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/20 01:55:42 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,4 +28,3 @@ void	draw_background(t_data *img, t_point2d point, t_screen screen,
 			create_trgb(0, 0, 200 - canvas.height / 5 + point.y / 5,
 					255 - canvas.height / 5 + point.y / 5));
 }
-

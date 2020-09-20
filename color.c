@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   color.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kdustin <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 17:10:22 by kdustin           #+#    #+#             */
-/*   Updated: 2020/08/11 18:37:34 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/20 01:43:39 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ int	color3d_to_trgb(t_color3d color)
 	int t;
 
 	t = 0;
-
 	if (color.x > 255)
 		color.x = 255;
 	else if (color.x < 0)

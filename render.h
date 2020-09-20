@@ -1,26 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   light.c                                            :+:      :+:    :+:   */
+/*   render.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/07 16:31:50 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/20 01:57:16 by kdustin          ###   ########.fr       */
+/*   Created: 2020/09/20 02:21:29 by kdustin           #+#    #+#             */
+/*   Updated: 2020/09/20 02:22:45 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "light.h"
+#ifndef RENDER_H
+# define RENDER_H
 
-void	*create_light_point(t_point3d position, double brightness,
-							t_color3d color)
-{
-	t_light_point	*new_light_point;
+# include "minirt.h"
 
-	if (!(new_light_point = (t_light_point*)malloc(sizeof(t_light_point))))
-		return (NULL);
-	new_light_point->position = position;
-	new_light_point->brightness = brightness;
-	new_light_point->color = color;
-	return ((void*)new_light_point);
-}
+int	render(t_screen screen, t_data *img, t_scene scene,int camera_number);
+
+#endif

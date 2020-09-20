@@ -1,26 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   light.c                                            :+:      :+:    :+:   */
+/*   file.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/07 16:31:50 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/20 01:57:16 by kdustin          ###   ########.fr       */
+/*   Created: 2020/09/20 02:32:11 by kdustin           #+#    #+#             */
+/*   Updated: 2020/09/20 02:32:59 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "light.h"
+#ifndef FILE_H
+# define FILE_H
 
-void	*create_light_point(t_point3d position, double brightness,
-							t_color3d color)
-{
-	t_light_point	*new_light_point;
+#include "minirt.h"
 
-	if (!(new_light_point = (t_light_point*)malloc(sizeof(t_light_point))))
-		return (NULL);
-	new_light_point->position = position;
-	new_light_point->brightness = brightness;
-	new_light_point->color = color;
-	return ((void*)new_light_point);
-}
+char	**resize_content(char **file_content, int size);
+char	**get_file_content(char *file);
+void	free_file_content(char **file_content);
+
+#endif

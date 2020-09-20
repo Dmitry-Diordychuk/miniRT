@@ -1,26 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   light.c                                            :+:      :+:    :+:   */
+/*   ft_lstget.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/07 16:31:50 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/20 01:57:16 by kdustin          ###   ########.fr       */
+/*   Created: 2020/09/20 02:11:37 by kdustin           #+#    #+#             */
+/*   Updated: 2020/09/20 02:12:17 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "light.h"
+#include "libft.h"
 
-void	*create_light_point(t_point3d position, double brightness,
-							t_color3d color)
+void	*ft_lstget(t_list *list, int number)
 {
-	t_light_point	*new_light_point;
+	int	i;
 
-	if (!(new_light_point = (t_light_point*)malloc(sizeof(t_light_point))))
-		return (NULL);
-	new_light_point->position = position;
-	new_light_point->brightness = brightness;
-	new_light_point->color = color;
-	return ((void*)new_light_point);
+	i = 0;
+	while (i < number && list != NULL)
+	{
+		list = list->next;
+		i++;
+	}
+	if (list != NULL)
+		return (list->content);
+	return (NULL);
 }

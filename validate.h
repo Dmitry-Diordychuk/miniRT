@@ -1,26 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   light.c                                            :+:      :+:    :+:   */
+/*   validate.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/07 16:31:50 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/20 01:57:16 by kdustin          ###   ########.fr       */
+/*   Created: 2020/09/20 02:42:04 by kdustin           #+#    #+#             */
+/*   Updated: 2020/09/20 02:43:55 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "light.h"
+#ifndef VALIDATE_H
+# define VALIDATE_H
 
-void	*create_light_point(t_point3d position, double brightness,
-							t_color3d color)
-{
-	t_light_point	*new_light_point;
+#include <libft.h>
 
-	if (!(new_light_point = (t_light_point*)malloc(sizeof(t_light_point))))
-		return (NULL);
-	new_light_point->position = position;
-	new_light_point->brightness = brightness;
-	new_light_point->color = color;
-	return ((void*)new_light_point);
-}
+int	validate_int(char *str);
+int	validate_double(char *str);
+
+#endif

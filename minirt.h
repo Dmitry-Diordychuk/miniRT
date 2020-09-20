@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 13:44:09 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/12 14:45:50 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/20 03:27:46 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,5 +30,20 @@
 # include "reflection.h"
 # include "camera.h"
 # include "transformation.h"
+# include "render.h"
+# include "file.h"
+
+typedef struct	s_vars
+{
+	void		*mlx;
+	void		*win;
+	t_data		data;
+	t_screen	screen;
+	t_scene		scene;
+}				t_vars;
+
+# include "validate.h"
+# include "parse.h"
+# include "file.h"
 
 #endif
