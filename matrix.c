@@ -6,35 +6,11 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/29 13:53:52 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/20 02:08:39 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/20 14:44:09 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "matrix.h"
-
-double		det_mat(t_matrix3d m)
-{
-	return (m.m00 * (m.m11 * m.m22 - m.m12 * m.m21)
-			- m.m01 * (m.m10 * m.m22 - m.m12 * m.m20)
-				+ m.m02 * (m.m10 * m.m21 - m.m11 * m.m20));
-}
-
-t_matrix3d	invert_mat3d(t_matrix3d m)
-{
-	double		det;
-
-	det = det_mat(m);
-	m.m00 = (m.m11 * m.m22 - m.m12 * m.m21) / det;
-	m.m01 = (m.m02 * m.m21 - m.m01 * m.m22) / det;
-	m.m02 = (m.m01 * m.m12 - m.m02 * m.m11) / det;
-	m.m10 = (m.m12 * m.m20 - m.m10 * m.m22) / det;
-	m.m11 = (m.m00 * m.m22 - m.m02 * m.m20) / det;
-	m.m12 = (m.m02 * m.m10 - m.m00 * m.m12) / det;
-	m.m20 = (m.m10 * m.m21 - m.m11 * m.m20) / det;
-	m.m21 = (m.m01 * m.m20 - m.m00 * m.m21) / det;
-	m.m22 = (m.m00 * m.m11 - m.m01 * m.m10) / det;
-	return (m);
-}
 
 t_matrix4d	mul_mat4d(t_matrix4d a, t_matrix4d b)
 {

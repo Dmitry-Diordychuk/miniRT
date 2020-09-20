@@ -6,13 +6,13 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/04 23:36:42 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/13 21:11:18 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/20 19:05:52 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "object.h"
 
-void		delete_content(const char *type, void *content)
+void	delete_content(const char *type, void *content)
 {
 	if (ft_strcmp("Sphere", type) == 0)
 		free((t_sphere*)content);
@@ -57,7 +57,7 @@ void	*create_object(const char *type, void *obj, t_color3d color)
 	return ((void*)object);
 }
 
-void		delete_object(void *item)
+void	delete_object(void *item)
 {
 	t_object	*object;
 
@@ -66,3 +66,23 @@ void		delete_object(void *item)
 	free(object);
 }
 
+t_vector3d	get_point_normal(t_object nearest_obj, t_point3d int_point,
+																	t_ray3d r)
+{
+	if (ft_strcmp(nearest_obj.type, "Sphere") == 0)
+		return (calculate_sphere_normal(*(t_sphere*)(nearest_obj.container),
+														int_point, r.origin));
+	else if (ft_strcmp(nearest_obj.type, "Plane") == 0)
+		return (normal_to_camera(((t_plane*)nearest_obj.container)->normal,
+																r.direction));
+	else if (ft_strcmp(nearest_obj.type, "Square") == 0)
+		return (normal_to_camera(((t_square*)nearest_obj.container)->normal,
+																r.direction));
+	else if (ft_strcmp(nearest_obj.type, "Triangle") == 0)
+		return (normal_to_camera(((t_triangle*)nearest_obj.container)->normal,
+																r.direction));
+	else if (ft_strcmp(nearest_obj.type, "Cylinder") == 0)
+		return (calculate_cylinder_normal(*(t_cylinder*)nearest_obj.container,
+																int_point, r));
+	return ((t_vector3d){0, 0, 0});
+}

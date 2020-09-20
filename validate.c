@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 02:39:38 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/20 02:42:15 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/20 17:49:28 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,27 +27,27 @@ int	validate_int(char *str)
 	return (-1);
 }
 
-int	validate_double(char *str)
+int	validate_double(char **str)
 {
 	int counter;
 
 	counter = 0;
-	while (ft_isdigit(*str))
+	while (ft_isdigit(*(*str)))
 	{
-		str++;
+		(*str)++;
 		counter++;
 	}
-	if (*str == '.')
+	if (*(*str) == '.')
 	{
 		counter++;
-		str++;
-		while (ft_isdigit(*str))
+		(*str)++;
+		while (ft_isdigit(*(*str)))
 		{
-			str++;
+			(*str)++;
 			counter++;
 		}
 	}
-	if (ft_isspace(*str) || *str == '\0')
+	if (ft_isspace(*(*str)) || *(*str) == '\0')
 		return (0);
 	return (-1);
 }

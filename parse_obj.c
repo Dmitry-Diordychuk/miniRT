@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 02:45:06 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/20 02:46:00 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/21 00:25:12 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,12 @@ int	parse_sphere(char *str, t_list **objects)
 
 	error = 0;
 	str += 2;
-	error += skip_spaces(&str);
-	error += parse_vector(str, &(sphere.position));
-	skip_vector(&str);
+	error += parse_vector(&str, &(sphere.position));
 	error += skip_spaces(&str);
 	sphere.radius = ft_atof(str) / 2;
-	error += validate_double(str);
-	skip_count_digit(&str);
-	error += skip_spaces(&str);
+	error += validate_double(&str);
 	error += parse_color(str, &color);
-	if (!(new = create_sphere(sphere.position, sphere.radius)))                  //malloc free
+	if (!(new = create_sphere(sphere.position, sphere.radius)))
 		return (-1);
 	if (!(new = create_object("Sphere", new, color)))
 		return (-1);
@@ -51,13 +47,8 @@ int	parse_plane(char *str, t_list **objects)
 
 	error = 0;
 	str += 2;
-	error += skip_spaces(&str);
-	error += parse_vector(str, &(plane.q));
-	skip_vector(&str);
-	error += skip_spaces(&str);
-	error += parse_vector(str, &(plane.normal));
-	skip_vector(&str);
-	error += skip_spaces(&str);
+	error += parse_vector(&str, &(plane.q));
+	error += parse_vector(&str, &(plane.normal));
 	error += parse_color(str, &color);
 	if (!(new = create_plane(plane.q, plane.normal)))
 		return (-1);
@@ -79,17 +70,11 @@ int	parse_square(char *str, t_list **objects)
 
 	error = 0;
 	str += 2;
-	error += skip_spaces(&str);
-	error += parse_vector(str, &(square.center));
-	skip_vector(&str);
-	error += skip_spaces(&str);
-	error += parse_vector(str, &(square.normal));
-	skip_vector(&str);
+	error += parse_vector(&str, &(square.center));
+	error += parse_vector(&str, &(square.normal));
 	error += skip_spaces(&str);
 	square.side = ft_atof(str);
-	error += validate_double(str);
-	skip_count_digit(&str);
-	error += skip_spaces(&str);
+	error += validate_double(&str);
 	error += parse_color(str, &color);
 	if (!(new = create_square(square.center, square.normal, square.side)))
 		return (-1);
@@ -103,7 +88,7 @@ int	parse_square(char *str, t_list **objects)
 
 int	parse_cylinder(char *str, t_list **objects)
 {
-	t_cylinder	cylinder;
+	t_cylinder	cy;
 	void		*new;
 	t_list		*new_elem;
 	t_color3d	color;
@@ -111,23 +96,16 @@ int	parse_cylinder(char *str, t_list **objects)
 
 	error = 0;
 	str += 2;
+	error += parse_vector(&str, &(cy.position));
+	error += parse_vector(&str, &(cy.direction));
 	error += skip_spaces(&str);
-	error += parse_vector(str, &(cylinder.position));
-	skip_vector(&str);
+	cy.d = ft_atof(str);
+	error += validate_double(&str);
 	error += skip_spaces(&str);
-	error += parse_vector(str, &(cylinder.direction));
-	skip_vector(&str);
-	error += skip_spaces(&str);
-	cylinder.d = ft_atof(str);
-	error += validate_double(str);
-	skip_count_digit(&str);
-	error += skip_spaces(&str);
-	cylinder.h = ft_atof(str);
-	error += validate_double(str);
-	skip_count_digit(&str);
-	error += skip_spaces(&str);
+	cy.h = ft_atof(str);
+	error += validate_double(&str);
 	error += parse_color(str, &color);
-	if (!(new = create_cylinder(cylinder.position, cylinder.direction, cylinder.d, cylinder.h)))
+	if (!(new = create_cylinder(cy.position, cy.direction, cy.d, cy.h)))
 		return (-1);
 	if (!(new = create_object("Cylinder", new, color)))
 		return (-1);
@@ -147,16 +125,9 @@ int	parse_triangle(char *str, t_list **objects)
 
 	error = 0;
 	str += 2;
-	error += skip_spaces(&str);
-	error += parse_vector(str, &(triangle.v1));
-	skip_vector(&str);
-	error += skip_spaces(&str);
-	error += parse_vector(str, &(triangle.v2));
-	skip_vector(&str);
-	error += skip_spaces(&str);
-	error += parse_vector(str, &(triangle.v3));
-	skip_vector(&str);
-	error += skip_spaces(&str);
+	error += parse_vector(&str, &(triangle.v1));
+	error += parse_vector(&str, &(triangle.v2));
+	error += parse_vector(&str, &(triangle.v3));
 	error += parse_color(str, &color);
 	if (!(new = create_triangle(triangle.v1, triangle.v2, triangle.v3)))
 		return (-1);

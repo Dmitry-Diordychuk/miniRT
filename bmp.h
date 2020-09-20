@@ -1,29 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sphere.h                                           :+:      :+:    :+:   */
+/*   bmp.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/03 20:09:25 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/20 19:25:54 by kdustin          ###   ########.fr       */
+/*   Created: 2020/09/20 16:07:27 by kdustin           #+#    #+#             */
+/*   Updated: 2020/09/20 16:36:22 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SPHERE_H
-# define SPHERE_H
+#ifndef BMP_H
+# define BMP_H
 
-# include "object.h"
+# include "minirt.h"
 
-typedef struct	s_sphere
-{
-	t_vector3d	position;
-	double		radius;
-}				t_sphere;
-
-void			*create_sphere(t_point3d p, double r);
-double			sgn(double x);
-double			intersect_sphere(t_ray3d r, void **obj);
-t_vector3d		calculate_sphere_normal(t_sphere s, t_point3d p, t_point3d ro);
+char	*init_bmp(t_vars vars);
+int		save_image(t_vars vars, char **argv);
 
 #endif

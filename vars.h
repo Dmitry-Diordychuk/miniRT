@@ -1,29 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sphere.h                                           :+:      :+:    :+:   */
+/*   vars.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/03 20:09:25 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/20 19:25:54 by kdustin          ###   ########.fr       */
+/*   Created: 2020/09/20 15:09:10 by kdustin           #+#    #+#             */
+/*   Updated: 2020/09/20 15:10:07 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SPHERE_H
-# define SPHERE_H
+#ifndef VARS_H
+# define VARS_H
 
-# include "object.h"
+# include "minirt.h"
 
-typedef struct	s_sphere
+typedef struct	s_vars
 {
-	t_vector3d	position;
-	double		radius;
-}				t_sphere;
-
-void			*create_sphere(t_point3d p, double r);
-double			sgn(double x);
-double			intersect_sphere(t_ray3d r, void **obj);
-t_vector3d		calculate_sphere_normal(t_sphere s, t_point3d p, t_point3d ro);
+	void		*mlx;
+	void		*win;
+	t_data		data;
+	t_screen	screen;
+	t_scene		scene;
+}				t_vars;
 
 #endif

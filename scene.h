@@ -6,13 +6,12 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 02:46:06 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/12 22:02:37 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/20 19:25:05 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SCENE_H
 # define SCENE_H
-
 
 # include "camera.h"
 # include "libft/libft.h"
@@ -25,10 +24,10 @@ typedef struct			s_scene
 	t_list				*lights;
 	t_list				*cameras;
 	int					cameras_counter;
-	t_light_environment	environment_light;
+	t_light_environment	ambient;
 }						t_scene;
 
-t_scene				init_scene(t_list *objects, t_list *lights, t_list *cameras);
+t_scene					init_scene(t_list *objects, t_list *lights,
+													t_list *cameras);
 
 #endif
-

@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 13:44:09 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/20 03:27:46 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/20 16:08:55 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <libft.h>
 # include <math.h>
 # include <fcntl.h>
-# include "mlx.h"
+# include <mlx.h>
 # include "color.h"
 # include "vector.h"
 # include "ray.h"
@@ -26,24 +26,15 @@
 # include "screen_and_canvas.h"
 # include "scene.h"
 # include "draw.h"
+# include "render.h"
 # include "light.h"
 # include "reflection.h"
 # include "camera.h"
 # include "transformation.h"
-# include "render.h"
 # include "file.h"
-
-typedef struct	s_vars
-{
-	void		*mlx;
-	void		*win;
-	t_data		data;
-	t_screen	screen;
-	t_scene		scene;
-}				t_vars;
-
 # include "validate.h"
+# include "vars.h"
 # include "parse.h"
-# include "file.h"
+# include "bmp.h"
 
 #endif

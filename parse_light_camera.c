@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 02:46:48 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/20 02:46:56 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/20 18:21:56 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,11 @@ int	parse_camera(char *str, t_list **cameras)
 
 	error = 0;
 	str++;
+	error += parse_vector(&str, &(c.ray.origin));
+	error += parse_vector(&str, &(c.direction));
 	error += skip_spaces(&str);
-	error += parse_vector(str, &(c.ray.origin));
-	skip_vector(&str);
-	error += skip_spaces(&str);
-	error += parse_vector(str, &(c.direction));
-	skip_vector(&str);
-	error += skip_spaces(&str);
-	error += validate_double(str);
 	c.fov = ft_atoi(str);
+	error += validate_double(&str);
 	if (!(new_camera = create_camera(c.ray.origin, c.direction, c.fov)))
 		return (error - 1);
 	if (!(new_elem = ft_lstnew(new_camera)))
@@ -50,16 +46,13 @@ int	parse_light(char *str, t_list **lights)
 
 	error = 0;
 	str++;
-	error += skip_spaces(&str);
-	error += parse_vector(str, &(light.position));
-	skip_vector(&str);
+	error += parse_vector(&str, &(light.position));
 	error += skip_spaces(&str);
 	light.brightness = ft_atof(str);
-	error += validate_double(str);
-	skip_count_digit(&str);
-	error += skip_spaces(&str);
+	error += validate_double(&str);
 	error += parse_color(str, &(light.color));
-	if (!(new_light = create_light_point(light.position, light.brightness, light.color)))
+	if (!(new_light = create_light_point(light.position, light.brightness,
+													light.color)))
 		return (-1);
 	if (!(new_elem = ft_lstnew(new_light)))
 		return (-1);

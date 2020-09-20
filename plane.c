@@ -6,13 +6,13 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/23 17:47:42 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/19 22:41:39 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/20 18:23:31 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "plane.h"
 
-void	*create_plane(t_point3d q, t_vector3d normal)
+void		*create_plane(t_point3d q, t_vector3d normal)
 {
 	t_plane *plane;
 
@@ -33,7 +33,7 @@ t_vector3d	normal_to_camera(t_vector3d normal, t_vector3d rd)
 	return (normal);
 }
 
-double	intersect_plane(t_ray3d r, void **obj)
+double		intersect_plane(t_ray3d r, void **obj)
 {
 	double		t;
 	t_plane		plane;

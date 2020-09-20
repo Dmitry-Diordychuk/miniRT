@@ -6,13 +6,13 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/03 20:11:31 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/19 22:40:28 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/20 19:26:58 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sphere.h"
 
-void	*create_sphere(t_point3d p, double r)
+void		*create_sphere(t_point3d p, double r)
 {
 	t_sphere *s;
 
@@ -37,7 +37,7 @@ t_vector3d	calculate_sphere_normal(t_sphere s, t_point3d p, t_point3d ro)
 **	sgn(x)
 */
 
-double	sgn(double x)
+double		sgn(double x)
 {
 	if (x > 0)
 		return (1);
@@ -51,7 +51,7 @@ double	sgn(double x)
 **	k3 = q;
 */
 
-double	intersect_sphere(t_ray3d r, void **obj)
+double		intersect_sphere(t_ray3d r, void **obj)
 {
 	t_sphere	s;
 	double		k[4];

@@ -6,13 +6,13 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 02:39:12 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/20 02:48:33 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/20 17:44:42 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse.h"
 
-int	skip_spaces(char **str)
+int		skip_spaces(char **str)
 {
 	int counter;
 
@@ -27,7 +27,7 @@ int	skip_spaces(char **str)
 	return (-1);
 }
 
-int	skip_count_digit(char **str)
+int		skip_count_digit(char **str)
 {
 	int counter;
 
@@ -49,22 +49,4 @@ int	skip_count_digit(char **str)
 		}
 	}
 	return (counter);
-}
-
-void	skip_vector(char **str)
-{
-	if (**str == '-')
-		(*str)++;
-	while (ft_isdigit(**str) || **str == '.')
-		(*str)++;
-	(*str)++;
-	if (**str == '-')
-		(*str)++;
-	while (ft_isdigit(**str) || **str == '.')
-		(*str)++;
-	(*str)++;
-	if (**str == '-')
-		(*str)++;
-	while (ft_isdigit(**str) || **str == '.')
-		(*str)++;
 }
