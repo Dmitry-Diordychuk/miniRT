@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 02:37:39 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/21 16:05:21 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/21 23:23:24 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ int	parse_vector(char **str, t_vector3d *vector)
 	return (0);
 }
 
-int	parse_file(char **file_content, t_vars *vars)
+int	parse_file(t_vars *vars)
 {
 	int	i;
 	int	error;
@@ -108,20 +108,18 @@ int	parse_file(char **file_content, t_vars *vars)
 	r_flag = 0;
 	a_flag = 0;
 	i = 0;
-	while (file_content[i] != NULL)
+	while ((*vars).file_content[i] != NULL)
 	{
-		error = parse(file_content[i], &vars);
+		error = parse((*vars).file_content[i], &vars);
 		if (error != 0)
-			return (-1);
-		if (file_content[i][0] == 'R')
+			return (show_error(-1, "Error\nWrong input data!\n"));
+		if ((*vars).file_content[i][0] == 'R')
 			r_flag++;
-		else if (file_content[i][0] == 'A')
+		else if ((*vars).file_content[i][0] == 'A')
 			a_flag++;
 		if (r_flag > 1 || a_flag > 1)
-			return (-1);
+			return (show_error(-1, "Error\nToo many A or R elements!\n"));
 		i++;
 	}
-	if (vars->scene.cameras_counter == 0 || a_flag == 0 || r_flag == 0)
-		return (-1);
 	return (0);
 }

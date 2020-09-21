@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 02:46:48 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/20 18:21:56 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/21 17:31:57 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,10 @@ int	parse_light(char *str, t_list **lights)
 													light.color)))
 		return (-1);
 	if (!(new_elem = ft_lstnew(new_light)))
+	{
+		free(new_light);
 		return (-1);
+	}
 	ft_lstpush(lights, new_elem);
 	return (error);
 }

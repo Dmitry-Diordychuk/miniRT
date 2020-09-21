@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 16:07:20 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/20 18:04:51 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/21 17:15:51 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,13 @@ char	*init_bmp(t_vars vars)
 	return (bmp);
 }
 
+int		return_handler(int ret, char *bmp)
+{
+	if (bmp != NULL)
+		free(bmp);
+	return (ret);
+}
+
 int		save_image(t_vars vars, char **argv)
 {
 	int		fd;
@@ -74,6 +81,7 @@ int		save_image(t_vars vars, char **argv)
 	int		i;
 	char	*bmp;
 
+	bmp = NULL;
 	if (!(filename = (char*)malloc(sizeof(char) * (ft_strlen(argv[1]) + 2))))
 		return (-1);
 	i = -1;
@@ -84,9 +92,9 @@ int		save_image(t_vars vars, char **argv)
 	filename[i + 2] = 'p';
 	filename[i + 3] = '\0';
 	if ((fd = open(filename, O_WRONLY | O_CREAT, S_IREAD | S_IWRITE)) < 0)
-		return (-1);
+		return (return_handler(-1, bmp));
 	if (!(bmp = init_bmp(vars)))
-		return (-1);
+		return (return_handler(-1, bmp));
 	write(fd, bmp, 54 + vars.screen.h * vars.screen.w * 3 + vars.screen.h * 2);
 	free(bmp);
 	if (close(fd) < 0)

@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 13:44:09 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/20 16:08:55 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/21 23:21:02 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,7 @@
 # include "vars.h"
 # include "parse.h"
 # include "bmp.h"
+
+int	show_error(int ret, char *str);
 
 #endif

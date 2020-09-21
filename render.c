@@ -6,11 +6,17 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 02:15:29 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/20 19:24:15 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/21 23:47:00 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "render.h"
+
+/*
+**	trace_ray function
+**	if find ray go trought object than we get it's color.
+**	if we find two object in one spote we get color of neares.
+*/
 
 int	trace_ray(t_scene scene)
 {
@@ -33,12 +39,6 @@ int	trace_ray(t_scene scene)
 	return (-1);
 }
 
-int	render_return(int ret, t_list *objects)
-{
-	//ft_lstclear(&objects, delete_object);
-	return (ret);
-}
-
 int	render(t_screen screen, t_data *img, t_scene scene, int camera_number)
 {
 	const t_canvas	canvas = create_canvas(screen);
@@ -47,8 +47,11 @@ int	render(t_screen screen, t_data *img, t_scene scene, int camera_number)
 	t_list			*lights;
 	int				test;
 
-	scene.camera = *(t_camera*)ft_lstget(scene.cameras,
+	if (scene.cameras != NULL)
+	{
+		scene.camera = *(t_camera*)ft_lstget(scene.cameras,
 									abs(camera_number % scene.cameras_counter));
+	}
 	point.y = canvas.top_border + 1;
 	while (--point.y > canvas.bottom_border)
 	{
@@ -62,8 +65,8 @@ int	render(t_screen screen, t_data *img, t_scene scene, int camera_number)
 			if ((color = trace_ray(scene)) >= 0)
 				draw_pixel(img, canvas_to_screen(point, screen), color);
 			else if (color == -2)
-				return (render_return(-2, scene.objects));
+				return (-2);
 		}
 	}
-	return (render_return(0, scene.objects));
+	return (0);
 }

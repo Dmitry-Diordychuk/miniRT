@@ -6,7 +6,7 @@
 #    By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/07/28 21:06:57 by kdustin           #+#    #+#              #
-#    Updated: 2020/09/21 01:31:15 by kdustin          ###   ########.fr        #
+#    Updated: 2020/09/21 20:24:24 by kdustin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ all:
 clean:
 	make clean -C ./libft/
 	make clean -C ./minilibx_opengl_20191021/
+
 fclean:
 	make fclean -C ./libft/
 	make clean -C ./minilibx_opengl_20191021/

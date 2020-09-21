@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 14:23:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/20 01:57:01 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/21 16:54:19 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,6 @@ typedef struct	s_light_environment
 
 void			*create_light_point(t_point3d position, double brightness,
 									t_color3d color);
+void			delete_light(void *obj);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 02:31:01 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/20 02:32:06 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/21 17:22:52 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,13 @@ char	**resize_content(char **file_content, int size)
 	return (new_file_content);
 }
 
+void	*null_returnhandler(char **file_content)
+{
+	free_file_content(file_content);
+	file_content = NULL;
+	return (NULL);
+}
+
 char	**get_file_content(char *file)
 {
 	int		fd;
@@ -37,20 +44,21 @@ char	**get_file_content(char *file)
 
 	if ((fd = open(file, O_RDONLY)) < 0)
 		return (NULL);
-	file_content = (char**)malloc(sizeof(char*));
+	if (!(file_content = (char**)malloc(sizeof(char*))))
+		return (NULL);
 	i = 0;
 	while (get_next_line(fd, &file_content[i]))
 	{
 		i++;
 		if (!(file_content = resize_content(file_content, i + 1)))
-			return (NULL);
+			return (null_returnhandler(file_content));
 	}
 	i++;
 	if (!(file_content = resize_content(file_content, i + 1)))
-		return (NULL);
+		return (null_returnhandler(file_content));
 	file_content[i] = NULL;
 	if (close(fd))
-		return (NULL);
+		return (null_returnhandler(file_content));
 	return (file_content);
 }
 
