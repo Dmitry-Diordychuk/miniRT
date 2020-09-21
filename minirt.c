@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/21 23:56:53 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/22 00:09:33 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,10 @@ int		main(int argc, char **argv)
 	t_vars		vars;
 	t_screen	user_screen;
 
-	if ((argc < 2 || argc > 3) && !check_file_name(argv[1]))
+	if ((argc < 2 || argc > 3))
 		return (show_error(-1, "Error\nToo many arguments!\n"));
+	if (!check_file_name(argv[1]))
+		return (show_error(-1, "Error\nWrong file format!\n"));
 	if (!(vars.file_content = get_file_content(argv[1])))
 		return (show_error(-1, "Error\nCan't get file content!\n"));
 	init_vars(&vars);
