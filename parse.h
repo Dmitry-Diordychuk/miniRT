@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 02:41:57 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/20 17:44:49 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/21 16:06:58 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,22 +15,23 @@
 
 # include "minirt.h"
 
-int		parse_resolution(char *str, t_screen *screen);
-int		parse_color(char *str, t_color3d *color);
-int		parse_ambient(char *str, t_light_environment *amb);
-int		parse_vector(char **str, t_vector3d *vector);
-int		parse_file(char **file_content, t_vars *vars);
+int	parse_resolution(char *str, t_screen *screen);
+int	parse_color(char *str, t_color3d *color);
+int	parse_ambient(char *str, t_light_environment *amb);
+int	parse_vector(char **str, t_vector3d *vector);
+int	parse_file(char **file_content, t_vars *vars);
 
-int		skip_spaces(char **str);
-int		skip_count_digit(char **str);
+int	skip_spaces(char **str);
+int	skip_count_digit(char **str);
+int	parse(char *line, t_vars **vars);
 
-int		parse_sphere(char *str, t_list **objects);
-int		parse_plane(char *str, t_list **objects);
-int		parse_square(char *str, t_list **objects);
-int		parse_cylinder(char *str, t_list **objects);
-int		parse_triangle(char *str, t_list **objects);
+int	parse_sphere(char *str, t_list **objects);
+int	parse_plane(char *str, t_list **objects);
+int	parse_square(char *str, t_list **objects);
+int	parse_cylinder(char *str, t_list **objects);
+int	parse_triangle(char *str, t_list **objects);
 
-int		parse_camera(char *str, t_list **cameras);
-int		parse_light(char *str, t_list **lights);
+int	parse_camera(char *str, t_list **cameras);
+int	parse_light(char *str, t_list **lights);
 
 #endif
