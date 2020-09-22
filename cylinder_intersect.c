@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 01:46:19 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/20 01:54:29 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/22 20:38:39 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ int		choose_closest_point(double *t)
 {
 	int	comp_1;
 	int comp_2;
-	int result;
 
 	if (t[0] < 0)
 		comp_1 = t[1] < 0 ? -1 : 1;

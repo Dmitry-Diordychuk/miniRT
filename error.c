@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/22 18:49:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/22 19:29:03 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/22 20:35:30 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	show_error(int ret, char *str)
 {
 	ft_putstr_fd(str, 1);
-	return (-1);
+	return (ret);
 }
 
 int	exit_handler(int ret, t_vars vars)

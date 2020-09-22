@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/11 01:05:50 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/22 19:27:41 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/22 20:37:53 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void		reflect_specular(t_scene scene, t_reflection_data data,
 	}
 }
 
-void		reflect_diffusion(t_scene scene, t_reflection_data data,
+void		reflect_diffusion(t_reflection_data data,
 									t_vector3d *color)
 {
 	double	cos;
@@ -83,7 +83,7 @@ t_color3d	calculate_diffusion_specular(t_scene scene, t_reflection_data data)
 		point_color = sum_v(point_color, mul_vs(data.light_color, 0.25));
 		if (check_shadow(scene, data) == 0)
 		{
-			reflect_diffusion(scene, data, &point_color);
+			reflect_diffusion(data, &point_color);
 			if (data.specular >= 0)
 				reflect_specular(scene, data, &point_color);
 		}
@@ -98,7 +98,6 @@ t_color3d	calculate_reflection(t_scene scene, double nearest_root,
 {
 	t_reflection_data	data;
 	t_color3d			reflection_result;
-	t_point3d			int_point;
 
 	data.point = ray_func(scene.camera.ray, nearest_root);
 	data.normal = get_point_normal(nearest_obj, data.point, scene.camera.ray);
