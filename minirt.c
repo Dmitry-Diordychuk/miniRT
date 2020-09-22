@@ -6,35 +6,11 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 13:31:53 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/22 00:09:33 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/22 19:28:53 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
-
-int	show_error(int ret, char *str)
-{
-	ft_putstr_fd(str, 1);
-	return (-1);
-}
-
-int		exit_handler(int ret, t_vars vars)
-{
-	if (ret == -2)
-		show_error(ret, "Error\nRendering error!\n");
-	if (ret == -3)
-		show_error(ret, "Error\nCan't save image!\n");
-	if (vars.scene.objects != NULL)
-		ft_lstclear(&vars.scene.objects, delete_object);
-	if (vars.scene.cameras != NULL)
-		ft_lstclear(&vars.scene.cameras, delete_camera);
-	if (vars.scene.lights != NULL)
-		ft_lstclear(&vars.scene.lights, delete_light);
-	if (vars.file_content != NULL)
-		free_file_content(vars.file_content);
-	exit(ret);
-	return (ret);
-}
 
 int		keys_handler(int keycode, t_vars *vars)
 {
@@ -44,7 +20,7 @@ int		keys_handler(int keycode, t_vars *vars)
 	{
 		mlx_destroy_window(vars->mlx, vars->win);
 		mlx_destroy_image(vars->mlx, vars->data.img);
-		exit_handler(-2, *vars);
+		exit_handler(0, *vars);
 	}
 	if (keycode == 123)
 	{
@@ -59,15 +35,6 @@ int		keys_handler(int keycode, t_vars *vars)
 		mlx_put_image_to_window(vars->mlx, vars->win, vars->data.img, 0, 0);
 	}
 	return (0);
-}
-
-int		check_file_name(char *name)
-{
-	while (ft_strcmp(name, ".rt") != 0 && *name != '\0')
-		name++;
-	if (*name == '\0')
-		return (0);
-	return (1);
 }
 
 void	init_vars(t_vars *vars)
@@ -87,16 +54,30 @@ void	init_vars(t_vars *vars)
 								generate_rotation_matrix(vars->scene.camera);
 }
 
-int		push_cross_button(t_vars *vars)
+void	mlx_setup(t_vars *vars)
 {
-	exit_handler(0, *vars);
-	return (0);
+	(*vars).win =
+		mlx_new_window((*vars).mlx, (*vars).screen.w, (*vars).screen.h, "MLX!");
+	mlx_put_image_to_window((*vars).mlx, (*vars).win, (*vars).data.img, 0, 0);
+	mlx_hook((*vars).win, 2, 1L << 0, keys_handler, vars);
+	mlx_hook((*vars).win, 17, 1L << 17, push_cross_button, vars);
+	mlx_loop((*vars).mlx);
+}
+
+void	screen_setup(t_vars *vars)
+{
+	t_screen	screensize;
+
+	mlx_get_screen_size((*vars).mlx, &screensize.w, &screensize.h);
+	(*vars).screen.w =
+			(*vars).screen.w > screensize.w ? screensize.w : (*vars).screen.w;
+	(*vars).screen.h =
+			(*vars).screen.h > screensize.h ? screensize.h : (*vars).screen.h;
 }
 
 int		main(int argc, char **argv)
 {
 	t_vars		vars;
-	t_screen	user_screen;
 
 	if ((argc < 2 || argc > 3))
 		return (show_error(-1, "Error\nToo many arguments!\n"));
@@ -108,26 +89,14 @@ int		main(int argc, char **argv)
 	if (parse_file(&vars))
 		return (exit_handler(-1, vars));
 	vars.mlx = mlx_init();
-	mlx_get_screen_size(vars.mlx, &user_screen.w, &user_screen.h);
-	vars.screen.w = vars.screen.w > user_screen.w ? user_screen.w : vars.screen.w;
-	vars.screen.h = vars.screen.h > user_screen.h ? user_screen.h : vars.screen.h;
+	screen_setup(&vars);
 	vars.data.img = mlx_new_image(vars.mlx, vars.screen.w, vars.screen.h);
 	vars.data.addr = mlx_get_data_addr(vars.data.img, &vars.data.bits_per_pixel,
 						&vars.data.line_length, &vars.data.endian);
-	if (render(vars.screen, &vars.data, vars.scene, 0) < 0)
-		return (exit_handler(-2, vars));
+	render(vars.screen, &vars.data, vars.scene, 0);
 	if (argc != 3)
-	{
-		vars.win = mlx_new_window(vars.mlx, vars.screen.w, vars.screen.h, "MLX!");
-		mlx_put_image_to_window(vars.mlx, vars.win, vars.data.img, 0, 0);
-		mlx_hook(vars.win, 2, 1L << 0, keys_handler, &vars);
-		mlx_hook(vars.win, 17, 1L << 17, push_cross_button, &vars);
-		mlx_loop(vars.mlx);
-	}
-	else if (argc == 3 && ft_strcmp(argv[2], "--save") == 0)
-	{
-		if (save_image(vars, argv) != 0)
-			return (exit_handler(-3, vars));
-	}
+		mlx_setup(&vars);
+	else if (!ft_strcmp(argv[2], "--save") && save_image(vars, argv))
+		return (exit_handler(-3, vars));
 	return (exit_handler(0, vars));
 }

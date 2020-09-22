@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/11 01:05:50 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/21 00:56:07 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/22 19:27:41 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,7 @@ int			check_shadow(t_scene scene, t_reflection_data data)
 	{
 		t = -1;
 		obj = *(t_object*)(objects->content);
-		if (apply_intersect(l, obj, &t, NULL))
-			return (-1);
+		apply_intersect(l, obj, &t, NULL);
 		if (t > 0 && t < 1)
 			return (1);
 		objects = objects->next;

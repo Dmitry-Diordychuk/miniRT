@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/23 17:06:03 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/19 22:48:07 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/22 19:31:07 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@
 **	apply intersect function choosen for certain primitive.
 */
 
-int	apply_intersect(t_ray3d r, t_object obj, double *near_t, t_object *near_obj)
+void	apply_intersect(t_ray3d r, t_object obj, double *near_t,
+															t_object *near_obj)
 {
 	double	t;
 
@@ -33,5 +34,4 @@ int	apply_intersect(t_ray3d r, t_object obj, double *near_t, t_object *near_obj)
 			*near_obj = obj;
 		*near_t = t;
 	}
-	return (0);
 }
