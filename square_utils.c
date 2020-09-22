@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 01:20:32 by kdustin           #+#    #+#             */
-/*   Updated: 2020/09/21 01:20:45 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/09/22 21:03:14 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,6 @@ void	adjust_delta(int *delta, t_point3d v1, t_point3d v2, t_point3d p_in)
 			*delta = -(*delta);
 	}
 }
-
-/*
-**  graphic gems 4
-*/
 
 int		angle_test(t_square square, t_point3d in_p)
 {
